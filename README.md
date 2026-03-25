@@ -1,4 +1,2 @@
 Supabase:
-url :
-user: 
-mdp: M2airbnbmiage@
+url : https://supabase.com/dashboard/org/gbxmaasdosnltxgfvjhl

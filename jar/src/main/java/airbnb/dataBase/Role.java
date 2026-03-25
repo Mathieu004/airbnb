@@ -1,4 +1,7 @@
 package airbnb.dataBase;
 
-public class Role {
+public enum Role {
+    GUEST,
+    HOST,
+    ADMIN
 }
