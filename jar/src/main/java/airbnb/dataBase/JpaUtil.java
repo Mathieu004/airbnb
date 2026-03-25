@@ -10,7 +10,7 @@ public class JpaUtil {
 
     private static EntityManagerFactory buildEntityManagerFactory() {
         try {
-            return Persistence.createEntityManagerFactory("airbnbPU");
+            return Persistence.createEntityManagerFactory("airbnbPU", DatabaseConfig.getJpaProperties());
         } catch (Exception e) {
             throw new RuntimeException("Error while creating EntityManagerFactory", e);
         }

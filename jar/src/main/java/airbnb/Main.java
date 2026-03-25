@@ -1,6 +1,10 @@
 package airbnb;
 
-import airbnb.dataBase.*;
+import airbnb.dataBase.DataBaseConnection;
+import airbnb.dataBase.JpaUtil;
+import airbnb.repository.PropertyRepository;
+import airbnb.service.PropertyDetails;
+import airbnb.service.PropertyService;
 import jakarta.persistence.EntityManager;
 
 import java.sql.Connection;
@@ -8,55 +12,43 @@ import java.sql.Connection;
 public class Main {
     public static void main(String[] args) {
         try (Connection conn = DataBaseConnection.getConnection()) {
-            System.out.println("Connexion réussie à Supabase !");
+            System.out.println("Connexion reussie a Supabase !");
 
             EntityManager em = JpaUtil.getEntityManager();
 
             try {
                 Long propertyId = 1L;
-
-                Property property = em.createQuery("""
-                    SELECT p FROM Property p
-                    LEFT JOIN FETCH p.host
-                    LEFT JOIN FETCH p.images
-                    LEFT JOIN FETCH p.reviews r
-                    LEFT JOIN FETCH r.user
-                    WHERE p.id = :id
-                    """, Property.class)
-                        .setParameter("id", propertyId)
-                        .getSingleResult();
+                PropertyService propertyService = new PropertyService(new PropertyRepository(em));
+                PropertyDetails property = propertyService.getPropertyDetails(propertyId);
 
                 System.out.println("====== PROPERTY ======");
-                System.out.println("Name: " + property.getName());
-                System.out.println("City: " + property.getCity());
-                System.out.println("Country: " + property.getCountry());
-                System.out.println("Address: " + property.getAddress());
-                System.out.println("Price per night: " + property.getPricePerNight());
-                System.out.println("Max guests: " + property.getMaxGuests());
-                System.out.println("Bedrooms: " + property.getBedrooms());
-                System.out.println("Bathrooms: " + property.getBathrooms());
-                System.out.println("Description: " + property.getDescription());
-                System.out.println("Features: " + property.getIncludedFeatures());
+                System.out.println("Name: " + property.name());
+                System.out.println("City: " + property.city());
+                System.out.println("Country: " + property.country());
+                System.out.println("Address: " + property.address());
+                System.out.println("Price per night: " + property.pricePerNight());
+                System.out.println("Max guests: " + property.maxGuests());
+                System.out.println("Bedrooms: " + property.bedrooms());
+                System.out.println("Bathrooms: " + property.bathrooms());
+                System.out.println("Description: " + property.description());
+                System.out.println("Features: " + property.includedFeatures());
 
                 System.out.println("\n====== HOST ======");
-                System.out.println("Username: " + property.getHost().getUsername());
-                System.out.println("Email: " + property.getHost().getEmail());
+                System.out.println("Username: " + property.host().username());
+                System.out.println("Email: " + property.host().email());
 
                 System.out.println("\n====== IMAGES ======");
-                for (PropertyImage img : property.getImages()) {
-                    System.out.println("- " + img.getImageUrl() +
-                            (Boolean.TRUE.equals(img.getIsMain()) ? " (MAIN)" : ""));
+                for (PropertyDetails.ImageDetails image : property.images()) {
+                    System.out.println("- " + image.imageUrl()
+                            + (Boolean.TRUE.equals(image.isMain()) ? " (MAIN)" : ""));
                 }
 
                 System.out.println("\n====== REVIEWS ======");
-                for (Review review : property.getReviews()) {
-                    System.out.println(
-                            review.getUser().getUsername() +
-                                    " | Rating: " + review.getRating() +
-                                    " | Comment: " + review.getComment()
-                    );
+                for (PropertyDetails.ReviewDetails review : property.reviews()) {
+                    System.out.println(review.username()
+                            + " | Rating: " + review.rating()
+                            + " | Comment: " + review.comment());
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -67,5 +59,4 @@ public class Main {
             e.printStackTrace();
         }
     }
-
 }
