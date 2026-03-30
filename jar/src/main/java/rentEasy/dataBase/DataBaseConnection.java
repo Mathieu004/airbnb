@@ -1,4 +1,4 @@
-package airbnb.dataBase;
+package rentEasy.dataBase;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

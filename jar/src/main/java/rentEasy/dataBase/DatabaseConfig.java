@@ -1,4 +1,4 @@
-package airbnb.dataBase;
+package rentEasy.dataBase;
 
 import java.io.InputStream;
 import java.util.HashMap;

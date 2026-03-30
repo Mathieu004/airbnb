@@ -1,4 +1,4 @@
-package airbnb.dataBase;
+package rentEasy.dataBase;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,7 +1,7 @@
-package airbnb.repository;
+package rentEasy.repository;
 
-import airbnb.dataBase.Property;
-import airbnb.dataBase.Review;
+import rentEasy.dataBase.Property;
+import rentEasy.dataBase.Review;
 import jakarta.persistence.EntityManager;
 
 import java.util.Optional;

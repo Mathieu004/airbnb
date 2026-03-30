@@ -1,4 +1,4 @@
-package airbnb.service;
+package rentEasy.service;
 
 import java.math.BigDecimal;
 import java.util.List;

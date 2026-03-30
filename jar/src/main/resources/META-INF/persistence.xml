@@ -7,10 +7,10 @@
     <persistence-unit name="airbnbPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>airbnb.dataBase.User</class>
-        <class>airbnb.dataBase.Property</class>
-        <class>airbnb.dataBase.PropertyImage</class>
-        <class>airbnb.dataBase.Review</class>
+        <class>rentEasy.dataBase.User</class>
+        <class>rentEasy.dataBase.Property</class>
+        <class>rentEasy.dataBase.PropertyImage</class>
+        <class>rentEasy.dataBase.Review</class>
 
         <properties>
             <property name="hibernate.show_sql" value="false"/>

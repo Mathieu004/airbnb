@@ -1,9 +1,9 @@
-package airbnb.service;
+package rentEasy.service;
 
-import airbnb.dataBase.Property;
-import airbnb.dataBase.PropertyImage;
-import airbnb.dataBase.Review;
-import airbnb.repository.PropertyRepository;
+import rentEasy.dataBase.Property;
+import rentEasy.dataBase.PropertyImage;
+import rentEasy.dataBase.Review;
+import rentEasy.repository.PropertyRepository;
 
 import java.util.List;
 

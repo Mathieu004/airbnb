@@ -1,10 +1,10 @@
-package airbnb;
+package rentEasy;
 
-import airbnb.dataBase.DataBaseConnection;
-import airbnb.dataBase.JpaUtil;
-import airbnb.repository.PropertyRepository;
-import airbnb.service.PropertyDetails;
-import airbnb.service.PropertyService;
+import rentEasy.dataBase.DataBaseConnection;
+import rentEasy.dataBase.JpaUtil;
+import rentEasy.repository.PropertyRepository;
+import rentEasy.service.PropertyDetails;
+import rentEasy.service.PropertyService;
 import jakarta.persistence.EntityManager;
 
 import java.sql.Connection;
