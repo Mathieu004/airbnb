@@ -1,8 +1,8 @@
 package rentEasy.service;
 
-import rentEasy.dataBase.Property;
-import rentEasy.dataBase.PropertyImage;
-import rentEasy.dataBase.Review;
+import rentEasy.model.Property;
+import rentEasy.model.PropertyImage;
+import rentEasy.model.Review;
 import rentEasy.repository.PropertyRepository;
 
 import java.util.List;

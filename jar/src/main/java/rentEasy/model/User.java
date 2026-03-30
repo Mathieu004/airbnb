@@ -1,7 +1,9 @@
-package rentEasy.dataBase;
+package rentEasy.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import rentEasy.dataBase.Role;
+import rentEasy.dataBase.RoleConverter;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

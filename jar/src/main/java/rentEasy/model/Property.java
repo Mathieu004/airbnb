@@ -1,4 +1,4 @@
-package rentEasy.dataBase;
+package rentEasy.model;
 
 import jakarta.persistence.*;
 import lombok.*;

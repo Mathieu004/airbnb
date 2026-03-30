@@ -1,4 +1,4 @@
-package rentEasy.dataBase;
+package rentEasy.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,15 +6,15 @@ import lombok.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "reviews")
+@Table(name = "property_images")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"property", "user"})
+@ToString(exclude = "property")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Review {
+public class PropertyImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,14 +25,11 @@ public class Review {
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    private Integer rating;
-
-    @Column(columnDefinition = "text")
-    private String comment;
+    @Column(name = "is_main")
+    private Boolean isMain;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private Timestamp createdAt;

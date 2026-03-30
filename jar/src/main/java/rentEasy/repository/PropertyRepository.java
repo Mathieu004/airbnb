@@ -1,7 +1,7 @@
 package rentEasy.repository;
 
-import rentEasy.dataBase.Property;
-import rentEasy.dataBase.Review;
+import rentEasy.model.Property;
+import rentEasy.model.Review;
 import jakarta.persistence.EntityManager;
 
 import java.util.Optional;
