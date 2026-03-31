@@ -1,0 +1,13 @@
+<div>
+  <h2>Inscription</h2>
+  @if (error) {
+    <p>{{ error }}</p>
+  }
+  <form (ngSubmit)="onSubmit()">
+    <input [(ngModel)]="username" name="username" placeholder="Nom d'utilisateur" required />
+    <input [(ngModel)]="email" name="email" type="email" placeholder="Email" required />
+    <input [(ngModel)]="password" name="password" type="password" placeholder="Mot de passe" required />
+    <button type="submit">S'inscrire</button>
+  </form>
+  <a routerLink="/login">Déjà un compte ?</a>
+</div>

@@ -1,0 +1,8 @@
+<div>
+  <h2>Propriétés disponibles</h2>
+  <div *ngFor="let p of properties">
+    <h3>{{ p.name }}</h3>
+    <p>{{ p.city }}, {{ p.country }} — {{ p.pricePerNight }}€/nuit</p>
+    <a [routerLink]="['/properties', p.id]">Voir le détail</a>
+  </div>
+</div>

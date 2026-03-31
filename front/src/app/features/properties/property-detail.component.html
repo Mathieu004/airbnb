@@ -1,0 +1,10 @@
+<div *ngIf="property">
+  <h2>{{ property.name }}</h2>
+  <p>{{ property.city }}, {{ property.country }}</p>
+  <p>{{ property.description }}</p>
+  <p>{{ property.pricePerNight }}€/nuit · {{ property.bedrooms }} chambres · {{ property.bathrooms }} sdb</p>
+  <p>Hôte : {{ property.host.username }}</p>
+  <div *ngFor="let review of property.reviews">
+    <strong>{{ review.username }}</strong> — {{ review.rating }}/5 : {{ review.comment }}
+  </div>
+</div>
