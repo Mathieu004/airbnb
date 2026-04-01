@@ -18,6 +18,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EntityManager entityManager;
+    private final PasswordService passwordService;
 
     @Transactional
     public List<User> findAll() {
@@ -36,7 +37,7 @@ public class UserService {
         user.setId(null);
         user.setUsername(normalize(user.getUsername()));
         user.setEmail(normalize(user.getEmail()));
-        user.setPasswordHash(user.getPasswordHash().trim());
+        user.setPasswordHash(passwordService.hash(user.getPasswordHash().trim()));
         if (user.getRole() == null) {
             user.setRole(Role.GUEST);
         }
@@ -58,7 +59,7 @@ public class UserService {
 
         existing.setUsername(normalize(user.getUsername()));
         existing.setEmail(normalize(user.getEmail()));
-        existing.setPasswordHash(user.getPasswordHash().trim());
+        existing.setPasswordHash(passwordService.hash(user.getPasswordHash().trim()));
         existing.setRole(user.getRole() != null ? user.getRole() : existing.getRole());
         return userRepository.save(existing);
     }
