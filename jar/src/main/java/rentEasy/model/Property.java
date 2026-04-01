@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"host", "images", "reviews"})
+@ToString(exclude = {"host", "images", "reviewsList"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Property {
 
@@ -46,7 +46,10 @@ public class Property {
     @Column(name = "max_guest_number")
     private Integer maxGuestnumber;
 
+    @Column(name = "bedroom_number")
     private Integer bedroomNumber;
+
+    @Column(name = "bathroom_number")
     private Integer bathroomNumber;
 
     @Column(name = "has_hair_dryer")

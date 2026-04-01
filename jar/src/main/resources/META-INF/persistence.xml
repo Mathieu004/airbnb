@@ -11,6 +11,7 @@
         <class>rentEasy.model.Property</class>
         <class>rentEasy.model.PropertyImage</class>
         <class>rentEasy.model.Review</class>
+        <class>rentEasy.model.Booking</class>
 
         <properties>
             <property name="hibernate.show_sql" value="false"/>

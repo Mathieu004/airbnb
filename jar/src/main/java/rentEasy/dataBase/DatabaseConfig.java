@@ -27,15 +27,15 @@ public final class DatabaseConfig {
     }
 
     public static String getUrl() {
-        return PROPERTIES.getProperty("db.url");
+        return PROPERTIES.getProperty("spring.datasource.url");
     }
 
     public static String getUser() {
-        return PROPERTIES.getProperty("db.user");
+        return PROPERTIES.getProperty("spring.datasource.username");
     }
 
     public static String getPassword() {
-        return PROPERTIES.getProperty("db.password");
+        return PROPERTIES.getProperty("spring.datasource.password");
     }
 
     public static Map<String, Object> getJpaProperties() {
