@@ -1,33 +1,29 @@
 package rentEasy.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import rentEasy.model.Property;
-import rentEasy.model.Review;
-import jakarta.persistence.EntityManager;
 
+import java.util.List;
 import java.util.Optional;
 
-public class PropertyRepository {
+@Repository
+public interface PropertyRepository extends JpaRepository<Property, Long> {
 
-    private final EntityManager entityManager;
+    @Override
+    @EntityGraph(attributePaths = {"host", "images", "reviewsList", "reviewsList.user"})
+    List<Property> findAll();
 
-    public PropertyRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    @Override
+    @EntityGraph(attributePaths = {"host", "images", "reviewsList", "reviewsList.user"})
+    Optional<Property> findById(Long id);
+
+    default List<Property> findAllWithRelations() {
+        return findAll();
     }
 
-    public Optional<Property> findByIdWithDetails(Long propertyId) {
-        Property property = entityManager.find(Property.class, propertyId);
-        if (property == null) {
-            return Optional.empty();
-        }
-
-        property.getHost().getId();
-        property.getImages().size();
-        property.getReviews().size();
-
-        for (Review review : property.getReviews()) {
-            review.getUser().getId();
-        }
-
-        return Optional.of(property);
+    default Optional<Property> findByIdWithRelations(Long id) {
+        return findById(id);
     }
 }

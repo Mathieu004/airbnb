@@ -1,62 +1,134 @@
 package rentEasy.service;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import rentEasy.model.Property;
-import rentEasy.model.PropertyImage;
-import rentEasy.model.Review;
+import rentEasy.model.User;
 import rentEasy.repository.PropertyRepository;
+import rentEasy.repository.UserRepository;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
+@Service
+@RequiredArgsConstructor
 public class PropertyService {
 
     private final PropertyRepository propertyRepository;
+    private final UserRepository userRepository;
 
-    public PropertyService(PropertyRepository propertyRepository) {
-        this.propertyRepository = propertyRepository;
+    @Transactional
+    public List<Property> findAll() {
+        return propertyRepository.findAllWithRelations();
     }
 
-    public PropertyDetails getPropertyDetails(Long propertyId) {
-        Property property = propertyRepository.findByIdWithDetails(propertyId)
+    @Transactional
+    public Property findById(Long propertyId) {
+        return propertyRepository.findByIdWithRelations(propertyId)
                 .orElseThrow(() -> new IllegalArgumentException("Property not found: " + propertyId));
-
-        List<PropertyDetails.ImageDetails> images = property.getImages().stream()
-                .map(this::toImageDetails)
-                .toList();
-
-        List<PropertyDetails.ReviewDetails> reviews = property.getReviews().stream()
-                .map(this::toReviewDetails)
-                .toList();
-
-        return new PropertyDetails(
-                property.getId(),
-                property.getName(),
-                property.getAddress(),
-                property.getCity(),
-                property.getCountry(),
-                property.getPricePerNight(),
-                property.getMaxGuests(),
-                property.getBedrooms(),
-                property.getBathrooms(),
-                property.getDescription(),
-                property.getIncludedFeatures(),
-                new PropertyDetails.HostDetails(
-                        property.getHost().getUsername(),
-                        property.getHost().getEmail()
-                ),
-                images,
-                reviews
-        );
     }
 
-    private PropertyDetails.ImageDetails toImageDetails(PropertyImage image) {
-        return new PropertyDetails.ImageDetails(image.getImageUrl(), image.getIsMain());
+    @Transactional
+    public Property create(Property property) {
+        property.setId(null);
+        preparePropertyRelations(property);
+        return propertyRepository.save(property);
     }
 
-    private PropertyDetails.ReviewDetails toReviewDetails(Review review) {
-        return new PropertyDetails.ReviewDetails(
-                review.getUser().getUsername(),
-                review.getRating(),
-                review.getComment()
-        );
+    @Transactional
+    public Property update(Long propertyId, Property property) {
+        Property existing = findById(propertyId);
+
+        existing.setName(property.getName());
+        existing.setAddress(property.getAddress());
+        existing.setCity(property.getCity());
+        existing.setCountry(property.getCountry());
+        existing.setDescription(property.getDescription());
+        existing.setPricePerNight(property.getPricePerNight());
+        existing.setMaxGuestnumber(property.getMaxGuestnumber());
+        existing.setBedroomNumber(property.getBedroomNumber());
+        existing.setBathroomNumber(property.getBathroomNumber());
+        existing.setHasHairDryer(property.getHasHairDryer());
+        existing.setHasWashMachine(property.getHasWashMachine());
+        existing.setHasDryerMachine(property.getHasDryerMachine());
+        existing.setHasAirConditioner(property.getHasAirConditioner());
+        existing.setHasKitchen(property.getHasKitchen());
+        existing.setHasHeater(property.getHasHeater());
+        existing.setHasOven(property.getHasOven());
+        existing.setHasCoffeeMachine(property.getHasCoffeeMachine());
+        existing.setHasTV(property.getHasTV());
+        existing.setHasWifi(property.getHasWifi());
+        existing.setHasGarden(property.getHasGarden());
+        existing.setAreAnimalsAllowed(property.getAreAnimalsAllowed());
+        existing.setCleaningOptionPrice(property.getCleaningOptionPrice());
+        existing.setType(property.getType());
+        existing.setSize(property.getSize());
+        existing.setIsActive(property.getIsActive());
+
+        if (property.getHost() != null && property.getHost().getId() != null) {
+            existing.setHost(getUserReference(property.getHost().getId()));
+        }
+
+        Set<rentEasy.model.PropertyImage> images = new LinkedHashSet<>();
+        if (property.getImages() != null) {
+            property.getImages().forEach(image -> {
+                image.setId(null);
+                image.setProperty(existing);
+                images.add(image);
+            });
+        }
+        existing.getImages().clear();
+        existing.getImages().addAll(images);
+
+        if (property.getReviewsList() != null) {
+            existing.getReviewsList().clear();
+            property.getReviewsList().forEach(review -> {
+                review.setId(null);
+                review.setProperty(existing);
+                if (review.getUser() != null && review.getUser().getId() != null) {
+                    review.setUser(getUserReference(review.getUser().getId()));
+                }
+                existing.getReviewsList().add(review);
+            });
+        }
+
+        return propertyRepository.save(existing);
+    }
+
+    @Transactional
+    public void delete(Long propertyId) {
+        if (!propertyRepository.existsById(propertyId)) {
+            throw new IllegalArgumentException("Property not found: " + propertyId);
+        }
+        propertyRepository.deleteById(propertyId);
+    }
+
+    private void preparePropertyRelations(Property property) {
+        if (property.getHost() != null && property.getHost().getId() != null) {
+            property.setHost(getUserReference(property.getHost().getId()));
+        }
+
+        if (property.getImages() != null) {
+            property.getImages().forEach(image -> {
+                image.setId(null);
+                image.setProperty(property);
+            });
+        }
+
+        if (property.getReviewsList() != null) {
+            property.getReviewsList().forEach(review -> {
+                review.setId(null);
+                review.setProperty(property);
+                if (review.getUser() != null && review.getUser().getId() != null) {
+                    review.setUser(getUserReference(review.getUser().getId()));
+                }
+            });
+        }
+    }
+
+    private User getUserReference(Long userId) {
+        return userRepository.getReferenceById(userId);
     }
 }

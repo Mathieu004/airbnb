@@ -1,36 +1,50 @@
 package rentEasy.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import rentEasy.model.Property;
+import rentEasy.service.PropertyService;
 
-import java.util.Map;
+import java.util.List;
 
+@RestController
+@RequestMapping("/api/properties")
+@RequiredArgsConstructor
 public class PropertyController {
 
-    @GetMapping("/api/test")
-    public Property load(@RequestBody Map<String, Object> payload) {
-        return null;
+    private final PropertyService propertyService;
+
+    @GetMapping
+    public List<Property> getAll() {
+        return propertyService.findAll();
     }
 
-    @GetMapping("/api/test")
-    public Property loadAll(@RequestBody Map<String, Object> payload) {
-        return null;
+    @GetMapping("/{id}")
+    public Property getById(@PathVariable Long id) {
+        return propertyService.findById(id);
     }
 
-    @PostMapping("/api/test")
-    public Property create(@RequestBody Map<String, Object> payload) {
-        return null;
+    @GetMapping("/{id}/details")
+    public Property getDetails(@PathVariable Long id) {
+        return propertyService.findById(id);
     }
 
-    @PostMapping("/api/test")
-    public Property update(@RequestBody Map<String, Object> payload) {
-        return null;
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Property create(@Valid @RequestBody Property property) {
+        return propertyService.create(property);
     }
 
-    @PostMapping("/api/test")
-    public Property delete(@RequestBody Map<String, Object> payload) {
-        return null;
+    @PutMapping("/{id}")
+    public Property update(@PathVariable Long id, @Valid @RequestBody Property property) {
+        return propertyService.update(id, property);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        propertyService.delete(id);
     }
 }

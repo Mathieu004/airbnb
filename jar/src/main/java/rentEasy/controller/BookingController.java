@@ -1,36 +1,58 @@
 package rentEasy.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import rentEasy.model.Property;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import rentEasy.controller.dto.BookingDto;
+import rentEasy.model.Booking;
+import rentEasy.service.BookingService;
 
-import java.util.Map;
+import java.util.List;
 
+@RestController
+@RequestMapping("/api/bookings")
+@RequiredArgsConstructor
 public class BookingController {
 
-    @GetMapping("/api/test")
-    public Property load(@RequestBody Map<String, Object> payload) {
-        return null;
+    private final BookingService bookingService;
+
+    @GetMapping
+    public List<BookingDto> getAll() {
+        return bookingService.findAll()
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
-    @GetMapping("/api/test")
-    public Property loadAll(@RequestBody Map<String, Object> payload) {
-        return null;
+    @GetMapping("/{id}")
+    public BookingDto getById(@PathVariable Long id) {
+        return toDto(bookingService.findById(id));
     }
 
-    @PostMapping("/api/test")
-    public Property create(@RequestBody Map<String, Object> payload) {
-        return null;
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public BookingDto create(@Valid @RequestBody Booking booking) {
+        return toDto(bookingService.create(booking));
     }
 
-    @PostMapping("/api/test")
-    public Property update(@RequestBody Map<String, Object> payload) {
-        return null;
+    @PutMapping("/{id}")
+    public BookingDto update(@PathVariable Long id, @Valid @RequestBody Booking booking) {
+        return toDto(bookingService.update(id, booking));
     }
 
-    @PostMapping("/api/test")
-    public Property delete(@RequestBody Map<String, Object> payload) {
-        return null;
+    @PatchMapping("/{id}/status")
+    public BookingDto updateStatus(@PathVariable Long id, @RequestBody Booking booking) {
+        return toDto(bookingService.partialUpdateStatus(id, booking));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        bookingService.delete(id);
+    }
+
+    private BookingDto toDto(Booking booking) {
+        return BookingDto.fromEntity(booking);
     }
 }

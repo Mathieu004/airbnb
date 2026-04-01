@@ -1,37 +1,45 @@
 package rentEasy.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import rentEasy.model.User;
+import rentEasy.service.UserService;
 
-import java.util.Map;
+import java.util.List;
 
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @GetMapping("/api/test")
-    public User load(@RequestBody Map<String, Object> payload) {
-        return null;
+    private final UserService userService;
+
+    @GetMapping
+    public List<User> getAll() {
+        return userService.findAll();
     }
 
-    @GetMapping("/api/test")
-    public User loadAll(@RequestBody Map<String, Object> payload) {
-        return null;
+    @GetMapping("/{id}")
+    public User getById(@PathVariable Long id) {
+        return userService.findById(id);
     }
 
-    @PostMapping("/api/test")
-    public User create(@RequestBody Map<String, Object> payload) {
-        return null;
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public User create(@Valid @RequestBody User user) {
+        return userService.create(user);
     }
 
-    @PostMapping("/api/test")
-    public User update(@RequestBody Map<String, Object> payload) {
-        return null;
+    @PutMapping("/{id}")
+    public User update(@PathVariable Long id, @Valid @RequestBody User user) {
+        return userService.update(id, user);
     }
 
-    @PostMapping("/api/test")
-    public User delete(@RequestBody Map<String, Object> payload) {
-        return null;
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        userService.delete(id);
     }
-
 }
