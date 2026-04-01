@@ -10,7 +10,8 @@ import rentEasy.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping({"/api/users", "/api/user"})
 @RequiredArgsConstructor
 public class UserController {
 
