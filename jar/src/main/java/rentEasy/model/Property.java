@@ -21,6 +21,11 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Property {
 
+    public enum PropertyType {
+        APARTMENT,
+        HOUSE
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -92,13 +97,14 @@ public class Property {
     private Boolean areAnimalsAllowed;
 
     @Column(name = "cleaning_option_price")
-    private Boolean cleaningOptionPrice;
+    private Integer cleaningOptionPrice;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private Boolean Type;
+    private PropertyType type;
 
     @Column(name = "size")
-    private Boolean Size;
+    private Integer Size;
 
     @Column(name = "is_active")
     private Boolean isActive;
