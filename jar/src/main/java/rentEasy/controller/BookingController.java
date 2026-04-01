@@ -11,6 +11,7 @@ import rentEasy.service.BookingService;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/bookings")
 @RequiredArgsConstructor
 public class BookingController {

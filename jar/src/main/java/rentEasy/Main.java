@@ -3,8 +3,8 @@ package rentEasy;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import rentEasy.controller.*;
+import rentEasy.controller.dto.PropertyDto;
 import rentEasy.dataBase.DataBaseConnection;
-import rentEasy.model.Property;
 import rentEasy.model.User;
 
 import java.sql.Connection;
@@ -19,7 +19,7 @@ public class Main {
                 PropertyController propertyController = context.getBean(PropertyController.class);
                 UserController userController = context.getBean(UserController.class);
 
-                Property property = propertyController.getById(1L);
+                PropertyDto property = propertyController.getById(1L);
                 User user = userController.getById(1L);
 
                 System.out.println("Property ID 1 : " + property);
