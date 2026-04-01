@@ -25,10 +25,9 @@ public class BookingService {
     public Booking update(Long bookingId, Booking booking) {
         Booking existing = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
-        existing.setCheckIn(booking.getCheckIn());
-        existing.setCheckOut(booking.getCheckOut());
+        existing.setStartDate(booking.getStartDate());
+        existing.setEndDate(booking.getEndDate());
         existing.setTotalPrice(booking.getTotalPrice());
-        existing.setStatus(booking.getStatus());
         existing.setProperty(booking.getProperty());
         existing.setGuest(booking.getGuest());
         return bookingRepository.save(existing);
@@ -46,7 +45,6 @@ public class BookingService {
     public Booking partialUpdateStatus(Long bookingId, Booking updated) {
         Booking existing = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
-        existing.setStatus(updated.getStatus());
         return bookingRepository.save(existing);
     }
 
