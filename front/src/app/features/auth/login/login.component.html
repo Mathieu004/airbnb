@@ -1,12 +1,226 @@
-<div>
-  <h2>Connexion</h2>
-  @if (error) {
-    <p>{{ error }}</p>
-  }
-  <form (ngSubmit)="onSubmit()">
-    <input [(ngModel)]="username" name="username" placeholder="Nom d'utilisateur" required />
-    <input [(ngModel)]="password" name="password" type="password" placeholder="Mot de passe" required />
-    <button type="submit">Se connecter</button>
-  </form>
-  <a routerLink="/register">Pas encore de compte ?</a>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="login.component.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com/" />
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+
+
+<div class="login-page">
+  <div class="login-wrapper">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">
+        <svg viewBox="0 0 64 64" class="brand-logo-svg">
+          <path
+            d="M10 27.5 31.1 10a1.5 1.5 0 0 1 1.8 0L54 27.5v23A3.5 3.5 0 0 1 50.5 54h-37A3.5 3.5 0 0 1 10 50.5v-23Z"
+            fill="currentColor"
+            opacity="0.96"
+          />
+          <path
+            d="M17 27 32 14l15 13"
+            fill="none"
+            stroke="#ffffff"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <rect x="24" y="29" width="7" height="7" rx="1.5" fill="#ffffff" />
+          <rect x="34" y="29" width="7" height="7" rx="1.5" fill="#ffffff" />
+          <rect x="24" y="39" width="7" height="7" rx="1.5" fill="#ffffff" />
+          <path
+            d="M42 18h5a1 1 0 0 1 1 1v12"
+            fill="none"
+            stroke="#ffffff"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <div class="brand-name">RentEasy</div>
+    </div>
+
+    <div class="hero">
+      <h1>Bienvenue sur RentEasy</h1>
+      <p>Connectez-vous à votre compte</p>
+    </div>
+
+    <div class="login-card">
+      <h2>Je me connecte en tant que</h2>
+
+      <div class="role-selector">
+        <button
+          type="button"
+          class="role-option"
+          [class.active]="selectedRole === 'administrateur'"
+          (click)="selectRole('administrateur')"
+        >
+          <svg viewBox="0 0 24 24" class="role-icon" aria-hidden="true">
+            <path
+              d="M12 3 6.5 5v5.2c0 4.2 2.6 8 5.5 9.8 2.9-1.8 5.5-5.6 5.5-9.8V5L12 3Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Administrateur</span>
+        </button>
+
+        <button
+          type="button"
+          class="role-option"
+          [class.active]="selectedRole === 'proprietaire'"
+          (click)="selectRole('proprietaire')"
+        >
+          <svg viewBox="0 0 24 24" class="role-icon" aria-hidden="true">
+            <path
+              d="M4 10.5 12 4l8 6.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M6.5 9.8V19a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9.8"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 20v-5h4v5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Propriétaire</span>
+        </button>
+
+        <button
+          type="button"
+          class="role-option"
+          [class.active]="selectedRole === 'client'"
+          (click)="selectRole('client')"
+        >
+          <svg viewBox="0 0 24 24" class="role-icon" aria-hidden="true">
+            <circle
+              cx="12"
+              cy="8"
+              r="3.3"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.9"
+            />
+            <path
+              d="M5.5 19a6.5 6.5 0 0 1 13 0"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linecap="round"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.4"
+              opacity="0.75"
+            />
+          </svg>
+          <span>Client</span>
+        </button>
+      </div>
+
+      <p class="role-description">Recherche et réservation</p>
+
+      <form class="login-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <div class="form-group">
+          <label for="username">Email</label>
+          <input
+            id="username"
+            type="email"
+            name="username"
+            placeholder="vous@exemple.com"
+            [(ngModel)]="username"
+            required
+            email
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+
+          <div class="password-field">
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              name="password"
+              placeholder="••••••••"
+              [(ngModel)]="password"
+              required
+            />
+
+            <button
+              type="button"
+              class="password-toggle"
+              [attr.aria-label]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+              (click)="togglePassword()"
+            >
+              <svg viewBox="0 0 24 24" class="eye-icon" aria-hidden="true">
+                <path
+                  d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linejoin="round"
+                />
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="3"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="remember-me">
+            <input
+              type="checkbox"
+              name="rememberMe"
+              [(ngModel)]="rememberMe"
+            />
+            <span>Se souvenir de moi</span>
+          </label>
+
+          <a routerLink="/forgot-password" class="forgot-link">Mot de passe oublié ?</a>
+        </div>
+
+        <p class="error-message" [style.display]="error ? 'block' : 'none'">
+          {{ error }}
+        </p>
+
+        <button type="submit" class="login-button">Se connecter</button>
+
+        <p class="signup-text">
+          Pas encore de compte ?
+          <a routerLink="/register" class="signup-link">S'inscrire</a>
+        </p>
+      </form>
+    </div>
+  </div>
 </div>
