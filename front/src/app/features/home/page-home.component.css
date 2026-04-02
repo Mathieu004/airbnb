@@ -106,7 +106,6 @@ img { display: block; width: 100%; height: auto; }
     opacity: 0.95;
 }
 
-/* --- 4. BARRE DE RECHERCHE --- */
 .search-bar {
     display: flex;
     align-items: center;
@@ -120,8 +119,9 @@ img { display: block; width: 100%; height: auto; }
 
 .search-field {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     padding: 8px 24px;
     flex: 1;
     text-align: left;
