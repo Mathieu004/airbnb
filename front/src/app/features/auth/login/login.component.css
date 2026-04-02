@@ -34,12 +34,15 @@
 .brand-logo {
   width: 58px;
   height: 58px;
-  color: #143d73;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.brand-logo-svg {
+.brand-logo-img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
   display: block;
 }
 
@@ -58,7 +61,7 @@
 
 .hero h1 {
   margin: 0;
-  font-size: 46px;
+  font-size: 32px;
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -67,7 +70,7 @@
 
 .hero p {
   margin: 12px 0 0;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 1.4;
   font-weight: 500;
   color: #70829c;
@@ -75,7 +78,7 @@
 
 .login-card {
   width: 100%;
-  max-width: 720px;
+  max-width: 620px;
   background: #ffffff;
   border: 1px solid #dde5ee;
   border-radius: 22px;
@@ -98,7 +101,7 @@
 }
 
 .role-option {
-  min-height: 108px;
+  min-height: 82px;
   border: 1.5px solid #dbe3ee;
   border-radius: 18px;
   background: #f7f9fc;
@@ -109,7 +112,7 @@
   justify-content: center;
   gap: 12px;
   padding: 14px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -161,12 +164,12 @@
 
 .form-group input {
   width: 100%;
-  height: 64px;
+  height: 54px;
   padding: 0 22px;
   border: 1.5px solid #dbe3ee;
   border-radius: 18px;
   background: #f7f9fc;
-  font-size: 16px;
+  font-size: 15px;
   color: #304865;
   outline: none;
   transition: all 0.2s ease;
@@ -272,12 +275,12 @@
 
 .login-button {
   width: 100%;
-  min-height: 62px;
+  min-height: 54px;
   border: none;
   border-radius: 18px;
   background: #234d79;
   color: #ffffff;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s ease;
