@@ -15,10 +15,8 @@
   <div class="login-wrapper">
     <div class="brand">
       <div class="brand-logo">
-        <img src="/logo.png" alt="RentEasy logo" class="brand-logo-img" />
+        <img src="../../../../../public/logo.png" alt="RentEasy logo" class="brand-logo-img" />
       </div>
-
-      <div class="brand-name">RentEasy</div>
     </div>
 
     <div class="hero">
@@ -186,9 +184,7 @@
           <a routerLink="/forgot-password" class="forgot-link">Mot de passe oublié ?</a>
         </div>
 
-        <p class="error-message" [style.display]="error ? 'block' : 'none'">
-          {{ error }}
-        </p>
+        <p class="error-message" style="display: none;"></p>
 
         <button type="submit" class="login-button">Se connecter</button>
 

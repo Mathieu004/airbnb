@@ -6,17 +6,17 @@
   box-sizing: border-box;
 }
 
-.login-page {
+login-page {
   min-height: 100vh;
-  padding: 26px 16px 40px;
+  padding: 32px 16px 48px;
   background: #f5f7fb;
-  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: "DM Sans", "Segoe UI", Roboto, Arial, sans-serif;
   color: #112b4c;
 }
 
 .login-wrapper {
   width: 100%;
-  max-width: 760px;
+  max-width: 560px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -27,13 +27,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 10px;
   margin-top: 0;
 }
 
 .brand-logo {
-  width: 58px;
-  height: 58px;
+  width: 70px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +47,7 @@
 }
 
 .brand-name {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1;
   color: #143d73;
@@ -55,13 +55,13 @@
 
 .hero {
   text-align: center;
-  margin-top: 24px;
-  margin-bottom: 34px;
+  margin-top: 10px;
+  margin-bottom: 18px;
 }
 
 .hero h1 {
   margin: 0;
-  font-size: 32px;
+  font-size: 30px;
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -69,7 +69,7 @@
 }
 
 .hero p {
-  margin: 12px 0 0;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 1.4;
   font-weight: 500;
@@ -78,17 +78,17 @@
 
 .login-card {
   width: 100%;
-  max-width: 620px;
+  max-width: 500px;
   background: #ffffff;
   border: 1px solid #dde5ee;
-  border-radius: 22px;
-  padding: 40px 40px 30px;
+  border-radius: 18px;
+  padding: 22px 24px 20px;
   box-shadow: 0 4px 14px rgba(16, 42, 74, 0.04);
 }
 
 .login-card h2 {
-  margin: 0 0 18px;
-  font-size: 22px;
+  margin-bottom: 12px;
+  font-size: 16px;
   line-height: 1.3;
   font-weight: 700;
   color: #112b4c;
@@ -97,22 +97,22 @@
 .role-selector {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 .role-option {
-  min-height: 82px;
+  min-height: 72px;
   border: 1.5px solid #dbe3ee;
-  border-radius: 18px;
+  border-radius: 14px;
   background: #f7f9fc;
   color: #6c7f99;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 14px;
-  font-size: 16px;
+  gap: 8px;
+  padding: 10px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -130,15 +130,15 @@
 }
 
 .role-icon {
-  width: 30px;
-  height: 30px;
+  width: 22px;
+  height: 22px;
   display: block;
 }
 
 .role-description {
-  margin: 12px 0 30px;
+  margin: 8px 0 18px;
   text-align: center;
-  font-size: 17px;
+  font-size: 13px;
   line-height: 1.4;
   color: #73859e;
 }
@@ -146,17 +146,17 @@
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 14px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .form-group label {
-  font-size: 17px;
+  font-size: 14px;
   line-height: 1.3;
   font-weight: 700;
   color: #112b4c;
@@ -164,12 +164,12 @@
 
 .form-group input {
   width: 100%;
-  height: 54px;
-  padding: 0 22px;
+  height: 48px;
+  padding: 0 16px;
   border: 1.5px solid #dbe3ee;
-  border-radius: 18px;
+  border-radius: 14px;
   background: #f7f9fc;
-  font-size: 15px;
+  font-size: 14px;
   color: #304865;
   outline: none;
   transition: all 0.2s ease;
@@ -190,16 +190,16 @@
 }
 
 .password-field input {
-  padding-right: 68px;
+  padding-right: 50px;
 }
 
 .password-toggle {
   position: absolute;
   top: 50%;
-  right: 18px;
+  right: 12px;
   transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   border: none;
   border-radius: 999px;
   background: transparent;
@@ -216,8 +216,8 @@
 }
 
 .eye-icon {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   display: block;
 }
 
@@ -239,8 +239,8 @@
 }
 
 .remember-me input {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   margin: 0;
   accent-color: #214a79;
 }
@@ -249,7 +249,7 @@
 .signup-link {
   color: #214a79;
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .forgot-link {
@@ -275,12 +275,12 @@
 
 .login-button {
   width: 100%;
-  min-height: 54px;
+  min-height: 48px;
   border: none;
-  border-radius: 18px;
+  border-radius: 14px;
   background: #234d79;
   color: #ffffff;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -363,7 +363,7 @@
   .remember-me,
   .signup-text,
   .form-group input {
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .login-button {
