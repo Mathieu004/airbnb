@@ -1,2 +1,191 @@
-<h1>Bienvenue sur Airbnb Clone</h1>
-<p>Liste des logements bientôt ici...</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentEasy</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar">
+    <a href="#" class="navbar-logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="6" fill="#1e3a5f"/>
+        <path d="M16 7L6 15v10h7v-6h6v6h7V15L16 7z" fill="white"/>
+      </svg>
+      <span>RentEasy</span>
+    </a>
+    <nav class="navbar-nav">
+      <a href="#" class="nav-link">Se connecter</a>
+      <a href="#" class="nav-btn">S'inscrire</a>
+    </nav>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <img src="/home-image.JPG" alt="Villa avec piscine vue mer" class="hero-img" />
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">Trouvez le logement idéal<br>pour votre séjour</h1>
+      <p class="hero-subtitle">Appartements, villas et studios dans les plus belles villes de France</p>
+
+      <div class="search-bar">
+        <div class="search-field">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+          <input type="text" placeholder="Destination" />
+        </div>
+        <div class="search-divider"></div>
+        <div class="search-field">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <input type="text" placeholder="Dates" />
+        </div>
+        <div class="search-divider"></div>
+        <div class="search-field">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <input type="text" placeholder="Voyageurs" />
+        </div>
+        <button class="search-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Rechercher
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LOGEMENTS POPULAIRES ===== -->
+  <section class="listings">
+    <h2 class="section-title">Logements populaires</h2>
+    <p class="section-subtitle">Nos logements les mieux notés par les voyageurs</p>
+
+    <div class="cards-grid">
+
+      <div class="card">
+        <div class="card-img-wrap">
+          <img src="/logement-paris.jpg" alt="Appartement Haussmannien" />
+          <span class="badge-type">Appartement</span>
+          <span class="badge-rating">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            5.0
+          </span>
+        </div>
+        <div class="card-body">
+          <h3>Appartement Haussmannien</h3>
+          <p class="card-location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Paris, France
+          </p>
+          <div class="card-footer">
+            <p class="card-price"><span>€185</span>/nuit</p>
+            <a href="#" class="card-btn">Réserver</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap">
+          <img src="/logement-nice.jpg" alt="Villa Méditerranée" />
+          <span class="badge-type">Villa</span>
+          <span class="badge-rating">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            4.0
+          </span>
+        </div>
+        <div class="card-body">
+          <h3>Villa Méditerranée</h3>
+          <p class="card-location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Nice, France
+          </p>
+          <div class="card-footer">
+            <p class="card-price"><span>€320</span>/nuit</p>
+            <a href="#" class="card-btn">Réserver</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== STATISTIQUES ===== -->
+  <section class="stats">
+
+    <div class="stat-item">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <strong>500+</strong>
+      <span>Logements disponibles</span>
+    </div>
+
+    <div class="stat-item">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-linecap="round" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-linecap="round" stroke-width="2.5"/></svg>
+      <strong>1000+</strong>
+      <span>Voyageurs satisfaits</span>
+    </div>
+
+    <div class="stat-item">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <strong>50+</strong>
+      <span>Villes couvertes</span>
+    </div>
+
+    <div class="stat-item">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <strong>4.8/5</strong>
+      <span>Note moyenne</span>
+    </div>
+
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-grid">
+
+      <div class="footer-brand">
+        <a href="#" class="navbar-logo footer-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="6" fill="#1e3a5f"/>
+            <path d="M16 7L6 15v10h7v-6h6v6h7V15L16 7z" fill="white"/>
+          </svg>
+          <span>RentEasy</span>
+        </a>
+        <p class="footer-desc">La plateforme de location courte durée simple et moderne.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Découvrir</h4>
+        <ul>
+          <li><a href="#">Logements</a></li>
+          <li><a href="#">Destinations</a></li>
+          <li><a href="#">Avis voyageurs</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Propriétaires</h4>
+        <ul>
+          <li><a href="#">Devenir hôte</a></li>
+          <li><a href="#">Gestion des logements</a></li>
+          <li><a href="#">Aide</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Suivez-nous</h4>
+        <div class="social-links">
+          <a href="#" class="social-btn">F</a>
+          <a href="#" class="social-btn">I</a>
+          <a href="#" class="social-btn">T</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 RentEasy. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
