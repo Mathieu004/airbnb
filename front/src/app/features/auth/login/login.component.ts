@@ -15,8 +15,17 @@ export class LoginComponent {
   password = '';
   error = '';
   rememberMe: boolean = false;
+  showPassword: boolean = false;        
+  selectedRole: string = 'client';
 
   constructor(private auth: AuthService, private router: Router) {}
+  togglePassword() {                   
+    this.showPassword = !this.showPassword;
+  }
+
+  selectRole(role: string) {           
+    this.selectedRole = role;
+  }
 
   onSubmit() {
     this.auth.login(this.username, this.password).subscribe({

@@ -1,8 +1,66 @@
-<div>
-  <h2>Propriétés disponibles</h2>
-  <div *ngFor="let p of properties">
-    <h3>{{ p.name }}</h3>
-    <p>{{ p.city }}, {{ p.country }} — {{ p.pricePerNight }}€/nuit</p>
-    <a [routerLink]="['/properties', p.id]">Voir le détail</a>
+<!-- property-list.component.html -->
+<div class="content">
+
+  <div class="page-header">
+    <h1>Explorer les logements</h1>
+    <p>Trouvez le logement idéal pour votre séjour</p>
   </div>
+
+  <!-- BARRE DE RECHERCHE + FILTRES -->
+  <div class="filters-bar">
+    <div class="search-input">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" placeholder="Rechercher par nom ou ville..." [(ngModel)]="searchTerm" />
+    </div>
+
+    <button class="filter-icon-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="filter-pills">
+      <button class="pill" [class.active]="activeFilter === 'Tous'" (click)="setFilter('Tous')">Tous</button>
+      <button class="pill" [class.active]="activeFilter === 'Appartement'" (click)="setFilter('Appartement')">Appartement</button>
+      <button class="pill" [class.active]="activeFilter === 'Villa'" (click)="setFilter('Villa')">Villa</button>
+      <button class="pill" [class.active]="activeFilter === 'Studio'" (click)="setFilter('Studio')">Studio</button>
+      <button class="pill" [class.active]="activeFilter === 'Maison'" (click)="setFilter('Maison')">Maison</button>
+    </div>
+  </div>
+
+  <!-- GRILLE DE CARTES -->
+  <div class="cards-grid">
+    <div class="card" *ngFor="let property of filteredProperties">
+      <div class="card-img-wrap">
+        <img [src]="property.image" [alt]="property.name" />
+        <span class="badge-type">{{ property.type }}</span>
+        <span class="badge-rating">⭐ {{ property.rating }}</span>
+      </div>
+      <div class="card-body">
+        <h3>{{ property.name }}</h3>
+        <p class="card-location">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          {{ property.location }}
+        </p>
+        <div class="card-specs">
+          <span>🛏 {{ property.beds }}</span>
+          <span>🚿 {{ property.baths }}</span>
+          <span>👥 {{ property.guests }}</span>
+          <span>📐 {{ property.surface }}m²</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-amenities">
+            <span class="amenity" *ngFor="let a of property.amenities">{{ a }}</span>
+          </div>
+          <p class="card-price"><strong>€{{ property.price }}</strong>/nuit</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
