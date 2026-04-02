@@ -14,6 +14,7 @@ export class LoginComponent {
   username = '';
   password = '';
   error = '';
+  rememberMe: boolean = false;
 
   constructor(private auth: AuthService, private router: Router) {}
 
