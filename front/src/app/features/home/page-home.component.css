@@ -1,10 +1,3 @@
-/* ============================================
-   RentEasy — style.css
-   Police : Inter (Google Fonts)
-   Bleu principal : #1e3a5f
-   ============================================ */
-
-/* --- RESET --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter', sans-serif; color: #111827; background: #fff; }
 a { text-decoration: none; color: inherit; }
@@ -12,9 +5,6 @@ ul { list-style: none; }
 img { display: block; width: 100%; }
 
 
-/* ============================================
-   NAVBAR
-   ============================================ */
 .navbar {
   display: flex;
   align-items: center;
@@ -64,9 +54,7 @@ img { display: block; width: 100%; }
 .nav-btn:hover { background: #162d4a; }
 
 
-/* ============================================
-   HERO
-   ============================================ */
+
 .hero {
   position: relative;
   height: 560px;
@@ -76,7 +64,7 @@ img { display: block; width: 100%; }
   overflow: hidden;
 }
 
-/* Image de fond */
+
 .hero-img {
   position: absolute;
   inset: 0;
@@ -93,7 +81,6 @@ img { display: block; width: 100%; }
   background: rgba(0, 0, 0, 0.48);
 }
 
-/* Contenu centré */
 .hero-content {
   position: relative;
   z-index: 2;
@@ -119,9 +106,6 @@ img { display: block; width: 100%; }
 }
 
 
-/* ============================================
-   BARRE DE RECHERCHE
-   ============================================ */
 .search-bar {
   display: flex;
   align-items: center;
@@ -134,7 +118,6 @@ img { display: block; width: 100%; }
   padding: 4px 4px 4px 0;
 }
 
-/* Chaque champ */
 .search-field {
   display: flex;
   align-items: center;
@@ -154,7 +137,6 @@ img { display: block; width: 100%; }
 }
 .search-field input::placeholder { color: #9ca3af; }
 
-/* Séparateur vertical */
 .search-divider {
   width: 1px;
   height: 26px;
@@ -162,7 +144,6 @@ img { display: block; width: 100%; }
   flex-shrink: 0;
 }
 
-/* Bouton Rechercher */
 .search-btn {
   display: flex;
   align-items: center;
@@ -183,9 +164,7 @@ img { display: block; width: 100%; }
 .search-btn:hover { background: #162d4a; }
 
 
-/* ============================================
-   LOGEMENTS POPULAIRES
-   ============================================ */
+
 .listings {
   background: #f3f4f6;
   padding: 64px 24px;
@@ -205,7 +184,6 @@ img { display: block; width: 100%; }
   margin-bottom: 48px;
 }
 
-/* Grille 2 colonnes centrée */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -215,9 +193,6 @@ img { display: block; width: 100%; }
 }
 
 
-/* ============================================
-   CARTE LOGEMENT
-   ============================================ */
 .card {
   background: #fff;
   border-radius: 16px;
@@ -226,7 +201,6 @@ img { display: block; width: 100%; }
   text-align: left;
 }
 
-/* Zone image */
 .card-img-wrap {
   position: relative;
   height: 210px;
@@ -238,7 +212,6 @@ img { display: block; width: 100%; }
   object-fit: cover;
 }
 
-/* Badge type (ex: "Appartement") — en haut à gauche */
 .badge-type {
   position: absolute;
   top: 12px;
@@ -251,7 +224,6 @@ img { display: block; width: 100%; }
   border-radius: 999px;
 }
 
-/* Badge note étoile — en haut à droite */
 .badge-rating {
   position: absolute;
   top: 12px;
@@ -267,7 +239,6 @@ img { display: block; width: 100%; }
   gap: 4px;
 }
 
-/* Corps de la carte */
 .card-body {
   padding: 18px 20px 20px;
 }
@@ -279,7 +250,6 @@ img { display: block; width: 100%; }
   margin-bottom: 8px;
 }
 
-/* Localisation */
 .card-location {
   display: flex;
   align-items: center;
@@ -289,7 +259,6 @@ img { display: block; width: 100%; }
   margin-bottom: 16px;
 }
 
-/* Pied : prix + bouton */
 .card-footer {
   display: flex;
   align-items: center;
@@ -307,7 +276,6 @@ img { display: block; width: 100%; }
   color: #111827;
 }
 
-/* Bouton Réserver */
 .card-btn {
   background: #1e3a5f;
   color: #fff;
@@ -320,9 +288,7 @@ img { display: block; width: 100%; }
 .card-btn:hover { background: #162d4a; }
 
 
-/* ============================================
-   STATISTIQUES
-   ============================================ */
+
 .stats {
   background: #1e3a5f;
   padding: 56px 24px;
@@ -352,9 +318,7 @@ img { display: block; width: 100%; }
 }
 
 
-/* ============================================
-   FOOTER
-   ============================================ */
+
 .footer {
   background: #fff;
   padding: 52px 40px 0;
@@ -371,7 +335,6 @@ img { display: block; width: 100%; }
   border-bottom: 1px solid #e5e7eb;
 }
 
-/* Colonne marque */
 .footer-brand .footer-logo {
   display: flex;
   align-items: center;
@@ -389,7 +352,6 @@ img { display: block; width: 100%; }
   max-width: 210px;
 }
 
-/* Colonnes liens */
 .footer-col h4 {
   font-size: 0.9rem;
   font-weight: 700;
@@ -406,7 +368,6 @@ img { display: block; width: 100%; }
 }
 .footer-col ul a:hover { color: #1e3a5f; }
 
-/* Boutons réseaux sociaux : cercles gris avec lettre */
 .social-links {
   display: flex;
   gap: 8px;
@@ -439,9 +400,7 @@ img { display: block; width: 100%; }
 }
 
 
-/* ============================================
-   RESPONSIVE
-   ============================================ */
+
 @media (max-width: 768px) {
   .hero-title { font-size: 1.9rem; }
   .cards-grid { grid-template-columns: 1fr; max-width: 440px; }
