@@ -1,272 +1,281 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RentEasy - Inscription</title>
-  <meta
-    name="description"
-    content="Créez votre compte RentEasy pour gérer vos locations courte durée."
-  />
-  <link rel="stylesheet" href="register.component.css" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RentEasy - Inscription</title>
+    <meta
+      name="description"
+      content="Créez votre compte RentEasy pour gérer vos locations courte durée."
+    />
+    <link rel="stylesheet" href="register.component.css" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com/" />
-  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-</head>
-<body>
-  <div class="register-page">
-    <div class="register-wrapper">
-      <div class="brand">
-        <div class="brand-logo">
-          <!-- Change only the src if your logo is stored in another folder -->
-          <img src="/logo.png" alt="RentEasy logo" class="brand-logo-img" />
-        </div>
-      </div>
-
-      <div class="hero">
-        <h1>Bienvenue sur RentEasy</h1>
-        <p>Créez votre compte</p>
-      </div>
-
-      <div class="register-card">
-        <h2>Je m’inscris en tant que</h2>
-
-        <div class="role-selector">
-          <button type="button" class="role-option active" data-role="administrateur">
-            <svg viewBox="0 0 24 24" class="role-icon" aria-hidden="true">
-              <path
-                d="M12 3 6.5 5v5.2c0 4.2 2.6 8 5.5 9.8 2.9-1.8 5.5-5.6 5.5-9.8V5L12 3Z"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.9"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <span>Administrateur</span>
-          </button>
-
-          <button type="button" class="role-option" data-role="proprietaire">
-            <svg viewBox="0 0 24 24" class="role-icon" aria-hidden="true">
-              <path
-                d="M4 10.5 12 4l8 6.5"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.9"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M6.5 9.8V19a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9.8"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.9"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M10 20v-5h4v5"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.9"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <span>Propriétaire</span>
-          </button>
-
-          <button type="button" class="role-option" data-role="client">
-            <svg viewBox="0 0 24 24" class="role-icon" aria-hidden="true">
-              <circle
-                cx="12"
-                cy="8"
-                r="3.3"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.9"
-              />
-              <path
-                d="M5.5 19a6.5 6.5 0 0 1 13 0"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.9"
-                stroke-linecap="round"
-              />
-              <circle
-                cx="12"
-                cy="12"
-                r="9"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.4"
-                opacity="0.75"
-              />
-            </svg>
-            <span>Client</span>
-          </button>
+    <link rel="preconnect" href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="register-page">
+      <div class="register-wrapper">
+        <div class="brand">
+          <div class="brand-logo">
+            <!-- Change only the src if your logo is stored in another folder -->
+            <img src="/logo.png" alt="RentEasy logo" class="brand-logo-img" />
+          </div>
         </div>
 
-        <p class="role-description">Choisissez votre profil pour continuer</p>
+        <div class="hero">
+          <h1>Bienvenue sur RentEasy</h1>
+          <p>Créez votre compte</p>
+        </div>
 
-        <form class="register-form">
-          <input type="hidden" id="selectedRole" name="role" value="administrateur" />
+        <div class="register-card">
+          <h2>Je m’inscris en tant que</h2>
 
-          <div class="form-group">
-            <label for="firstName">Prénom</label>
-            <input
-              id="firstName"
-              type="text"
-              name="firstName"
-              placeholder="Votre prénom"
-              required
-            />
+          <div class="role-selector">
+            <button
+              type="button"
+              class="role-option active"
+              data-role="administrateur"
+            >
+              <svg viewBox="0 0 24 24" class="role-icon" aria-hidden="true">
+                <path
+                  d="M12 3 6.5 5v5.2c0 4.2 2.6 8 5.5 9.8 2.9-1.8 5.5-5.6 5.5-9.8V5L12 3Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span>Administrateur</span>
+            </button>
+
+            <button type="button" class="role-option" data-role="proprietaire">
+              <svg viewBox="0 0 24 24" class="role-icon" aria-hidden="true">
+                <path
+                  d="M4 10.5 12 4l8 6.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M6.5 9.8V19a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9.8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M10 20v-5h4v5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span>Propriétaire</span>
+            </button>
+
+            <button type="button" class="role-option" data-role="client">
+              <svg viewBox="0 0 24 24" class="role-icon" aria-hidden="true">
+                <circle
+                  cx="12"
+                  cy="8"
+                  r="3.3"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                />
+                <path
+                  d="M5.5 19a6.5 6.5 0 0 1 13 0"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                />
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  opacity="0.75"
+                />
+              </svg>
+              <span>Client</span>
+            </button>
           </div>
 
-          <div class="form-group">
-            <label for="lastName">Nom</label>
+          <p class="role-description">Choisissez votre profil pour continuer</p>
+
+          <form class="register-form">
             <input
-              id="lastName"
-              type="text"
-              name="lastName"
-              placeholder="Votre nom"
-              required
+              type="hidden"
+              id="selectedRole"
+              name="role"
+              value="administrateur"
             />
-          </div>
 
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              placeholder="vous@exemple.com"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="password">Mot de passe</label>
-
-            <div class="password-field">
+            <div class="form-group">
+              <label for="firstName">Prénom</label>
               <input
-                id="password"
-                type="password"
-                name="password"
-                placeholder="••••••••"
+                id="firstName"
+                type="text"
+                name="firstName"
+                placeholder="Votre prénom"
                 required
               />
-
-              <button
-                type="button"
-                class="password-toggle"
-                aria-label="Afficher le mot de passe"
-                onclick="togglePasswordVisibility('password', this)"
-              >
-                <svg viewBox="0 0 24 24" class="eye-icon" aria-hidden="true">
-                  <path
-                    d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.9"
-                    stroke-linejoin="round"
-                  />
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="3"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.9"
-                  />
-                </svg>
-              </button>
             </div>
-          </div>
 
-          <div class="form-group">
-            <label for="confirmPassword">Confirmer le mot de passe</label>
-
-            <div class="password-field">
+            <div class="form-group">
+              <label for="lastName">Nom</label>
               <input
-                id="confirmPassword"
-                type="password"
-                name="confirmPassword"
-                placeholder="••••••••"
+                id="lastName"
+                type="text"
+                name="lastName"
+                placeholder="Votre nom"
                 required
               />
-
-              <button
-                type="button"
-                class="password-toggle"
-                aria-label="Afficher le mot de passe"
-                onclick="togglePasswordVisibility('confirmPassword', this)"
-              >
-                <svg viewBox="0 0 24 24" class="eye-icon" aria-hidden="true">
-                  <path
-                    d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.9"
-                    stroke-linejoin="round"
-                  />
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="3"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.9"
-                  />
-                </svg>
-              </button>
             </div>
-          </div>
 
-          <div class="form-row terms-row">
-            <label class="remember-me">
-              <input type="checkbox" name="acceptTerms" required />
-              <span>J’accepte les conditions d’utilisation</span>
-            </label>
-          </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="vous@exemple.com"
+                required
+              />
+            </div>
 
-          <p class="error-message" style="display: none;"></p>
+            <div class="form-group">
+              <label for="password">Mot de passe</label>
 
-          <button type="submit" class="register-button">S’inscrire</button>
+              <div class="password-field">
+                <input
+                  id="password"
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  required
+                />
 
-          <p class="signup-text">
-            Vous avez déjà un compte ?
-            <a href="login.component.html" class="signup-link">Se connecter</a>
-          </p>
-        </form>
+                <button
+                  type="button"
+                  class="password-toggle"
+                  aria-label="Afficher le mot de passe"
+                  onclick="togglePasswordVisibility('password', this)"
+                >
+                  <svg viewBox="0 0 24 24" class="eye-icon" aria-hidden="true">
+                    <path
+                      d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.9"
+                      stroke-linejoin="round"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="3"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.9"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirmer le mot de passe</label>
+
+              <div class="password-field">
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="••••••••"
+                  required
+                />
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  aria-label="Afficher le mot de passe"
+                  onclick="togglePasswordVisibility('confirmPassword', this)"
+                >
+                  <svg viewBox="0 0 24 24" class="eye-icon" aria-hidden="true">
+                    <path
+                      d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.9"
+                      stroke-linejoin="round"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="3"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.9"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-row terms-row">
+              <label class="remember-me">
+                <input type="checkbox" name="acceptTerms" required />
+                <span>J’accepte les conditions d’utilisation</span>
+              </label>
+            </div>
+
+            <p class="error-message" style="display: none"></p>
+
+            <button type="submit" class="register-button">S’inscrire</button>
+
+            <p class="signup-text">
+              Vous avez déjà un compte ?
+              <a href="/login" class="signup-link">Se connecter</a>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    const roleButtons = document.querySelectorAll(".role-option");
-    const selectedRoleInput = document.getElementById("selectedRole");
+    <script>
+      const roleButtons = document.querySelectorAll(".role-option");
+      const selectedRoleInput = document.getElementById("selectedRole");
 
-    roleButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        roleButtons.forEach((btn) => btn.classList.remove("active"));
-        button.classList.add("active");
-        selectedRoleInput.value = button.dataset.role;
+      roleButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          roleButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          selectedRoleInput.value = button.dataset.role;
+        });
       });
-    });
 
-    function togglePasswordVisibility(inputId, button) {
-      const input = document.getElementById(inputId);
-      if (!input) return;
+      function togglePasswordVisibility(inputId, button) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
 
-      const isHidden = input.type === "password";
-      input.type = isHidden ? "text" : "password";
-      button.setAttribute(
-        "aria-label",
-        isHidden ? "Masquer le mot de passe" : "Afficher le mot de passe"
-      );
-    }
-  </script>
-</body>
+        const isHidden = input.type === "password";
+        input.type = isHidden ? "text" : "password";
+        button.setAttribute(
+          "aria-label",
+          isHidden ? "Masquer le mot de passe" : "Afficher le mot de passe",
+        );
+      }
+    </script>
+  </body>
 </html>
