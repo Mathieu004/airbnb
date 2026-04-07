@@ -15,21 +15,21 @@ export class LoginComponent {
   password = '';
   error = '';
   rememberMe: boolean = false;
-  showPassword: boolean = false;        
+  showPassword: boolean = false;
   selectedRole: string = 'client';
 
   constructor(private auth: AuthService, private router: Router) {}
-  togglePassword() {                   
+  togglePassword() {
     this.showPassword = !this.showPassword;
   }
 
-  selectRole(role: string) {           
+  selectRole(role: string) {
     this.selectedRole = role;
   }
 
   onSubmit() {
     this.auth.login(this.username, this.password).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
+      next: () => this.router.navigate(['/explorar']),
       error: () => this.error = 'Identifiants incorrects'
     });
   }

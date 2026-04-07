@@ -33,5 +33,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
-  { path: '**', redirectTo: '' }
+  {
+    path: 'explorar',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/Explorar').then(m => m.ExplorarComponent)
+  },
 ];
