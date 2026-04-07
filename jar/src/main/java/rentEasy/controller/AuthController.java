@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import rentEasy.service.AuthService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {

@@ -11,7 +11,6 @@ import rentEasy.service.ReviewService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
 public class ReviewController {

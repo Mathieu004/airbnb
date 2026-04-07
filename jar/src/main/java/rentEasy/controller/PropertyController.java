@@ -11,7 +11,6 @@ import rentEasy.service.PropertyService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping({"/api/properties", "/api/property"})
 @RequiredArgsConstructor
 public class PropertyController {
