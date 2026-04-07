@@ -39,4 +39,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/Explorar').then(m => m.ExplorarComponent)
   },
+  {
+    path: 'bookings',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/bookings/bookings').then(m => m.BookingsComponent)
+  },
 ];
