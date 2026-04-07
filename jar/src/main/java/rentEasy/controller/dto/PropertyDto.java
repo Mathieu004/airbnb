@@ -11,6 +11,7 @@ import java.util.Objects;
 
 public record PropertyDto(
         Long id,
+        String propertyType,
         String name,
         String address,
         String city,
@@ -40,6 +41,7 @@ public record PropertyDto(
 
         return new PropertyDto(
                 property.getId(),
+                property.getType() == null ? null : property.getType().name().toLowerCase(),
                 property.getName(),
                 property.getAddress(),
                 property.getCity(),

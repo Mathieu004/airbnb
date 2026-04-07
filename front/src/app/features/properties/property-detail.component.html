@@ -1,10 +1,90 @@
-<div *ngIf="property">
-  <h2>{{ property.name }}</h2>
-  <p>{{ property.city }}, {{ property.country }}</p>
-  <p>{{ property.description }}</p>
-  <p>{{ property.pricePerNight }}€/nuit · {{ property.bedrooms }} chambres · {{ property.bathrooms }} sdb</p>
-  <p>Hôte : {{ property.host.username }}</p>
-  <div *ngFor="let review of property.reviews">
-    <strong>{{ review.username }}</strong> — {{ review.rating }}/5 : {{ review.comment }}
+<section class="property-detail">
+  <div *ngIf="isLoading" class="property-detail__state">
+    Chargement du logement...
   </div>
-</div>
+
+  <div *ngIf="!isLoading && errorMessage" class="property-detail__state property-detail__state--error">
+    {{ errorMessage }}
+  </div>
+
+  <ng-container *ngIf="!isLoading && property">
+    <div class="property-detail__hero">
+      <img [src]="mainImage" [alt]="property.name">
+    </div>
+
+    <header class="property-detail__header">
+      <div>
+        <h1>{{ property.name }}</h1>
+        <p class="property-detail__location">
+          {{ property.address || property.city || 'Adresse non renseignee' }}, {{ property.country || 'Pays inconnu' }}
+        </p>
+        <div class="property-detail__stats">
+          <span>{{ property.bedrooms }} chambres</span>
+          <span>{{ property.bathrooms }} SDB</span>
+          <span>{{ property.maxGuests }} voyageurs</span>
+        </div>
+      </div>
+      <div class="property-detail__rating">
+        ⭐ {{ ratingLabel }}
+      </div>
+    </header>
+
+    <div class="property-detail__content">
+      <div class="property-detail__main">
+        <article class="property-card">
+          <h2>Description</h2>
+          <p>{{ property.description || 'Ce logement n\'a pas encore de description detaillee.' }}</p>
+        </article>
+
+        <article class="property-card">
+          <h2>Equipements</h2>
+          <div class="property-detail__amenities">
+            <div *ngFor="let amenity of amenities">✔ {{ amenity }}</div>
+            <div *ngIf="!amenities.length" class="property-detail__amenities-empty">
+              Aucun equipement specifique renseigne.
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="property-detail__sidebar">
+        <div class="booking-card">
+          <div class="booking-card__price">
+            {{ property.pricePerNight | currency:'EUR':'symbol':'1.0-0' }} <span>/ nuit</span>
+          </div>
+          <p class="booking-card__note">Menage inclus</p>
+
+          <label>
+            Arrivee
+            <input type="date">
+          </label>
+          <label>
+            Depart
+            <input type="date">
+          </label>
+          <label>
+            Voyageurs
+            <select>
+              <option *ngFor="let count of getGuestOptions()">
+                {{ count }} voyageur{{ count > 1 ? 's' : '' }}
+              </option>
+            </select>
+          </label>
+
+          <button type="button" class="booking-card__cta">
+            Reserver
+          </button>
+          <button type="button" class="booking-card__secondary">
+            Contacter l'hote
+          </button>
+        </div>
+
+        <div class="host-card" *ngIf="property.host">
+          <p class="host-card__label">Hote</p>
+          <p class="host-card__name">{{ property.host.username }}</p>
+          <p class="host-card__email">{{ property.host.email }}</p>
+        </div>
+      </aside>
+    </div>
+  </ng-container>
+</section>

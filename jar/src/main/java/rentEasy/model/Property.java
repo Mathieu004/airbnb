@@ -23,7 +23,9 @@ public class Property {
 
     public enum PropertyType {
         APARTMENT,
-        HOUSE
+        HOUSE,
+        STUDIO,
+        VILLA
     }
 
     @Id

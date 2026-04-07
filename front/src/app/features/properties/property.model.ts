@@ -16,6 +16,7 @@ export interface ReviewDetails {
 
 export interface Property {
   id: number;
+  propertyType?: string | null;
   name: string;
   address: string;
   city: string;
@@ -26,7 +27,7 @@ export interface Property {
   bathrooms: number;
   description: string;
   includedFeatures: string;
-  host: HostDetails;
-  images: ImageDetails[];
-  reviews: ReviewDetails[];
+  host?: HostDetails | null;
+  images?: ImageDetails[] | null;
+  reviews?: ReviewDetails[] | null;
 }

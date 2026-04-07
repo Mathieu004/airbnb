@@ -1,4 +1,92 @@
-<div style="padding: 40px;">
-  <h1>Page Explorer</h1>
-  <p>La page fonctionne correctement </p>
+<div class="explorar">
+  <header class="explorar__toolbar">
+    <div class="global-search">
+      <span class="global-search__icon">🔍</span>
+      <input type="search"
+             placeholder="Rechercher..."
+             [(ngModel)]="globalSearchTerm" />
+    </div>
+    <div class="toolbar-user">
+      <button type="button"
+              class="notif-btn"
+              aria-label="Notifications">
+        🔔
+        <span class="notif-dot"></span>
+      </button>
+      <div class="toolbar-user__info">
+        <div class="toolbar-user__avatar">{{ getInitials(currentUser) }}</div>
+        <div>
+          <div class="toolbar-user__name">{{ currentUser }}</div>
+          <div class="toolbar-user__role">Client</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="explorar__filters">
+    <h1>Explorer les logements</h1>
+    <p class="explorar__subtitle">Trouvez le logement ideal pour votre sejour</p>
+    <div class="filters-row">
+<!--      <div class="filters-row__input">-->
+<!--        <span>🔍</span>-->
+<!--        <input type="search"-->
+<!--               placeholder="Rechercher par nom ou ville..."-->
+<!--               [(ngModel)]="searchTerm" />-->
+<!--      </div>-->
+<!--      <button type="button"-->
+<!--              class="filters-row__icon"-->
+<!--              (click)="refresh()"-->
+<!--              [disabled]="isLoading">-->
+<!--        ☰-->
+<!--      </button>-->
+    </div>
+    <div class="filters-row__pills">
+      <button type="button"
+              *ngFor="let filter of filters"
+              [class.active]="activeFilter === filter"
+              (click)="setFilter(filter)">
+        {{ filter }}
+      </button>
+    </div>
+  </section>
+
+  <section *ngIf="isLoading" class="explorar__state">
+    Chargement des logements...
+  </section>
+
+  <section *ngIf="!isLoading && errorMessage" class="explorar__state explorar__state--error">
+    {{ errorMessage }}
+  </section>
+
+  <section *ngIf="!isLoading && !errorMessage && filteredProperties.length === 0"
+           class="explorar__state">
+    Aucun logement ne correspond a votre recherche pour le moment.
+  </section>
+
+  <div class="explorar__grid"
+       *ngIf="!isLoading && !errorMessage && filteredProperties.length">
+    <article class="property-card"
+             *ngFor="let property of filteredProperties"
+             [routerLink]="['/properties', property.id]">
+      <div class="property-card__media">
+        <img [src]="getMainImage(property)" [alt]="property.name" />
+        <span class="property-card__type">{{ getDisplayType(property) }}</span>
+        <span class="property-card__badge">{{ getAverageRating(property) }}</span>
+      </div>
+      <div class="property-card__body">
+        <div class="property-card__header">
+          <h2>{{ property.name }}</h2>
+          <p>{{ property.city }}, {{ property.country }}</p>
+        </div>
+        <p class="property-card__description">{{ property.description }}</p>
+        <div class="property-card__meta">
+          <span>{{ property.bedrooms }} ch - {{ property.bathrooms }} sdb - {{ property.maxGuests }} voyageurs</span>
+          <span class="property-card__price">{{ property.pricePerNight | currency:'EUR':'symbol':'1.0-0' }}/nuit</span>
+        </div>
+        <div class="property-card__host">
+          Hote : <strong>{{ property.host?.username || 'non renseigne' }}</strong>
+        </div>
+      </div>
+    </article>
+  </div>
 </div>
