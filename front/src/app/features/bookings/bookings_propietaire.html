@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentEasy - Réservations</title>
+
+  <link rel="stylesheet" href="bookings_propietaire.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com/" />
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <main class="booking-page">
+    <div class="booking-container">
+      <header class="page-header">
+        <h1>Réservations</h1>
+        <p>5 réservations au total</p>
+      </header>
+
+      <section class="booking-toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+            <path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+          <input type="text" placeholder="Rechercher des réservations..." />
+        </div>
+
+        <div class="filter-group">
+          <button type="button" class="filter-icon-button" aria-label="Filtres">
+            <svg viewBox="0 0 24 24" class="filter-icon" aria-hidden="true">
+              <path d="M4 6h16l-6 7v5l-4-2v-3L4 6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+
+          <button type="button" class="filter-pill active">All</button>
+          <button type="button" class="filter-pill">Pending</button>
+          <button type="button" class="filter-pill">Confirmed</button>
+          <button type="button" class="filter-pill">Cancelled</button>
+          <button type="button" class="filter-pill">Completed</button>
+        </div>
+      </section>
+
+      <section class="reservations-list">
+        <article class="reservation-card">
+          <div class="reservation-left">
+            <div class="guest-avatar">SM</div>
+
+            <div class="reservation-info">
+              <h2>Sophie Martin</h2>
+              <p>Appartement Haussmannien</p>
+            </div>
+          </div>
+
+          <div class="reservation-right">
+            <div class="reservation-meta">
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+                  <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>2026-04-02 → 2026-04-06</span>
+              </div>
+
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+                  <circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+                  <path d="M4 19a5 5 0 0 1 10 0M13 19a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>2</span>
+              </div>
+
+              <span class="status confirmed">confirmed</span>
+            </div>
+
+            <div class="reservation-price">€740</div>
+          </div>
+        </article>
+
+        <article class="reservation-card">
+          <div class="reservation-left">
+            <div class="guest-avatar">JW</div>
+
+            <div class="reservation-info">
+              <h2>James Wilson</h2>
+              <p>Villa Méditerranée</p>
+            </div>
+          </div>
+
+          <div class="reservation-right">
+            <div class="reservation-meta">
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+                  <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>2026-04-05 → 2026-04-12</span>
+              </div>
+
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+                  <circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+                  <path d="M4 19a5 5 0 0 1 10 0M13 19a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>6</span>
+              </div>
+
+              <span class="status pending">pending</span>
+            </div>
+
+            <div class="reservation-price">€2240</div>
+          </div>
+        </article>
+
+        <article class="reservation-card">
+          <div class="reservation-left">
+            <div class="guest-avatar">MD</div>
+
+            <div class="reservation-info">
+              <h2>Marie Dupont</h2>
+              <p>Appartement Haussmannien</p>
+            </div>
+          </div>
+
+          <div class="reservation-right">
+            <div class="reservation-meta">
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+                  <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>2026-04-10 → 2026-04-13</span>
+              </div>
+
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+                  <circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+                  <path d="M4 19a5 5 0 0 1 10 0M13 19a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>3</span>
+              </div>
+
+              <span class="status confirmed">confirmed</span>
+            </div>
+
+            <div class="reservation-price">€555</div>
+          </div>
+        </article>
+
+        <article class="reservation-card">
+          <div class="reservation-left">
+            <div class="guest-avatar">TA</div>
+
+            <div class="reservation-info">
+              <h2>Tom Anderson</h2>
+              <p>Studio Presqu'île</p>
+            </div>
+          </div>
+
+          <div class="reservation-right">
+            <div class="reservation-meta">
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+                  <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>2026-03-28 → 2026-03-31</span>
+              </div>
+
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+                  <circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+                  <path d="M4 19a5 5 0 0 1 10 0M13 19a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>1</span>
+              </div>
+
+              <span class="status completed">completed</span>
+            </div>
+
+            <div class="reservation-price">€285</div>
+          </div>
+        </article>
+
+        <article class="reservation-card">
+          <div class="reservation-left">
+            <div class="guest-avatar">ER</div>
+
+            <div class="reservation-info">
+              <h2>Elena Rossi</h2>
+              <p>Villa Méditerranée</p>
+            </div>
+          </div>
+
+          <div class="reservation-right">
+            <div class="reservation-meta">
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+                  <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>2026-04-15 → 2026-04-20</span>
+              </div>
+
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+                  <circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+                  <path d="M4 19a5 5 0 0 1 10 0M13 19a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>4</span>
+              </div>
+
+              <span class="status cancelled">cancelled</span>
+            </div>
+
+            <div class="reservation-price">€1600</div>
+          </div>
+        </article>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
