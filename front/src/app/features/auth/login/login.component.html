@@ -1,32 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="login.component.css" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="login.component.css" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com/" />
-  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-</head>
+    <link rel="preconnect" href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
-  <div class="login-page">
-    <div class="login-wrapper">
-      <div class="brand">
-        <div class="brand-logo">
-          <img src="/logo.png" alt="RentEasy logo" class="brand-logo-img" />
+  <body>
+    <div class="login-page">
+      <div class="login-wrapper">
+        <div class="brand">
+          <div class="brand-logo">
+            <img src="/logo.png" alt="RentEasy logo" class="brand-logo-img" />
+          </div>
         </div>
-      </div>
 
-      <div class="hero">
-        <h1>Bienvenue sur RentEasy</h1>
-        <p>Connectez-vous à votre compte</p>
-      </div>
-
+        <div class="hero">
+          <h1>Bienvenue sur RentEasy</h1>
+          <p>Connectez-vous à votre compte</p>
+        </div>
 
         <form class="login-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
           <div class="form-group">
@@ -58,7 +57,11 @@
               <button
                 type="button"
                 class="password-toggle"
-                [attr.aria-label]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+                [attr.aria-label]="
+                  showPassword
+                    ? 'Masquer le mot de passe'
+                    : 'Afficher le mot de passe'
+                "
                 (click)="togglePassword()"
               >
                 <svg viewBox="0 0 24 24" class="eye-icon" aria-hidden="true">
@@ -92,10 +95,12 @@
               <span>Se souvenir de moi</span>
             </label>
 
-            <a routerLink="/forgot-password" class="forgot-link">Mot de passe oublié ?</a>
+            <a routerLink="/forgot-password" class="forgot-link"
+              >Mot de passe oublié ?</a
+            >
           </div>
 
-          <p class="error-message" style="display: none;"></p>
+          <p class="error-message" style="display: none"></p>
 
           <button type="submit" class="login-button">Se connecter</button>
 
@@ -106,6 +111,5 @@
         </form>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
