@@ -1,5 +1,7 @@
 package rentEasy.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import rentEasy.dataBase.Role;
@@ -31,6 +33,8 @@ public class User {
     @Column(unique = true, length = 255)
     private String email;
 
+    @JsonAlias("password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 

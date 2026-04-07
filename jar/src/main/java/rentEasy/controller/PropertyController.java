@@ -4,31 +4,36 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import rentEasy.controller.dto.PropertyDto;
 import rentEasy.model.Property;
 import rentEasy.service.PropertyService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/properties")
+@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping({"/api/properties", "/api/property"})
 @RequiredArgsConstructor
 public class PropertyController {
 
     private final PropertyService propertyService;
 
     @GetMapping
-    public List<Property> getAll() {
-        return propertyService.findAll();
+    public List<PropertyDto> getAll() {
+        return propertyService.findAll()
+                .stream()
+                .map(PropertyDto::fromEntity)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public Property getById(@PathVariable Long id) {
-        return propertyService.findById(id);
+    public PropertyDto getById(@PathVariable Long id) {
+        return PropertyDto.fromEntity(propertyService.findById(id));
     }
 
     @GetMapping("/{id}/details")
-    public Property getDetails(@PathVariable Long id) {
-        return propertyService.findById(id);
+    public PropertyDto getDetails(@PathVariable Long id) {
+        return PropertyDto.fromEntity(propertyService.findById(id));
     }
 
     @PostMapping
