@@ -125,6 +125,11 @@ public class UserService {
         return value == null || value.trim().isEmpty();
     }
 
+    @Transactional
+    public User saveDirectly(User user) {
+        return userRepository.save(user);
+    }
+
     private String normalize(String value) {
         return value == null ? null : value.trim();
     }

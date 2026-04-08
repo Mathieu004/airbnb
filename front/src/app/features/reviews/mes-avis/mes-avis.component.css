@@ -1,0 +1,112 @@
+.mes-avis-container {
+  padding: 30px 40px;
+  max-width: 1100px;
+}
+
+.mes-avis-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+}
+
+.avis-count {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 30px 0;
+}
+
+.avis-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  color: #64748b;
+  font-size: 16px;
+}
+
+.no-avis {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+.avis-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.avis-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px 28px;
+  transition: box-shadow 0.2s;
+}
+
+.avis-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.avis-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.avis-card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.avis-property-name {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.stars-container {
+  display: flex;
+  gap: 2px;
+}
+
+.avis-card-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avis-date {
+  font-size: 14px;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.avis-delete-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.avis-delete-btn:hover {
+  color: #ef4444;
+  background: #fef2f2;
+}
+
+.avis-comment {
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0;
+}

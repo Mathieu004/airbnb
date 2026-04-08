@@ -1,0 +1,43 @@
+<div class="mes-avis-container">
+  <div class="mes-avis-header">
+    <h1>Mes avis</h1>
+    <p class="avis-count">{{ reviews.length }} avis laissé(s)</p>
+  </div>
+
+  <div class="avis-loading" *ngIf="loading">
+    Chargement...
+  </div>
+
+  <div class="no-avis" *ngIf="!loading && reviews.length === 0">
+    <p>Vous n'avez laissé aucun avis pour le moment.</p>
+  </div>
+
+  <div class="avis-list" *ngIf="!loading && reviews.length > 0">
+    <div class="avis-card" *ngFor="let review of reviews">
+      <div class="avis-card-header">
+        <div class="avis-card-left">
+          <h3 class="avis-property-name">{{ review.property.name }}</h3>
+          <div class="stars-container">
+            <svg *ngFor="let filled of getStars(review.rating)"
+                 width="18" height="18" viewBox="0 0 24 24"
+                 [attr.fill]="filled ? '#f59e0b' : 'none'"
+                 [attr.stroke]="filled ? '#f59e0b' : '#d1d5db'"
+                 stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+        </div>
+        <div class="avis-card-right">
+          <span class="avis-date">{{ formatDate(review.createdAt) }}</span>
+          <button class="avis-delete-btn" (click)="deleteReview(review.id)" title="Supprimer cet avis">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p class="avis-comment">{{ review.comment }}</p>
+    </div>
+  </div>
+</div>

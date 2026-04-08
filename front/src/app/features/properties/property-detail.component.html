@@ -45,6 +45,71 @@
             </div>
           </div>
         </article>
+
+        <!-- Section Avis -->
+        <article class="property-card">
+          <div class="reviews-header">
+            <h2>Avis</h2>
+            <button *ngIf="!showReviewForm && isLoggedIn()" class="btn-leave-review" (click)="showReviewForm = true">
+              Laisser un avis
+            </button>
+          </div>
+
+          <!-- Formulaire avis -->
+          <div *ngIf="showReviewForm" class="review-form">
+            <div class="review-form__stars">
+              <span class="review-form__label">Votre note :</span>
+              <div class="stars-selector">
+                <svg *ngFor="let star of [1,2,3,4,5]"
+                     width="28" height="28" viewBox="0 0 24 24"
+                     [attr.fill]="star <= (hoverRating || selectedRating) ? '#f59e0b' : 'none'"
+                     [attr.stroke]="star <= (hoverRating || selectedRating) ? '#f59e0b' : '#d1d5db'"
+                     stroke-width="2"
+                     style="cursor:pointer"
+                     (mouseenter)="hoverRating = star"
+                     (mouseleave)="hoverRating = 0"
+                     (click)="selectedRating = star">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+            </div>
+            <textarea class="review-form__textarea"
+                      [(ngModel)]="reviewComment"
+                      placeholder="Partagez votre expérience..."
+                      rows="4"
+                      maxlength="1000"></textarea>
+            <p *ngIf="reviewError" class="review-form__error">{{ reviewError }}</p>
+            <p *ngIf="reviewSuccess" class="review-form__success">{{ reviewSuccess }}</p>
+            <div class="review-form__actions">
+              <button class="btn-cancel" (click)="cancelReview()">Annuler</button>
+              <button class="btn-submit" (click)="submitReview()" [disabled]="submittingReview">
+                {{ submittingReview ? 'Envoi...' : 'Publier' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Liste des avis existants -->
+          <div class="reviews-list" *ngIf="property.reviews && property.reviews.length > 0">
+            <div class="review-item" *ngFor="let r of property.reviews">
+              <div class="review-item__header">
+                <span class="review-item__author">{{ r.username }}</span>
+                <div class="review-item__stars">
+                  <svg *ngFor="let s of [1,2,3,4,5]"
+                       width="14" height="14" viewBox="0 0 24 24"
+                       [attr.fill]="s <= r.rating ? '#f59e0b' : 'none'"
+                       [attr.stroke]="s <= r.rating ? '#f59e0b' : '#d1d5db'"
+                       stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                </div>
+              </div>
+              <p class="review-item__comment">{{ r.comment }}</p>
+            </div>
+          </div>
+          <p *ngIf="!property.reviews || property.reviews.length === 0" class="no-reviews">
+            Aucun avis pour le moment. Soyez le premier à donner votre avis !
+          </p>
+        </article>
       </div>
 
       <aside class="property-detail__sidebar">

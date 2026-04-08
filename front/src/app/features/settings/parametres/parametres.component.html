@@ -1,0 +1,143 @@
+<div class="settings-container">
+  <div class="settings-header">
+    <h1>Settings</h1>
+    <p class="settings-subtitle">Manage your profile and preferences</p>
+  </div>
+
+  <!-- Profile -->
+  <section class="settings-card">
+    <div class="card-title">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      <h2>Profile</h2>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text" [(ngModel)]="firstName" placeholder="First name">
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" [(ngModel)]="lastName" placeholder="Last name">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" [(ngModel)]="email" placeholder="Email">
+    </div>
+
+    <p *ngIf="profileMessage" class="msg-success">{{ profileMessage }}</p>
+    <p *ngIf="profileError" class="msg-error">{{ profileError }}</p>
+
+    <button class="btn-primary" (click)="saveProfile()" [disabled]="savingProfile">
+      {{ savingProfile ? 'Saving...' : 'Save Changes' }}
+    </button>
+  </section>
+
+  <!-- Change Password -->
+  <section class="settings-card">
+    <div class="card-title">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+      </svg>
+      <h2>Change Password</h2>
+    </div>
+
+    <div class="form-group">
+      <label>Current Password</label>
+      <input type="password" [(ngModel)]="currentPassword" placeholder="••••••••">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" [(ngModel)]="newPassword" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" [(ngModel)]="confirmPassword" placeholder="••••••••">
+      </div>
+    </div>
+
+    <p *ngIf="passwordMessage" class="msg-success">{{ passwordMessage }}</p>
+    <p *ngIf="passwordError" class="msg-error">{{ passwordError }}</p>
+
+    <button class="btn-primary" (click)="changePassword()" [disabled]="savingPassword">
+      {{ savingPassword ? 'Saving...' : 'Update Password' }}
+    </button>
+  </section>
+
+  <!-- Notifications -->
+  <section class="settings-card">
+    <div class="card-title">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+      <h2>Notifications</h2>
+    </div>
+
+    <div class="toggle-row">
+      <span>New reservations</span>
+      <label class="toggle">
+        <input type="checkbox" [(ngModel)]="notifReservations">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <span>Cleaning task updates</span>
+      <label class="toggle">
+        <input type="checkbox" [(ngModel)]="notifCleaning">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <span>Guest messages</span>
+      <label class="toggle">
+        <input type="checkbox" [(ngModel)]="notifMessages">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <span>Payment confirmations</span>
+      <label class="toggle">
+        <input type="checkbox" [(ngModel)]="notifPayments">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </section>
+
+  <!-- Language & Region -->
+  <section class="settings-card">
+    <div class="card-title">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+        <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+      </svg>
+      <h2>Language &amp; Region</h2>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Language</label>
+        <select [(ngModel)]="language">
+          <option>Français</option>
+          <option>English</option>
+          <option>Español</option>
+          <option>Deutsch</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Currency</label>
+        <select [(ngModel)]="currency">
+          <option>EUR (€)</option>
+          <option>USD ($)</option>
+          <option>GBP (£)</option>
+          <option>CHF (CHF)</option>
+        </select>
+      </div>
+    </div>
+  </section>
+</div>

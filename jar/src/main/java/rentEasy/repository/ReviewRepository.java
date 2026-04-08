@@ -17,6 +17,14 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @EntityGraph(attributePaths = {"property", "user"})
     Optional<Review> findById(Long id);
 
+    @EntityGraph(attributePaths = {"property", "user"})
+    List<Review> findByUserId(Long userId);
+
+    @EntityGraph(attributePaths = {"property", "user"})
+    List<Review> findByPropertyId(Long propertyId);
+
+    boolean existsByUserIdAndPropertyId(Long userId, Long propertyId);
+
     default List<Review> findAllWithRelations() {
         return findAll();
     }

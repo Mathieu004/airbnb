@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { PropertyService } from './propertyService';
 import { Property } from './property.model';
+import { ReviewService } from '../reviews/reviewService';
 
 @Component({
   selector: 'app-property-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './property-detail.component.html',
   styleUrl: './property-detail.component.css'
 })
@@ -18,9 +20,19 @@ export class PropertyDetailComponent implements OnInit {
   amenities: string[] = [];
   private readonly fallbackImage = 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80';
 
+  // Review form state
+  showReviewForm = false;
+  selectedRating = 0;
+  hoverRating = 0;
+  reviewComment = '';
+  reviewError = '';
+  reviewSuccess = '';
+  submittingReview = false;
+
   constructor(
     private route: ActivatedRoute,
-    private propertyService: PropertyService
+    private propertyService: PropertyService,
+    private reviewService: ReviewService
   ) {}
 
   ngOnInit(): void {
@@ -73,5 +85,76 @@ export class PropertyDetailComponent implements OnInit {
     return value.split(',')
       .map(item => item.trim())
       .filter(Boolean);
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  private getUserId(): number | null {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.uid;
+    } catch {
+      return null;
+    }
+  }
+
+  cancelReview(): void {
+    this.showReviewForm = false;
+    this.selectedRating = 0;
+    this.hoverRating = 0;
+    this.reviewComment = '';
+    this.reviewError = '';
+    this.reviewSuccess = '';
+  }
+
+  submitReview(): void {
+    this.reviewError = '';
+    this.reviewSuccess = '';
+
+    if (this.selectedRating === 0) {
+      this.reviewError = 'Veuillez sélectionner une note';
+      return;
+    }
+    if (!this.reviewComment.trim()) {
+      this.reviewError = 'Veuillez écrire un commentaire';
+      return;
+    }
+
+    const userId = this.getUserId();
+    if (!userId || !this.property) {
+      this.reviewError = 'Vous devez être connecté';
+      return;
+    }
+
+    this.submittingReview = true;
+    this.reviewService.create({
+      propertyId: this.property.id,
+      userId: userId,
+      rating: this.selectedRating,
+      comment: this.reviewComment.trim()
+    }).subscribe({
+      next: () => {
+        this.reviewSuccess = 'Avis publié avec succès !';
+        this.submittingReview = false;
+        // Reload property to refresh review list
+        this.propertyService.getById(this.property!.id).subscribe({
+          next: data => {
+            this.property = data;
+            this.showReviewForm = false;
+            this.selectedRating = 0;
+            this.reviewComment = '';
+            this.reviewSuccess = '';
+          }
+        });
+      },
+      error: (err) => {
+        this.submittingReview = false;
+        this.reviewError = err.error?.message || 'Erreur lors de l\'envoi de l\'avis';
+      }
+    });
   }
 }

@@ -45,4 +45,16 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/bookings/bookings').then(m => m.BookingsComponent)
   },
+  {
+    path: 'avis',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/reviews/mes-avis/mes-avis.component').then(m => m.MesAvisComponent)
+  },
+  {
+    path: 'parametres',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/settings/parametres/parametres.component').then(m => m.ParametresComponent)
+  },
 ];
