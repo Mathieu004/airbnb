@@ -1,12 +1,16 @@
 .app-layout {
   display: flex;
-  min-height: 100vh;
+  margin-top: 70px;
+  min-height: calc(100vh - 70px);
 }
 
 .main {
-  margin-left: 260px;
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: #f3f4f6;
+  margin-left: 260px;
+  overflow-y: auto;
+}
+
+.full-width {
+  width: 100%;
+  margin-left: 0;
 }

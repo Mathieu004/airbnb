@@ -9,36 +9,27 @@ import { filter } from 'rxjs/operators';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, NavbarComponent, SidebarComponent, CommonModule],
-  template: `
-
-    <ng-container *ngIf="isPublicPage">
-      <app-navbar></app-navbar>
-      <router-outlet></router-outlet>
-    </ng-container>
-
-    <div class="app-layout" *ngIf="!isPublicPage">
-      <app-sidebar></app-sidebar>
-      <div class="main">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  `,
+  templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  isPublicPage = true;
+  isMinimalPage = false;
 
-  private publicRoutes = ['/', '/login', '/register', '/home'];
+  private minimalRoutes = ['/', '/login', '/register'];
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void {
-    this.isPublicPage = this.publicRoutes.includes(this.router.url);
+  private checkIfMinimalRoute(url: string): boolean {
+    return this.minimalRoutes.includes(url);
+  }
 
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.isPublicPage = this.publicRoutes.includes(event.urlAfterRedirects);
-    });
+  ngOnInit(): void {
+    this.isMinimalPage = this.checkIfMinimalRoute(this.router.url);
+
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.isMinimalPage = this.checkIfMinimalRoute(event.urlAfterRedirects);
+      });
   }
 }

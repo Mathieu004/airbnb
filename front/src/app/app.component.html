@@ -1,10 +1,9 @@
 <app-navbar></app-navbar>
-<router-outlet></router-outlet>
 
 <div class="app-layout">
-  <app-sidebar></app-sidebar>
-  <div class="main">
-    <app-navbar></app-navbar>
+  <app-sidebar *ngIf="!isMinimalPage"></app-sidebar>
+
+  <div class="main" [class.full-width]="isMinimalPage">
     <router-outlet></router-outlet>
   </div>
 </div>

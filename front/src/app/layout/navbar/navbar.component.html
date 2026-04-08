@@ -1,12 +1,44 @@
-<!--<nav>-->
-<!--  <a routerLink="/">RentEasy</a>-->
-<!--  <a routerLink="/properties">Propriétés</a>-->
-<!--  <ng-container *ngIf="auth.isLoggedIn(); else notLogged">-->
-<!--    <a routerLink="/dashboard">Mon espace</a>-->
-<!--    <button (click)="logout()">Déconnexion</button>-->
-<!--  </ng-container>-->
-<!--  <ng-template #notLogged>-->
-<!--    <a routerLink="/login">Connexion</a>-->
-<!--    <a routerLink="/register">Inscription</a>-->
-<!--  </ng-template>-->
-<!--</nav>-->
+<header class="navbar">
+  <a routerLink="/" class="navbar-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="6" fill="#1e3a5f"/>
+      <path d="M16 7L6 15v10h7v-6h6v6h7V15L16 7z" fill="white"/>
+    </svg>
+    <span>RentEasy</span>
+  </a>
+
+  <nav class="navbar-nav">
+    <!-- Non connecté -->
+    <ng-container *ngIf="!auth.isLoggedIn()">
+      <a routerLink="/login" class="nav-btn">Se connecter</a>
+      <a routerLink="/register" class="nav-btn">S'inscrire</a>
+    </ng-container>
+
+    <!-- Connecté -->
+    <div class="profile" *ngIf="auth.isLoggedIn()">
+      <button class="profile__trigger" (click)="toggleMenu()" aria-label="Menu profil">
+        <span class="profile__avatar">{{ getInitials() }}</span>
+        <span class="profile__name">{{ auth.getCurrentUser() }}</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+
+      <div class="profile__menu" *ngIf="menuOpen">
+        <a routerLink="/dashboard" class="profile__menu-item" (click)="menuOpen = false">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Mon espace
+        </a>
+        <a routerLink="/parametres" class="profile__menu-item" (click)="menuOpen = false">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Paramètres
+        </a>
+        <div class="profile__divider"></div>
+        <button class="profile__menu-item profile__menu-item--logout" (click)="logout()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Déconnexion
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>

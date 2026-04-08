@@ -1,15 +1,16 @@
 .sidebar {
   width: 260px;
-  height: 100vh;
+  height: calc(100vh - 70px);
   background: #1e3a5f;
   display: flex;
   flex-direction: column;
   padding: 24px 16px;
   position: fixed;
-  top: 0; left: 0;
-  z-index: 10;
-  overflow-y: auto;        /* ← overflow: hidden retiré */
-  box-sizing: border-box;  /* ← ajouté */
+  top: 70px;
+  left: 0;
+  z-index: 100;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .sidebar-logo {
@@ -23,13 +24,6 @@
   padding: 0 8px;
 }
 
-.sidebar-nav {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
 .nav-item {
   display: flex;
   align-items: center;
@@ -38,7 +32,7 @@
   border-radius: 10px;
   font-size: 0.98rem;
   font-weight: 500;
-  color: rgba(255,255,255,0.65);
+  color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
   cursor: pointer;
@@ -49,18 +43,29 @@
   height: 20px;
   flex-shrink: 0;
 }
+
 .nav-item:hover,
-.nav-item.active { background: rgba(255,255,255,0.15); color: #fff; }
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
 
 .sidebar-bottom {
   margin-top: auto;
   padding-top: 16px;
-  padding-bottom: 16px;    /* ← ajouté */
-  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
 }
 
 .nav-item.logout,
-.nav-item.reduce { color: rgba(255,255,255,0.5); font-size: 0.92rem; }
+.nav-item.reduce {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.92rem;
+}
+
 .nav-item.logout:hover,
-.nav-item.reduce:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+.nav-item.reduce:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
+}
