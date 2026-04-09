@@ -28,35 +28,18 @@
 
         <div class="hero">
           <h1>Bienvenue sur RentEasy</h1>
-          <p>Créez votre compte</p>
+          <p>Creez votre compte</p>
         </div>
 
-        <form class="register-form">
-          <input
-            type="hidden"
-            id="selectedRole"
-            name="role"
-            value="administrateur"
-          />
-
+        <form (ngSubmit)="onSubmit()" class="register-form" #registerForm="ngForm">
           <div class="form-group">
-            <label for="firstName">Prénom</label>
+            <label for="username">Nom d'utilisateur</label>
             <input
-              id="firstName"
+              id="username"
               type="text"
-              name="firstName"
-              placeholder="Votre prénom"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="lastName">Nom</label>
-            <input
-              id="lastName"
-              type="text"
-              name="lastName"
-              placeholder="Votre nom"
+              name="username"
+              placeholder="Votre identifiant"
+              [(ngModel)]="username"
               required
             />
           </div>
@@ -68,27 +51,29 @@
               type="email"
               name="email"
               placeholder="vous@exemple.com"
+              [(ngModel)]="email"
               required
+              email
             />
           </div>
 
           <div class="form-group">
             <label for="password">Mot de passe</label>
-
             <div class="password-field">
               <input
                 id="password"
-                type="password"
+                [type]="showPassword ? 'text' : 'password'"
                 name="password"
-                placeholder="••••••••"
+                placeholder="********"
+                [(ngModel)]="password"
                 required
               />
 
               <button
                 type="button"
                 class="password-toggle"
-                aria-label="Afficher le mot de passe"
-                onclick="togglePasswordVisibility('password', this)"
+                [attr.aria-label]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+                (click)="togglePassword()"
               >
                 <svg viewBox="0 0 24 24" class="eye-icon" aria-hidden="true">
                   <path
@@ -113,21 +98,21 @@
 
           <div class="form-group">
             <label for="confirmPassword">Confirmer le mot de passe</label>
-
             <div class="password-field">
               <input
                 id="confirmPassword"
-                type="password"
+                [type]="showConfirmPassword ? 'text' : 'password'"
                 name="confirmPassword"
-                placeholder="••••••••"
+                placeholder="********"
+                [(ngModel)]="confirmPassword"
                 required
               />
 
               <button
                 type="button"
                 class="password-toggle"
-                aria-label="Afficher le mot de passe"
-                onclick="togglePasswordVisibility('confirmPassword', this)"
+                [attr.aria-label]="showConfirmPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+                (click)="toggleConfirmPassword()"
               >
                 <svg viewBox="0 0 24 24" class="eye-icon" aria-hidden="true">
                   <path
@@ -153,45 +138,20 @@
           <div class="form-row terms-row">
             <label class="remember-me">
               <input type="checkbox" name="acceptTerms" required />
-              <span>J’accepte les conditions d’utilisation</span>
+              <span>J'accepte les conditions d'utilisation</span>
             </label>
           </div>
 
-          <p class="error-message" style="display: none"></p>
+          <p class="error-message" *ngIf="error">{{ error }}</p>
 
-          <button type="submit" class="register-button">S’inscrire</button>
+          <button type="submit" class="register-button">S'inscrire</button>
 
           <p class="signup-text">
-            Vous avez déjà un compte ?
-            <a href="/login" class="signup-link">Se connecter</a>
+            Vous avez deja un compte ?
+            <a routerLink="/login" class="signup-link">Se connecter</a>
           </p>
         </form>
       </div>
     </div>
-
-    <script>
-      const roleButtons = document.querySelectorAll(".role-option");
-      const selectedRoleInput = document.getElementById("selectedRole");
-
-      roleButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          roleButtons.forEach((btn) => btn.classList.remove("active"));
-          button.classList.add("active");
-          selectedRoleInput.value = button.dataset.role;
-        });
-      });
-
-      function togglePasswordVisibility(inputId, button) {
-        const input = document.getElementById(inputId);
-        if (!input) return;
-
-        const isHidden = input.type === "password";
-        input.type = isHidden ? "text" : "password";
-        button.setAttribute(
-          "aria-label",
-          isHidden ? "Masquer le mot de passe" : "Afficher le mot de passe",
-        );
-      }
-    </script>
   </body>
 </html>
