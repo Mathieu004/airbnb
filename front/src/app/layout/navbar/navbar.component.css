@@ -11,7 +11,11 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   color: #1a202c;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -61,7 +65,9 @@
   font-family: inherit;
   font-size: 0.95rem;
   color: #111827;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .profile__trigger:hover {
@@ -141,5 +147,30 @@
 }
 
 @media (max-width: 768px) {
-  .profile__name { display: none; }
+  .profile__name {
+    display: none;
+  }
+}
+
+.profile__role-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #e8f0fe;
+  color: #1e3a5f;
+  padding: 2px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+
+.profile__menu-item--host {
+  color: #1e3a5f;
+}
+
+.profile__menu-item--host:hover {
+  background: #e8f0fe;
+}
+
+.profile__menu-item--host:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
