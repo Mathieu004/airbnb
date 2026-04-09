@@ -22,8 +22,10 @@ import java.util.Set;
 public class Property {
 
     public enum PropertyType {
+        STUDIO,
         APARTMENT,
-        HOUSE
+        HOUSE,
+        VILLA
     }
 
     @Id

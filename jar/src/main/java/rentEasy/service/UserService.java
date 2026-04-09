@@ -9,8 +9,10 @@ import rentEasy.dataBase.Role;
 import rentEasy.model.User;
 import rentEasy.repository.UserRepository;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -38,9 +40,7 @@ public class UserService {
         user.setUsername(normalize(user.getUsername()));
         user.setEmail(normalize(user.getEmail()));
         user.setPasswordHash(passwordService.hash(user.getPasswordHash().trim()));
-        if (user.getRole() == null) {
-            user.setRole(Role.GUEST);
-        }
+        applyBusinessRoles(user);
 
         synchronizeUserIdSequence();
 
@@ -60,7 +60,9 @@ public class UserService {
         existing.setUsername(normalize(user.getUsername()));
         existing.setEmail(normalize(user.getEmail()));
         existing.setPasswordHash(passwordService.hash(user.getPasswordHash().trim()));
-        existing.setRole(user.getRole() != null ? user.getRole() : existing.getRole());
+        if (hasExplicitRoleSelection(user)) {
+            applyBusinessRoles(existing, user);
+        }
         return userRepository.save(existing);
     }
 
@@ -127,6 +129,28 @@ public class UserService {
 
     private String normalize(String value) {
         return value == null ? null : value.trim();
+    }
+
+    private boolean hasExplicitRoleSelection(User user) {
+        return user.getRole() != null || !user.getRoles().isEmpty();
+    }
+
+    private void applyBusinessRoles(User user) {
+        applyBusinessRoles(user, user);
+    }
+
+    private void applyBusinessRoles(User target, User source) {
+        Set<Role> requestedRoles = new LinkedHashSet<>(source.getRoles());
+        if (source.getRole() != null) {
+            requestedRoles.add(source.getRole());
+        }
+
+        if (requestedRoles.contains(Role.ADMIN)) {
+            target.setRoles(Set.of(Role.ADMIN));
+            return;
+        }
+
+        target.setRoles(Set.of(Role.GUEST, Role.HOST));
     }
 
     private void synchronizeUserIdSequence() {

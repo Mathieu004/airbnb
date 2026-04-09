@@ -2,7 +2,10 @@ package rentEasy.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import rentEasy.dataBase.Role;
 import rentEasy.model.Property;
 import rentEasy.model.User;
 import rentEasy.repository.PropertyRepository;
@@ -15,18 +18,33 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class PropertyService {
-
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public List<Property> findAll() {
-        return propertyRepository.findAllWithRelations();
+    public List<Property> findAll(Long userId, String requestedRoleValue) {
+        if (userId == null) {
+            return propertyRepository.findAllBy();
+        }
+
+        User user = userRepository.findByIdWithRelations(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found: " + userId));
+
+        if (user.hasRole(Role.ADMIN)) {
+            return propertyRepository.findAllBy();
+        }
+
+        Role requestedRole = resolveRequestedRole(requestedRoleValue);
+        return switch (requestedRole) {
+            case GUEST -> propertyRepository.findAllBy();
+            case HOST -> propertyRepository.findByHostId(user.getId());
+            case ADMIN -> propertyRepository.findAllBy();
+        };
     }
 
     @Transactional
     public Property findById(Long propertyId) {
-        return propertyRepository.findByIdWithRelations(propertyId)
+        return propertyRepository.findOneById(propertyId)
                 .orElseThrow(() -> new IllegalArgumentException("Property not found: " + propertyId));
     }
 
@@ -130,5 +148,16 @@ public class PropertyService {
 
     private User getUserReference(Long userId) {
         return userRepository.getReferenceById(userId);
+    }
+
+    private Role resolveRequestedRole(String requestedRoleValue) {
+        Role requestedRole;
+        try {
+            requestedRole = Role.fromRequestValue(requestedRoleValue);
+        } catch (IllegalArgumentException exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage(), exception);
+        }
+
+        return requestedRole == null ? Role.GUEST : requestedRole;
     }
 }
