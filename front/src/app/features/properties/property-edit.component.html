@@ -1,0 +1,164 @@
+<section class="property-edit">
+  <div *ngIf="isLoading" class="property-edit__state">
+    Chargement du logement...
+  </div>
+
+  <div *ngIf="!isLoading && errorMessage" class="property-edit__state property-edit__state--error">
+    {{ errorMessage }}
+  </div>
+
+  <ng-container *ngIf="!isLoading && property">
+    <div class="property-edit__hero">
+      <img [src]="mainImageUrl" [alt]="property.name">
+    </div>
+    <div class="property-edit__gallery" *ngIf="(property.images?.length ?? 0) > 1">
+      <div class="gallery-track">
+        <img *ngFor="let image of property.images"
+             [src]="image.imageUrl"
+             [alt]="property.name"
+             class="gallery-image"
+             [class.gallery-image--main]="mainImageUrl === image.imageUrl"
+             (click)="setMainImage(image.imageUrl)">
+      </div>
+    </div>
+
+    <header class="property-edit__header">
+      <div>
+        <h1>{{ property.name }}</h1>
+        <p class="property-edit__location">
+          <mat-icon fontIcon="place"></mat-icon>
+          {{ property.address || property.city || 'Adresse non renseignee' }}, {{ property.country || 'Pays inconnu' }}
+        </p>
+        <ul class="property-edit__meta">
+          <li><mat-icon fontIcon="king_bed"></mat-icon>{{ property.bedrooms }} chambres</li>
+          <li><mat-icon fontIcon="bathtub"></mat-icon>{{ property.bathrooms }} SDB</li>
+          <li><mat-icon fontIcon="groups"></mat-icon>{{ property.maxGuests }} voyageurs</li>
+        </ul>
+      </div>
+      <div class="property-edit__rating">
+        <mat-icon fontIcon="star"></mat-icon>
+        <span>{{ ratingLabel }}</span>
+      </div>
+    </header>
+
+    <div class="property-edit__content">
+      <div class="property-edit__main">
+        <article class="property-card">
+          <h2>Description</h2>
+          <p>{{ property.description || 'Ce logement n\'a pas encore de description detaillee.' }}</p>
+        </article>
+
+        <article class="property-card">
+          <h2>Equipements</h2>
+          <div class="property-edit__amenities">
+            <div *ngFor="let amenity of amenities">
+              <mat-icon fontIcon="check_circle"></mat-icon> {{ amenity }}
+            </div>
+            <div *ngIf="!amenities.length" class="property-edit__amenities-empty">
+              Aucun equipement specifique renseigne.
+            </div>
+          </div>
+        </article>
+
+        <article class="property-card reviews-card">
+          <div class="reviews-header">
+            <h2>Avis ({{ reviews.length }})</h2>
+            <p class="reviews-error" *ngIf="reviewsError">{{ reviewsError }}</p>
+          </div>
+          <div *ngIf="reviewsLoading" class="reviews-loading">Chargement des avis...</div>
+          <div *ngIf="!reviewsLoading && !reviews.length" class="empty-reviews">Aucun avis pour le moment.</div>
+          <div class="review-item" *ngFor="let review of reviews">
+            <div class="review-avatar">{{ getReviewInitials(review.reviewer?.username) }}</div>
+            <div class="review-content">
+              <div class="review-meta">
+                <div>
+                  <p class="review-author">{{ review.reviewer?.username || 'Voyageur' }}</p>
+                  <span class="review-date">{{ review.createdAt | date:'yyyy-MM-dd' }}</span>
+                </div>
+                <div class="review-rating">
+                  <mat-icon fontIcon="star"></mat-icon>
+                  <span>{{ review.rating }}/5</span>
+                </div>
+              </div>
+              <p class="review-comment">{{ review.comment || 'Aucun commentaire.' }}</p>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="property-edit__sidebar">
+        <div class="booking-card">
+          <div class="booking-card__price">
+            {{ property.pricePerNight | currency:'EUR':'symbol':'1.0-0' }} <span>/ nuit</span>
+          </div>
+          <p class="booking-card__note">Menage inclus</p>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Arrivee</mat-label>
+            <input matInput [matDatepicker]="arrivalPicker" [(ngModel)]="arrivalDate">
+            <mat-datepicker-toggle matIconSuffix [for]="arrivalPicker"></mat-datepicker-toggle>
+            <mat-datepicker #arrivalPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Depart</mat-label>
+            <input matInput [matDatepicker]="departurePicker" [(ngModel)]="departureDate">
+            <mat-datepicker-toggle matIconSuffix [for]="departurePicker"></mat-datepicker-toggle>
+            <mat-datepicker #departurePicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Voyageurs</mat-label>
+            <mat-select [(ngModel)]="selectedGuests">
+              <mat-option *ngFor="let count of getGuestOptions()" [value]="count">
+                {{ count }} voyageur{{ count > 1 ? 's' : '' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="booking-card__summary">
+            <div class="summary-row">
+              <span>{{ property.pricePerNight | currency:'EUR':'symbol':'1.0-0' }} x {{ nightsLabel }}</span>
+              <span>{{ subtotalPrice | currency:'EUR':'symbol':'1.0-0' }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Frais de service</span>
+              <span>{{ serviceFee | currency:'EUR':'symbol':'1.0-0' }}</span>
+            </div>
+            <div class="summary-row summary-row--total">
+              <span>Total</span>
+              <span>{{ totalDue | currency:'EUR':'symbol':'1.0-0' }}</span>
+            </div>
+          </div>
+
+          <button type="button"
+                  class="booking-card__cta"
+                  (click)="reserve()"
+                  [disabled]="!canReserve">
+            <mat-icon fontIcon="event_available"></mat-icon>
+            Reserver
+          </button>
+          <button type="button" class="booking-card__secondary">
+            <mat-icon fontIcon="chat_bubble"></mat-icon>
+            Contacter l'hote
+          </button>
+        </div>
+
+        <div class="booking-card__state" *ngIf="successMessage">
+          <mat-icon fontIcon="check_circle"></mat-icon>
+          {{ successMessage }}
+        </div>
+        <div class="booking-card__state booking-card__state--error" *ngIf="bookingError">
+          <mat-icon fontIcon="error_outline"></mat-icon>
+          {{ bookingError }}
+        </div>
+
+        <div class="host-card" *ngIf="property.host">
+          <p class="host-card__label">Hote</p>
+          <p class="host-card__name">{{ property.host.username }}</p>
+          <p class="host-card__email">{{ property.host.email }}</p>
+        </div>
+      </aside>
+    </div>
+  </ng-container>
+</section>

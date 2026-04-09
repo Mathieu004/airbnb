@@ -1,52 +1,133 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import {Property} from './property.model';
+import {PropertyService} from './propertyService';
+import {AuthService} from '../../core/auth.service';
 
 @Component({
   selector: 'app-property-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './property-list.component.html',
   styleUrls: ['./property-list.component.css']
 })
-export class PropertyListComponent {
+export class PropertyListComponent implements OnInit {
 
-  searchTerm: string = '';
-  activeFilter: string = 'Tous';
+  properties: Property[] = [];
+  isLoading = false;
+  errorMessage = '';
+  searchTerm = '';
+  globalSearchTerm = '';
+  activeFilter = 'Tous';
+  filters = ['Tous', 'Appartement', 'Villa', 'Studio', 'Maison'];
+  currentUser = '';
+  private readonly fallbackImage = 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80';
 
-  properties = [
-    {
-      name: 'Appartement Haussmannien',
-      type: 'Appartement',
-      location: 'Paris, France',
-      rating: 5.0,
-      beds: 2, baths: 1, guests: 4, surface: 75,
-      amenities: ['Wi-Fi', 'Cuisine', 'Machine à laver'],
-      price: 185,
-      image: '/logement-paris.jpg'
-    },
-    {
-      name: 'Villa Méditerranée',
-      type: 'Villa',
-      location: 'Nice, France',
-      rating: 4.0,
-      beds: 4, baths: 3, guests: 8, surface: 200,
-      amenities: ['Wi-Fi', 'Piscine', 'Cuisine'],
-      price: 320,
-      image: '/logement-nice.jpg'
-    }
-  ];
+  constructor(
+    private propertyService: PropertyService,
+    private authService: AuthService
+  ) {}
 
-  get filteredProperties() {
-    return this.properties.filter(p => {
-      const matchType = this.activeFilter === 'Tous' || p.type === this.activeFilter;
-      const matchSearch = p.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-                       || p.location.toLowerCase().includes(this.searchTerm.toLowerCase());
-      return matchType && matchSearch;
+  ngOnInit(): void {
+    this.currentUser = this.authService.getCurrentUser() ?? 'Invite';
+    this.loadProperties();
+  }
+
+  get filteredProperties(): Property[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    const globalTerm = this.globalSearchTerm.trim().toLowerCase();
+    const activeFilter = this.activeFilter.toLowerCase();
+    return this.properties.filter(property => {
+      const haystack = `${property.name} ${property.city} ${property.country}`.toLowerCase();
+      const matchesLocal = !term || haystack.includes(term);
+      const matchesGlobal = !globalTerm || haystack.includes(globalTerm);
+      const type = this.getTypeLabel(property).toLowerCase();
+      const matchesFilter = activeFilter === 'tous'
+        || type === activeFilter
+        || property.description?.toLowerCase().includes(activeFilter);
+      return matchesLocal && matchesGlobal && matchesFilter;
     });
   }
 
-  setFilter(filter: string) {
+  setFilter(filter: string): void {
     this.activeFilter = filter;
+  }
+
+  getInitials(name: string): string {
+    if (!name) {
+      return 'GU';
+    }
+    return name
+      .split(' ')
+      .filter(Boolean)
+      .map(word => word[0]?.toUpperCase() ?? '')
+      .slice(0, 2)
+      .join('');
+  }
+
+  getMainImage(property: Property): string {
+    if (property.images && property.images.length) {
+      const main = property.images.find(img => img.isMain);
+      return (main ?? property.images[0]).imageUrl;
+    }
+    return this.fallbackImage;
+  }
+
+  getAverageRating(property: Property): string {
+    if (!property.reviews || property.reviews.length === 0) {
+      return 'Nouveau';
+    }
+    const total = property.reviews.reduce((sum, review) => sum + (review.rating ?? 0), 0);
+    const avg = total / property.reviews.length;
+    return `${avg.toFixed(1)} / 5`;
+  }
+
+  refresh(): void {
+    this.loadProperties();
+  }
+
+  private loadProperties(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.propertyService.getAll().subscribe({
+      next: data => {
+        this.properties = data;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Impossible de charger les logements. Veuillez reessayer.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  getTypeLabel(property: Property): string {
+    const value = property.propertyType ?? '';
+    if (!value) return 'logement';
+    switch (value.toLowerCase()) {
+      case 'apartment':
+        return 'appartement';
+      case 'house':
+        return 'maison';
+      case 'studio':
+        return 'studio';
+      case 'villa':
+        return 'villa';
+      default:
+        return value.toLowerCase();
+    }
+  }
+
+  getDisplayType(property: Property): string {
+    return this.capitalize(this.getTypeLabel(property));
+  }
+
+  private capitalize(value: string): string {
+    if (!value) {
+      return '';
+    }
+    return value.charAt(0).toUpperCase() + value.slice(1);
   }
 }

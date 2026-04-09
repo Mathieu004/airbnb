@@ -1,66 +1,92 @@
-<!-- property-list.component.html -->
-<div class="content">
+<div class="explorar">
+  <header class="explorar__toolbar">
+    <div class="global-search">
+      <span class="global-search__icon">🔍</span>
+      <input type="search"
+             placeholder="Rechercher..."
+             [(ngModel)]="globalSearchTerm" />
+    </div>
+    <div class="toolbar-user">
+      <button type="button"
+              class="notif-btn"
+              aria-label="Notifications">
+        🔔
+        <span class="notif-dot"></span>
+      </button>
+      <div class="toolbar-user__info">
+        <div class="toolbar-user__avatar">{{ getInitials(currentUser) }}</div>
+        <div>
+          <div class="toolbar-user__name">{{ currentUser }}</div>
+          <div class="toolbar-user__role">Client</div>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  <div class="page-header">
+  <section class="explorar__filters">
     <h1>Explorer les logements</h1>
-    <p>Trouvez le logement idéal pour votre séjour</p>
-  </div>
-
-  <!-- BARRE DE RECHERCHE + FILTRES -->
-  <div class="filters-bar">
-    <div class="search-input">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-      </svg>
-      <input type="text" placeholder="Rechercher par nom ou ville..." [(ngModel)]="searchTerm" />
+    <p class="explorar__subtitle">Trouvez le logement ideal pour votre sejour</p>
+    <div class="filters-row">
+      <!--      <div class="filters-row__input">-->
+      <!--        <span>🔍</span>-->
+      <!--        <input type="search"-->
+      <!--               placeholder="Rechercher par nom ou ville..."-->
+      <!--               [(ngModel)]="searchTerm" />-->
+      <!--      </div>-->
+      <!--      <button type="button"-->
+      <!--              class="filters-row__icon"-->
+      <!--              (click)="refresh()"-->
+      <!--              [disabled]="isLoading">-->
+      <!--        ☰-->
+      <!--      </button>-->
     </div>
-
-    <button class="filter-icon-btn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
-      </svg>
-    </button>
-
-    <div class="filter-pills">
-      <button class="pill" [class.active]="activeFilter === 'Tous'" (click)="setFilter('Tous')">Tous</button>
-      <button class="pill" [class.active]="activeFilter === 'Appartement'" (click)="setFilter('Appartement')">Appartement</button>
-      <button class="pill" [class.active]="activeFilter === 'Villa'" (click)="setFilter('Villa')">Villa</button>
-      <button class="pill" [class.active]="activeFilter === 'Studio'" (click)="setFilter('Studio')">Studio</button>
-      <button class="pill" [class.active]="activeFilter === 'Maison'" (click)="setFilter('Maison')">Maison</button>
+    <div class="filters-row__pills">
+      <button type="button"
+              *ngFor="let filter of filters"
+              [class.active]="activeFilter === filter"
+              (click)="setFilter(filter)">
+        {{ filter }}
+      </button>
     </div>
-  </div>
+  </section>
 
-  <!-- GRILLE DE CARTES -->
-  <div class="cards-grid">
-    <div class="card" *ngFor="let property of filteredProperties">
-      <div class="card-img-wrap">
-        <img [src]="property.image" [alt]="property.name" />
-        <span class="badge-type">{{ property.type }}</span>
-        <span class="badge-rating">⭐ {{ property.rating }}</span>
+  <section *ngIf="isLoading" class="explorar__state">
+    Chargement des logements...
+  </section>
+
+  <section *ngIf="!isLoading && errorMessage" class="explorar__state explorar__state--error">
+    {{ errorMessage }}
+  </section>
+
+  <section *ngIf="!isLoading && !errorMessage && filteredProperties.length === 0"
+           class="explorar__state">
+    Aucun logement ne correspond a votre recherche pour le moment.
+  </section>
+
+  <div class="explorar__grid"
+       *ngIf="!isLoading && !errorMessage && filteredProperties.length">
+    <article class="property-card"
+             *ngFor="let property of filteredProperties"
+             [routerLink]="['/properties', property.id]">
+      <div class="property-card__media">
+        <img [src]="getMainImage(property)" [alt]="property.name" />
+        <span class="property-card__type">{{ getDisplayType(property) }}</span>
+        <span class="property-card__badge">{{ getAverageRating(property) }}</span>
       </div>
-      <div class="card-body">
-        <h3>{{ property.name }}</h3>
-        <p class="card-location">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-            <circle cx="12" cy="9" r="2.5"/>
-          </svg>
-          {{ property.location }}
-        </p>
-        <div class="card-specs">
-          <span>🛏 {{ property.beds }}</span>
-          <span>🚿 {{ property.baths }}</span>
-          <span>👥 {{ property.guests }}</span>
-          <span>📐 {{ property.surface }}m²</span>
+      <div class="property-card__body">
+        <div class="property-card__header">
+          <h2>{{ property.name }}</h2>
+          <p>{{ property.city }}, {{ property.country }}</p>
         </div>
-        <div class="card-footer">
-          <div class="card-amenities">
-            <span class="amenity" *ngFor="let a of property.amenities">{{ a }}</span>
-          </div>
-          <p class="card-price"><strong>€{{ property.price }}</strong>/nuit</p>
+        <p class="property-card__description">{{ property.description }}</p>
+        <div class="property-card__meta">
+          <span>{{ property.bedrooms }} ch - {{ property.bathrooms }} sdb - {{ property.maxGuests }} voyageurs</span>
+          <span class="property-card__price">{{ property.pricePerNight | currency:'EUR':'symbol':'1.0-0' }}/nuit</span>
+        </div>
+        <div class="property-card__host">
+          Hote : <strong>{{ property.host?.username || 'non renseigne' }}</strong>
         </div>
       </div>
-    </div>
+    </article>
   </div>
-
 </div>
