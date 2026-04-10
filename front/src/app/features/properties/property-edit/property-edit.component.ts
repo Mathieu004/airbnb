@@ -8,12 +8,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
-import { PropertyService } from './propertyService';
-import { Property } from './property.model';
-import { BookingService } from '../bookings/bookingService';
-import { AuthService } from '../../core/auth.service';
-import { ReviewService } from '../reviews/reviewService';
-import { Review } from '../reviews/review.model';
+import { PropertyService } from '../propertyService';
+import { Property } from '../property.model';
+import { BookingService } from '../../bookings/bookingService';
+import { AuthService } from '../../../core/auth.service';
+import { ReviewService } from '../../reviews/reviewService';
+import { Review } from '../../reviews/review.model';
 
 @Component({
   selector: 'app-property-edit',
@@ -239,7 +239,8 @@ export class PropertyEditComponent implements OnInit {
     this.reviewsError = '';
     this.reviewService.getByPropertyId(propertyId).subscribe({
       next: data => {
-        this.reviews = data;
+        this.reviews = data ?? [];
+        this.updateReviewStatsFromList();
         this.reviewsLoading = false;
       },
       error: () => {
@@ -247,5 +248,19 @@ export class PropertyEditComponent implements OnInit {
         this.reviewsLoading = false;
       }
     });
+  }
+
+  private updateReviewStatsFromList(): void {
+    if (!this.property) {
+      return;
+    }
+    const reviewCount = this.reviews.length;
+    this.property.reviewCount = reviewCount;
+    if (!reviewCount) {
+      this.property.reviewAverage = undefined;
+      return;
+    }
+    const totalRating = this.reviews.reduce((sum, review) => sum + (review.rating ?? 0), 0);
+    this.property.reviewAverage = totalRating / reviewCount;
   }
 }

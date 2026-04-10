@@ -30,4 +30,6 @@ export interface Property {
   host?: HostDetails | null;
   images?: ImageDetails[] | null;
   reviews?: ReviewDetails[] | null;
+  reviewCount?: number;
+  reviewAverage?: number;
 }

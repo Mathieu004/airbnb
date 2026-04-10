@@ -1,4 +1,20 @@
 <section class="property-edit">
+  <div class="property-edit__toast-container" *ngIf="successMessage || bookingError">
+    <div class="property-edit__toast property-edit__toast--success" *ngIf="successMessage">
+      <mat-icon fontIcon="check_circle"></mat-icon>
+      <div>
+        <p class="property-edit__toast-title">Reservation envoyee</p>
+        <p class="property-edit__toast-message">{{ successMessage }}</p>
+      </div>
+    </div>
+    <div class="property-edit__toast property-edit__toast--error" *ngIf="bookingError">
+      <mat-icon fontIcon="error_outline"></mat-icon>
+      <div>
+        <p class="property-edit__toast-title">Reservation impossible</p>
+        <p class="property-edit__toast-message">{{ bookingError }}</p>
+      </div>
+    </div>
+  </div>
   <div *ngIf="isLoading" class="property-edit__state">
     Chargement du logement...
   </div>
@@ -46,7 +62,7 @@
         <article class="property-card">
           <h2>Description</h2>
           <p>{{ property.description || 'Ce logement n\'a pas encore de description detaillee.' }}</p>
-        </article>
+        </article><br>
 
         <article class="property-card">
           <h2>Equipements</h2>
@@ -58,7 +74,7 @@
               Aucun equipement specifique renseigne.
             </div>
           </div>
-        </article>
+        </article><br>
 
         <article class="property-card reviews-card">
           <div class="reviews-header">
@@ -142,15 +158,6 @@
             <mat-icon fontIcon="chat_bubble"></mat-icon>
             Contacter l'hote
           </button>
-        </div>
-
-        <div class="booking-card__state" *ngIf="successMessage">
-          <mat-icon fontIcon="check_circle"></mat-icon>
-          {{ successMessage }}
-        </div>
-        <div class="booking-card__state booking-card__state--error" *ngIf="bookingError">
-          <mat-icon fontIcon="error_outline"></mat-icon>
-          {{ bookingError }}
         </div>
 
         <div class="host-card" *ngIf="property.host">

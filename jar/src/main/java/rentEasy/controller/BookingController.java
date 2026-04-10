@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import rentEasy.controller.dto.BookingDto;
+import rentEasy.controller.dto.BookingRequest;
 import rentEasy.model.Booking;
 import rentEasy.service.BookingService;
 
@@ -32,8 +33,8 @@ public class BookingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookingDto create(@Valid @RequestBody Booking booking) {
-        return toDto(bookingService.create(booking));
+    public BookingDto create(@Valid @RequestBody BookingRequest bookingRequest) {
+        return toDto(bookingService.create(bookingRequest));
     }
 
     @PutMapping("/{id}")

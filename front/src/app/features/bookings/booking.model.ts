@@ -1,9 +1,20 @@
 export interface Booking {
-  id: number;
-  propertyId: number;
-  userId: number;
+  id?: number;
+  property?: {
+    id: number;
+    name?: string;
+    city?: string;
+    country?: string;
+  };
+  guest?: {
+    id?: number;
+    username?: string;
+    email?: string;
+  };
   startDate: string;
   endDate: string;
   totalPrice: number;
-  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
+  reservationDate?: string;
+  propertyId?: number;
+  guestUsername?: string;
 }

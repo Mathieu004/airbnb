@@ -1,22 +1,17 @@
+:host {
+  display: block;
+}
+
 * {
   box-sizing: border-box;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
+.client-bookings-page {
+  min-height: calc(100vh - 80px);
+  padding: 48px 28px 64px;
   background: #f5f7fb;
   font-family: "DM Sans", "Segoe UI", Roboto, Arial, sans-serif;
   color: #112b4c;
-}
-
-.client-bookings-page {
-  min-height: 100vh;
-  padding: 48px 28px 64px;
 }
 
 .client-bookings-container {
@@ -44,6 +39,23 @@ body {
   line-height: 1.4;
   font-weight: 500;
   color: #71839c;
+}
+
+.bookings-state {
+  margin-bottom: 20px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid #dde5ee;
+  background: #ffffff;
+  font-weight: 600;
+  color: #234d79;
+  text-align: center;
+}
+
+.bookings-state--error {
+  background: #ffecec;
+  color: #c53030;
+  border-color: #f5b5b5;
 }
 
 .bookings-list {
@@ -87,8 +99,13 @@ body {
   color: #112b4c;
 }
 
-.booking-date,
-.travellers {
+.booking-location {
+  margin: 0 0 6px;
+  color: #5d6c83;
+  font-size: 16px;
+}
+
+.booking-date {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -125,14 +142,9 @@ body {
   white-space: nowrap;
 }
 
-.booking-status.confirmed {
-  background: #e9f9ef;
-  color: #22a447;
-}
-
-.booking-status.cancelled {
-  background: #ffecef;
-  color: #ea4f5b;
+.booking-status.pending {
+  background: #fff9ed;
+  color: #c9730c;
 }
 
 .booking-price {
@@ -143,35 +155,6 @@ body {
   font-weight: 800;
   color: #112b4c;
   white-space: nowrap;
-}
-
-.message-button {
-  min-height: 48px;
-  padding: 0 16px;
-  border: 1px solid #dbe3ee;
-  border-radius: 14px;
-  background: #f1f4f8;
-  color: #234d79;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-
-.message-button:hover {
-  background: #e8edf4;
-  border-color: #cfd9e5;
-}
-
-.message-icon,
-.chevron-icon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
 }
 
 @media (max-width: 1080px) {
@@ -216,8 +199,7 @@ body {
     font-size: 19px;
   }
 
-  .booking-date,
-  .travellers {
+  .booking-date {
     font-size: 15px;
   }
 
@@ -228,11 +210,6 @@ body {
   .booking-price {
     font-size: 20px;
   }
-
-  .message-button {
-    min-height: 44px;
-    font-size: 15px;
-  }
 }
 
 @media (max-width: 520px) {
@@ -242,8 +219,7 @@ body {
   }
 
   .booking-status,
-  .booking-price,
-  .message-button {
+  .booking-price {
     align-self: flex-start;
   }
 }

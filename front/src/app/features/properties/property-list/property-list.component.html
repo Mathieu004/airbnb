@@ -1,0 +1,91 @@
+<div class="explorar">
+  <section class="explorar__filters">
+    <div class="page-header">
+      <h1>Explorer les logements</h1>
+      <p>Trouvez le logement ideal pour votre sejour</p>
+    </div>
+
+    <div class="filters-bar">
+      <div class="search-input">
+        <svg class="search-icon" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Rechercher par nom ou ville..." [(ngModel)]="searchTerm" />
+      </div>
+
+      <!--      <button class="filter-icon-btn" (click)="refresh()" [disabled]="isLoading">-->
+      <!--        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">-->
+      <!--          <line x1="4" y1="6" x2="20" y2="6"></line>-->
+      <!--          <line x1="8" y1="12" x2="16" y2="12"></line>-->
+      <!--          <line x1="11" y1="18" x2="13" y2="18"></line>-->
+      <!--        </svg>-->
+      <!--      </button>-->
+
+      <div class="filter-pills">
+        <button type="button"
+                class="pill"
+                *ngFor="let filter of filters"
+                [class.active]="activeFilter === filter"
+                (click)="setFilter(filter)">
+          {{ filter }}
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="isLoading" class="explorar__state">
+    Chargement des logements...
+  </section>
+
+  <section *ngIf="!isLoading && errorMessage" class="explorar__state explorar__state--error">
+    {{ errorMessage }}
+  </section>
+
+  <section *ngIf="!isLoading && !errorMessage && filteredProperties.length === 0"
+           class="explorar__state">
+    Aucun logement ne correspond a votre recherche pour le moment.
+  </section>
+
+  <div class="cards-grid"
+       *ngIf="!isLoading && !errorMessage && filteredProperties.length">
+    <article class="card"
+             *ngFor="let property of filteredProperties"
+             (click)="openProperty(property)">
+      <div class="card-img-wrap">
+        <img [src]="getMainImage(property)" [alt]="property.name" />
+        <span class="badge-type">{{ getDisplayType(property) }}</span>
+        <span class="badge-rating">{{ getAverageRating(property) }}</span>
+      </div>
+      <div class="card-body">
+        <h3>{{ property.name }}</h3>
+        <p class="card-location">
+          <svg class="location-icon" viewBox="0 0 24 24">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path>
+            <circle cx="12" cy="9" r="2.5"></circle>
+          </svg>
+          {{ getLocation(property) }}
+        </p>
+
+        <div class="card-specs">
+          <span>🛏 {{ property.bedrooms }} ch</span>
+          <span>🚿 {{ property.bathrooms }} sdb</span>
+          <span>👥 {{ property.maxGuests }} voyageurs</span>
+          <!--          <span>📐 {{ property.surface }}m²</span>-->
+        </div>
+
+        <div class="card-footer">
+          <div class="card-amenities">
+            <span class="amenity" *ngFor="let amenity of getAmenityPreview(property)">
+              {{ amenity }}
+            </span>
+          </div>
+          <p class="card-price">
+            <strong>{{ property.pricePerNight | currency:'EUR':'symbol':'1.0-0' }}</strong>/nuit
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>
+

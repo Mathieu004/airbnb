@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { PropertyService } from './propertyService';
-import { Property } from './property.model';
-import { ReviewService } from '../reviews/reviewService';
+import {Property} from '../property.model';
+import {PropertyService} from '../propertyService';
+import {ReviewService} from '../../reviews/reviewService';
 
 @Component({
   selector: 'app-property-detail',
@@ -45,11 +45,11 @@ export class PropertyDetailComponent implements OnInit {
     this.propertyService.getById(id).subscribe({
       next: data => {
         this.property = data;
-        this.amenities = this.buildAmenities(data.includedFeatures);
+        this.amenities = this.extractAmenities(data.includedFeatures);
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Impossible de charger le logement.';
+        this.errorMessage = 'Impossible de charger ce logement pour le moment.';
         this.isLoading = false;
       }
     });
@@ -78,7 +78,7 @@ export class PropertyDetailComponent implements OnInit {
     return Array.from({ length: Math.max(count, 1) }, (_, index) => index + 1);
   }
 
-  private buildAmenities(value?: string | null): string[] {
+  private extractAmenities(value?: string | null): string[] {
     if (!value) {
       return [];
     }

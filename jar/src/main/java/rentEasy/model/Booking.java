@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Entity
@@ -40,6 +41,13 @@ public class Booking {
     @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice;
 
-    @Column(name = "reservation_date", insertable = false, updatable = false)
+    @Column(name = "reservation_date")
     private Timestamp reservationDate;
+
+    @PrePersist
+    protected void onCreate() {
+        if (reservationDate == null) {
+            reservationDate = Timestamp.from(Instant.now());
+        }
+    }
 }

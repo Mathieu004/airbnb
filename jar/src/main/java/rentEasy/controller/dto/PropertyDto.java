@@ -24,7 +24,9 @@ public record PropertyDto(
         String includedFeatures,
         HostDetails host,
         List<ImageDetails> images,
-        List<ReviewDetails> reviews
+        List<ReviewDetails> reviews,
+        Integer reviewCount,
+        Double reviewAverage
 ) {
 
     public record HostDetails(String username, String email) {
@@ -38,6 +40,14 @@ public record PropertyDto(
 
     public static PropertyDto fromEntity(Property property) {
         Objects.requireNonNull(property, "property must not be null");
+
+        List<Review> reviews = property.getReviewsList() == null ? List.of() : property.getReviewsList();
+
+        double average = reviews.isEmpty() ? 0.0 :
+                reviews.stream()
+                        .mapToInt(review -> review.getRating() == null ? 0 : review.getRating())
+                        .average()
+                        .orElse(0.0);
 
         return new PropertyDto(
                 property.getId(),
@@ -59,9 +69,9 @@ public record PropertyDto(
                 property.getImages() == null ? List.of() : property.getImages().stream()
                         .map(PropertyDto::toImageDetails)
                         .toList(),
-                property.getReviewsList() == null ? List.of() : property.getReviewsList().stream()
-                        .map(PropertyDto::toReviewDetails)
-                        .toList()
+                reviews.stream().map(PropertyDto::toReviewDetails).toList(),
+                reviews.size(),
+                average
         );
     }
 

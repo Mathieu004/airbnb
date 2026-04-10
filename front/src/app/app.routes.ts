@@ -20,24 +20,24 @@ export const routes: Routes = [
   {
     path: 'properties',
     loadComponent: () =>
-      import('./features/properties/property-list.component').then(m => m.PropertyListComponent)
+      import('./features/properties/property-list/property-list.component').then(m => m.PropertyListComponent)
   },
   {
     path: 'properties/:id',
     loadComponent: () =>
-      import('./features/properties/property-detail.component').then(m => m.PropertyDetailComponent)
+      import('./features/properties/property-detail/property-detail.component').then(m => m.PropertyDetailComponent)
+  },
+  {
+    path: 'property/edit/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/properties/property-edit/property-edit.component').then(m => m.PropertyEditComponent)
   },
   {
     path: 'dashboard',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
-  },
-  {
-    path: 'explorar',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/Explorar').then(m => m.ExplorarComponent)
   },
   {
     path: 'bookings',

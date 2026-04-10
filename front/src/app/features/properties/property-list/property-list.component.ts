@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { PropertyService } from './properties/propertyService';
-import { Property } from './properties/property.model';
-import { AuthService } from '../core/auth.service';
+import {Property} from '../property.model';
+import {PropertyService} from '../propertyService';
+import {AuthService} from '../../../core/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-explorar',
+  selector: 'app-property-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './Explorar.html',
-  styleUrl: './Explorar.css'
+  imports: [CommonModule, FormsModule],
+  templateUrl: './property-list.component.html',
+  styleUrls: ['./property-list.component.css']
 })
-export class ExplorarComponent implements OnInit {
+export class PropertyListComponent implements OnInit {
   properties: Property[] = [];
   isLoading = false;
   errorMessage = '';
@@ -26,7 +26,8 @@ export class ExplorarComponent implements OnInit {
 
   constructor(
     private propertyService: PropertyService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -75,6 +76,9 @@ export class ExplorarComponent implements OnInit {
   }
 
   getAverageRating(property: Property): string {
+    if ((property.reviewCount ?? 0) > 0 && property.reviewAverage != null) {
+      return `${property.reviewAverage.toFixed(1)} / 5`;
+    }
     if (!property.reviews || property.reviews.length === 0) {
       return 'Nouveau';
     }
@@ -85,6 +89,15 @@ export class ExplorarComponent implements OnInit {
 
   refresh(): void {
     this.loadProperties();
+  }
+
+  openProperty(property: Property): void {
+    if (!property?.id) {
+      return;
+    }
+    this.router.navigate(['/property/edit', property.id], {
+      state: { property }
+    });
   }
 
   private loadProperties(): void {
@@ -121,6 +134,21 @@ export class ExplorarComponent implements OnInit {
 
   getDisplayType(property: Property): string {
     return this.capitalize(this.getTypeLabel(property));
+  }
+
+  getLocation(property: Property): string {
+    const parts = [property.city, property.country].filter(Boolean);
+    return parts.join(', ') || 'Localisation inconnue';
+  }
+
+  getAmenityPreview(property: Property): string[] {
+    if (!property.includedFeatures) {
+      return [];
+    }
+    return property.includedFeatures.split(',')
+      .map(feature => feature.trim())
+      .filter(Boolean)
+      .slice(0, 3);
   }
 
   private capitalize(value: string): string {
