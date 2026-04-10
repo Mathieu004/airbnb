@@ -7,10 +7,19 @@
 .main {
   flex: 1;
   margin-left: 260px;
-  overflow-y: auto;
+  transition: margin-left 0.3s ease;
 }
 
 .full-width {
   width: 100%;
+  margin-left: 0;
+}
+
+
+.main.sidebar-collapsed {
+  margin-left: 64px;
+}
+
+.main.full-width {
   margin-left: 0;
 }

@@ -14,6 +14,8 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   isMinimalPage = false;
+  isSidebarCollapsed = false;
+
 
   private minimalRoutes = ['/', '/login', '/register'];
 
@@ -32,4 +34,8 @@ export class AppComponent implements OnInit {
         this.isMinimalPage = this.checkIfMinimalRoute(event.urlAfterRedirects);
       });
   }
+  onSidebarToggle(collapsed: boolean) {
+    this.isSidebarCollapsed = collapsed;
+  }
+
 }
