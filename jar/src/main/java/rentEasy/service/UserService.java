@@ -151,15 +151,4 @@ public class UserService {
                 """)
                 .getSingleResult();
     }
-
-    @Transactional
-    public User switchToHost(Long userId) {
-        User existing = findById(userId);
-        if (existing.getRole() == Role.GUEST) {
-            existing.setRole(Role.HOST);
-        } else if (existing.getRole() == Role.HOST) {
-            existing.setRole(Role.GUEST);
-        }
-        return userRepository.save(existing);
-    }
 }

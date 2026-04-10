@@ -78,19 +78,6 @@ public class UserController {
         }
     }
 
-    @PatchMapping("/{id}/role")
-    public ResponseEntity<?> switchRole(@PathVariable Long id) {
-        try {
-            User updated = userService.switchToHost(id);
-            return ResponseEntity.ok(Map.of(
-                    "id", updated.getId(),
-                    "role", updated.getRole().name()
-            ));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
-    }
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
