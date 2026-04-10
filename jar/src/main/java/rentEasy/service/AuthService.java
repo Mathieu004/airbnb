@@ -13,7 +13,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +53,6 @@ public class AuthService {
                     "{\"sub\":\"" + escape(user.getUsername()) + "\","
                             + "\"uid\":" + user.getId() + ","
                             + "\"role\":\"" + user.getRole() + "\","
-                            + "\"roles\":[" + formatRoles(user) + "],"
                             + "\"exp\":" + expiresAt + "}"
             );
 
@@ -77,14 +75,6 @@ public class AuthService {
 
     private String escape(String value) {
         return value.replace("\\", "\\\\").replace("\"", "\\\"");
-    }
-
-    private String formatRoles(User user) {
-        return user.getRoles().stream()
-                .map(Role::name)
-                .map(this::escape)
-                .map(role -> "\"" + role + "\"")
-                .collect(Collectors.joining(","));
     }
 
     private boolean isBlank(String value) {

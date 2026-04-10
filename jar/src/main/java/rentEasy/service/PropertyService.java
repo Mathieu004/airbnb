@@ -11,8 +11,10 @@ import rentEasy.model.User;
 import rentEasy.repository.PropertyRepository;
 import rentEasy.repository.UserRepository;
 
+import java.text.Normalizer;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 @Service
@@ -30,11 +32,11 @@ public class PropertyService {
         User user = userRepository.findByIdWithRelations(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found: " + userId));
 
-        if (user.hasRole(Role.ADMIN)) {
+        if (user.getRole() == Role.ADMIN) {
             return propertyRepository.findAllBy();
         }
 
-        Role requestedRole = resolveRequestedRole(requestedRoleValue);
+        PropertyAccessMode requestedRole = resolveRequestedRole(requestedRoleValue);
         return switch (requestedRole) {
             case GUEST -> propertyRepository.findAllBy();
             case HOST -> propertyRepository.findByHostId(user.getId());
@@ -150,14 +152,35 @@ public class PropertyService {
         return userRepository.getReferenceById(userId);
     }
 
-    private Role resolveRequestedRole(String requestedRoleValue) {
-        Role requestedRole;
+    private PropertyAccessMode resolveRequestedRole(String requestedRoleValue) {
         try {
-            requestedRole = Role.fromRequestValue(requestedRoleValue);
+            return PropertyAccessMode.fromRequestValue(requestedRoleValue);
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage(), exception);
         }
+    }
 
-        return requestedRole == null ? Role.GUEST : requestedRole;
+    private enum PropertyAccessMode {
+        GUEST,
+        HOST,
+        ADMIN;
+
+        private static PropertyAccessMode fromRequestValue(String value) {
+            if (value == null || value.isBlank()) {
+                return GUEST;
+            }
+
+            String normalized = Normalizer.normalize(value, Normalizer.Form.NFD)
+                    .replaceAll("\\p{M}", "")
+                    .trim()
+                    .toLowerCase(Locale.ROOT);
+
+            return switch (normalized) {
+                case "guest", "client" -> GUEST;
+                case "host", "owner", "proprietaire", "proprietary" -> HOST;
+                case "admin", "administrator" -> ADMIN;
+                default -> throw new IllegalArgumentException("Unsupported role value: " + value);
+            };
+        }
     }
 }

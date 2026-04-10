@@ -12,11 +12,11 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Override
-    @EntityGraph(attributePaths = {"hostedProperties", "reviews", "roles"})
+    @EntityGraph(attributePaths = {"hostedProperties", "reviews"})
     List<User> findAll();
 
     @Override
-    @EntityGraph(attributePaths = {"hostedProperties", "reviews", "roles"})
+    @EntityGraph(attributePaths = {"hostedProperties", "reviews"})
     Optional<User> findById(Long id);
 
     default List<User> findAllWithRelations() {
