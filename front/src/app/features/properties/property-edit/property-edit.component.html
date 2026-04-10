@@ -84,11 +84,11 @@
           <div *ngIf="reviewsLoading" class="reviews-loading">Chargement des avis...</div>
           <div *ngIf="!reviewsLoading && !reviews.length" class="empty-reviews">Aucun avis pour le moment.</div>
           <div class="review-item" *ngFor="let review of reviews">
-            <div class="review-avatar">{{ getReviewInitials(review.reviewer?.username) }}</div>
+            <div class="review-avatar">{{ review.reviewer.username || 'Voyageur' }}</div>
             <div class="review-content">
               <div class="review-meta">
                 <div>
-                  <p class="review-author">{{ review.reviewer?.username || 'Voyageur' }}</p>
+                  <p class="review-author">{{ review.reviewer.username || 'Voyageur' }}</p>
                   <span class="review-date">{{ review.createdAt | date:'yyyy-MM-dd' }}</span>
                 </div>
                 <div class="review-rating">

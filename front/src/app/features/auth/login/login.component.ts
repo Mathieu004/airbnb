@@ -29,7 +29,7 @@ export class LoginComponent {
 
   onSubmit() {
     this.auth.login(this.username, this.password).subscribe({
-      next: () => this.router.navigate(['/explorar']),
+      next: () => this.router.navigate(['/properties']),
       error: () => this.error = 'Identifiants incorrects'
     });
   }
