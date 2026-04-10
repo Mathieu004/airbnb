@@ -39,7 +39,7 @@ public class User {
     private String passwordHash;
 
     @Convert(converter = RoleConverter.class)
-    @Column(nullable = false, length = 20)
+    @Column(name = "role", nullable = false, length = 20)
     private Role role;
 
     @Column(name = "created_at", insertable = false, updatable = false)

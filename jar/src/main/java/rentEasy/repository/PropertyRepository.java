@@ -11,19 +11,12 @@ import java.util.Optional;
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
 
-    @Override
     @EntityGraph(attributePaths = {"host", "images", "reviewsList", "reviewsList.user"})
-    List<Property> findAll();
+    List<Property> findAllBy();
 
-    @Override
     @EntityGraph(attributePaths = {"host", "images", "reviewsList", "reviewsList.user"})
-    Optional<Property> findById(Long id);
+    Optional<Property> findOneById(Long id);
 
-    default List<Property> findAllWithRelations() {
-        return findAll();
-    }
-
-    default Optional<Property> findByIdWithRelations(Long id) {
-        return findById(id);
-    }
+    @EntityGraph(attributePaths = {"host", "images", "reviewsList", "reviewsList.user"})
+    List<Property> findByHostId(Long hostId);
 }

@@ -18,8 +18,11 @@ public class PropertyController {
     private final PropertyService propertyService;
 
     @GetMapping
-    public List<PropertyDto> getAll() {
-        return propertyService.findAll()
+    public List<PropertyDto> getAll(
+            @RequestParam(value = "userId", required = false) Long userId,
+            @RequestParam(value = "role", required = false) String role
+    ) {
+        return propertyService.findAll(userId, role)
                 .stream()
                 .map(PropertyDto::fromEntity)
                 .toList();

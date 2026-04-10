@@ -2,31 +2,51 @@ package rentEasy.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import rentEasy.dataBase.Role;
 import rentEasy.model.Property;
 import rentEasy.model.User;
 import rentEasy.repository.PropertyRepository;
 import rentEasy.repository.UserRepository;
 
+import java.text.Normalizer;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class PropertyService {
-
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public List<Property> findAll() {
-        return propertyRepository.findAllWithRelations();
+    public List<Property> findAll(Long userId, String requestedRoleValue) {
+        if (userId == null) {
+            return propertyRepository.findAllBy();
+        }
+
+        User user = userRepository.findByIdWithRelations(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found: " + userId));
+
+        if (user.getRole() == Role.ADMIN) {
+            return propertyRepository.findAllBy();
+        }
+
+        PropertyAccessMode requestedRole = resolveRequestedRole(requestedRoleValue);
+        return switch (requestedRole) {
+            case GUEST -> propertyRepository.findAllBy();
+            case HOST -> propertyRepository.findByHostId(user.getId());
+            case ADMIN -> propertyRepository.findAllBy();
+        };
     }
 
     @Transactional
     public Property findById(Long propertyId) {
-        return propertyRepository.findByIdWithRelations(propertyId)
+        return propertyRepository.findOneById(propertyId)
                 .orElseThrow(() -> new IllegalArgumentException("Property not found: " + propertyId));
     }
 
@@ -130,5 +150,37 @@ public class PropertyService {
 
     private User getUserReference(Long userId) {
         return userRepository.getReferenceById(userId);
+    }
+
+    private PropertyAccessMode resolveRequestedRole(String requestedRoleValue) {
+        try {
+            return PropertyAccessMode.fromRequestValue(requestedRoleValue);
+        } catch (IllegalArgumentException exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage(), exception);
+        }
+    }
+
+    private enum PropertyAccessMode {
+        GUEST,
+        HOST,
+        ADMIN;
+
+        private static PropertyAccessMode fromRequestValue(String value) {
+            if (value == null || value.isBlank()) {
+                return GUEST;
+            }
+
+            String normalized = Normalizer.normalize(value, Normalizer.Form.NFD)
+                    .replaceAll("\\p{M}", "")
+                    .trim()
+                    .toLowerCase(Locale.ROOT);
+
+            return switch (normalized) {
+                case "guest", "client" -> GUEST;
+                case "host", "owner", "proprietaire", "proprietary" -> HOST;
+                case "admin", "administrator" -> ADMIN;
+                default -> throw new IllegalArgumentException("Unsupported role value: " + value);
+            };
+        }
     }
 }

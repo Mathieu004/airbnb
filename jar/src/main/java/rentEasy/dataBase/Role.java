@@ -1,7 +1,6 @@
 package rentEasy.dataBase;
 
 public enum Role {
-    GUEST,
-    HOST,
+    CLIENT,
     ADMIN
 }

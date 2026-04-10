@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import rentEasy.dataBase.Role;
 import rentEasy.model.User;
 import rentEasy.repository.UserRepository;
 

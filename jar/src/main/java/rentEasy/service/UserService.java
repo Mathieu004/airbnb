@@ -38,9 +38,7 @@ public class UserService {
         user.setUsername(normalize(user.getUsername()));
         user.setEmail(normalize(user.getEmail()));
         user.setPasswordHash(passwordService.hash(user.getPasswordHash().trim()));
-        if (user.getRole() == null) {
-            user.setRole(Role.GUEST);
-        }
+        user.setRole(resolveStoredRole(user.getRole()));
 
         synchronizeUserIdSequence();
 
@@ -60,7 +58,9 @@ public class UserService {
         existing.setUsername(normalize(user.getUsername()));
         existing.setEmail(normalize(user.getEmail()));
         existing.setPasswordHash(passwordService.hash(user.getPasswordHash().trim()));
-        existing.setRole(user.getRole() != null ? user.getRole() : existing.getRole());
+        if (user.getRole() != null) {
+            existing.setRole(resolveStoredRole(user.getRole()));
+        }
         return userRepository.save(existing);
     }
 
@@ -132,6 +132,13 @@ public class UserService {
 
     private String normalize(String value) {
         return value == null ? null : value.trim();
+    }
+
+    private Role resolveStoredRole(Role requestedRole) {
+        if (requestedRole == Role.ADMIN) {
+            return Role.ADMIN;
+        }
+        return Role.CLIENT;
     }
 
     private void synchronizeUserIdSequence() {
