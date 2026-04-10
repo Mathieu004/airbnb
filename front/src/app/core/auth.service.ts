@@ -31,7 +31,7 @@ export class AuthService {
     password: string,
   ): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${this.apiUrl}/auth/register`, {
+      .post<AuthResponse>(`${this.apiUrl}/user`, {
         username,
         email,
         password,
