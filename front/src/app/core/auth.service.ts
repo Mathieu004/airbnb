@@ -35,12 +35,7 @@ export class AuthService {
         username,
         email,
         password,
-      })
-      .pipe(
-        tap((res) =>
-          this.persistSession(res.token, username, res.id, res.role),
-        ),
-      );
+      });
   }
 
   logout(): void {

@@ -26,6 +26,23 @@
           </div>
         </div>
 
+        <div class="property-edit__toast-container" *ngIf="successMessage || errorMessage">
+          <div class="property-edit__toast property-edit__toast--success" *ngIf="successMessage">
+            <mat-icon fontIcon="check_circle"></mat-icon>
+            <div>
+              <p class="property-edit__toast-title">Inscription réussi</p>
+              <p class="property-edit__toast-message">{{ successMessage }}</p>
+            </div>
+          </div>
+          <div class="property-edit__toast property-edit__toast--error" *ngIf="errorMessage">
+            <mat-icon fontIcon="error_outline"></mat-icon>
+            <div>
+              <p class="property-edit__toast-title">Erreur lors de l'inscription</p>
+              <p class="property-edit__toast-message">{{ errorMessage }}</p>
+            </div>
+          </div>
+        </div>
+
         <div class="hero">
           <h1>Bienvenue sur RentEasy</h1>
           <p>Creez votre compte</p>
