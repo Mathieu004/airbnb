@@ -1,9 +1,9 @@
 <app-navbar></app-navbar>
 
 <div class="app-layout">
-  <app-sidebar *ngIf="!isMinimalPage" (collapsedChange)="onSidebarToggle($event)"></app-sidebar>
+  <app-sidebar *ngIf="!isMinimalPage && auth.isLoggedIn()" (collapsedChange)="onSidebarToggle($event)"></app-sidebar>
 
-  <div class="main" [class.full-width]="isMinimalPage" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <div class="main" [class.full-width]="isMinimalPage || !auth.isLoggedIn()" [class.sidebar-collapsed]="auth.isLoggedIn() && isSidebarCollapsed">
     <router-outlet></router-outlet>
   </div>
 </div>

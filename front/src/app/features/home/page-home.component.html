@@ -12,7 +12,7 @@
     <img src="home-image.jpg" alt="Villa avec piscine vue mer" class="hero-img" />
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <h1 class="hero-title">Trouvez le logement idéal<br>pour votre séjour</h1>
+      <h1 class="hero-title">Trouvez le logement ideal<br>pour votre sejour</h1>
       <p class="hero-subtitle">Appartements, villas et studios dans les plus belles villes de France</p>
 
       <div class="search-bar">
@@ -38,57 +38,38 @@
     </div>
   </section>
 
-
   <section class="listings">
     <h2 class="section-title">Logements populaires</h2>
-    <p class="section-subtitle">Nos logements les mieux notés par les voyageurs</p>
+    <p class="section-subtitle">Les logements les mieux notés par les voyageurs</p>
+    <p class="section-subtitle" *ngIf="isLoading">Chargement des meilleurs logements...</p>
+    <p class="section-subtitle" *ngIf="!isLoading && errorMessage">{{ errorMessage }}</p>
+    <p class="section-subtitle" *ngIf="!isLoading && !errorMessage && !featuredProperties.length">
+      Aucun logement note n'est disponible pour le moment.
+    </p>
 
-    <div class="cards-grid">
-
-      <div class="card">
+    <div class="cards-grid" *ngIf="featuredProperties.length">
+      <div class="card" *ngFor="let property of featuredProperties">
         <div class="card-img-wrap">
-          <img src="/logement-paris.jpg" alt="Appartement Haussmannien" />
-          <span class="badge-type">Appartement</span>
+          <img [src]="getMainImage(property)" [alt]="property.name" />
+          <span class="badge-type">{{ getDisplayType(property) }}</span>
           <span class="badge-rating">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            5.0
+            {{ getRatingValue(property) }}
           </span>
         </div>
         <div class="card-body">
-          <h3>Appartement Haussmannien</h3>
+          <h3>{{ property.name }}</h3>
           <p class="card-location">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-            Paris, France
+            {{ getLocation(property) }}
           </p>
+          <p class="card-location">{{ getReviewLabel(property) }}</p>
           <div class="card-footer">
-            <p class="card-price"><span>€185</span>/nuit</p>
-            <a routerLink="/login" class="card-btn">Réserver</a>
+            <p class="card-price"><span>{{ property.pricePerNight | currency:'EUR':'symbol':'1.0-0' }}</span>/nuit</p>
+            <a [routerLink]="getPropertyLink(property)" [queryParams]="getPropertyQueryParams(property)" class="card-btn">Voir</a>
           </div>
         </div>
       </div>
-
-      <div class="card">
-        <div class="card-img-wrap">
-          <img src="/logement-nice.jpg" alt="Villa Méditerranée" />
-          <span class="badge-type">Villa</span>
-          <span class="badge-rating">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            4.0
-          </span>
-        </div>
-        <div class="card-body">
-          <h3>Villa Méditerranée</h3>
-          <p class="card-location">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-            Nice, France
-          </p>
-          <div class="card-footer">
-            <p class="card-price"><span>€320</span>/nuit</p>
-            <a routerLink="/login" class="card-btn">Réserver</a>
-          </div>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -131,11 +112,11 @@
           </svg>
           <span>RentEasy</span>
         </a>
-        <p class="footer-desc">La plateforme de location courte durée simple et moderne.</p>
+        <p class="footer-desc">La plateforme de location courte duree simple et moderne.</p>
       </div>
 
       <div class="footer-col">
-        <h4>Découvrir</h4>
+        <h4>Decouvrir</h4>
         <ul>
           <li><a href="#">Logements</a></li>
           <li><a href="#">Destinations</a></li>
@@ -144,9 +125,9 @@
       </div>
 
       <div class="footer-col">
-        <h4>Propriétaires</h4>
+        <h4>Proprietaires</h4>
         <ul>
-          <li><a href="#">Devenir hôte</a></li>
+          <li><a href="#">Devenir hote</a></li>
           <li><a href="#">Gestion des logements</a></li>
           <li><a href="#">Aide</a></li>
         </ul>
@@ -164,7 +145,7 @@
     </div>
 
     <div class="footer-bottom">
-      <p>© 2026 RentEasy. Tous droits réservés.</p>
+      <p>© 2026 RentEasy. Tous droits reserves.</p>
     </div>
   </footer>
 

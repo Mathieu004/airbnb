@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
@@ -17,8 +17,16 @@ export class LoginComponent {
   rememberMe: boolean = false;
   showPassword: boolean = false;
   selectedRole: string = 'client';
+  private returnUrl = '/properties';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/properties';
+  }
+
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
@@ -29,7 +37,7 @@ export class LoginComponent {
 
   onSubmit() {
     this.auth.login(this.username, this.password).subscribe({
-      next: () => this.router.navigate(['/properties']),
+      next: () => this.router.navigateByUrl(this.returnUrl),
       error: () => this.error = 'Identifiants incorrects'
     });
   }

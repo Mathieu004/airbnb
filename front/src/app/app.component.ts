@@ -4,6 +4,7 @@ import { NavbarComponent } from './layout/navbar/navbar.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
+import { AuthService } from './core/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,10 @@ export class AppComponent implements OnInit {
 
   private minimalRoutes = ['/', '/login', '/register'];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    public auth: AuthService
+  ) {}
 
   private checkIfMinimalRoute(url: string): boolean {
     return this.minimalRoutes.includes(url);

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookingService } from './bookingService';
 import { Booking } from './booking.model';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-bookings',
@@ -15,16 +16,26 @@ export class BookingsComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
 
-  constructor(private bookingService: BookingService) {}
+  constructor(
+    private bookingService: BookingService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loadBookings();
   }
 
   private loadBookings(): void {
+    const currentUserId = this.authService.getCurrentUserId();
+    if (currentUserId == null) {
+      this.bookings = [];
+      this.errorMessage = 'Utilisateur non connecte.';
+      return;
+    }
+
     this.isLoading = true;
     this.errorMessage = '';
-    this.bookingService.getAll().subscribe({
+    this.bookingService.getByGuestId(currentUserId).subscribe({
       next: data => {
         this.bookings = data;
         this.isLoading = false;

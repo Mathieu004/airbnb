@@ -81,6 +81,11 @@ public class BookingService {
     }
 
     @Transactional
+    public List<Booking> findAllByGuestId(Long guestId) {
+        return bookingRepository.findAllByGuestIdWithRelations(guestId);
+    }
+
+    @Transactional
     public Booking findById(Long bookingId) {
         return bookingRepository.findByIdWithRelations(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));

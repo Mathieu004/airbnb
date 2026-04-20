@@ -179,11 +179,11 @@ img { display: block; width: 100%; height: auto; }
 
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(2, 400px); 
+    grid-template-columns: repeat(3, minmax(280px, 1fr));
     gap: 32px;
-    width: fit-content;
-    justify-content: start; 
-    padding-left: 5%; 
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 .card {
     background: #fff;
@@ -318,5 +318,6 @@ img { display: block; width: 100%; height: auto; }
     .navbar-nav { display: none; }
     .search-bar { flex-direction: column; border-radius: 24px; }
     .search-field { border-right: none !important; width: 100%; border-bottom: 1px solid #eee; }
+    .cards-grid { grid-template-columns: 1fr; }
     .footer-grid { grid-template-columns: 1fr; }
 }
