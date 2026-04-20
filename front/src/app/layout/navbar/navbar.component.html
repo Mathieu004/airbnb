@@ -81,6 +81,7 @@
           Paramètres
         </a>
 
+        <!-- Bouton switch rôle — réactif via role$ | async -->
         <button
           class="profile__menu-item profile__menu-item--host"
           (click)="switchRole()"
@@ -97,10 +98,10 @@
             <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
             <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
-          <span *ngIf="!switchingRole">{{
-            isHost() ? "Passer en voyageur" : "Devenir hôte"
-          }}</span>
-          <span *ngIf="switchingRole">Changement...</span>
+          <ng-container *ngIf="!switchingRole">
+            {{ (role$ | async) === 'HOST' ? 'Passer en voyageur' : 'Devenir hôte' }}
+          </ng-container>
+          <ng-container *ngIf="switchingRole">Changement...</ng-container>
         </button>
 
         <div class="profile__divider"></div>

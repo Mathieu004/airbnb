@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { NgIf, AsyncPipe } from '@angular/common';
 import { AuthService } from '../../core/auth.service';
-import { UserService } from '../../features/users/userService';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, NgIf],
+  imports: [RouterLink, NgIf, AsyncPipe],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
@@ -15,11 +15,14 @@ export class NavbarComponent {
   menuOpen = false;
   switchingRole = false;
 
+  role$: Observable<string | null>;
+
   constructor(
     public auth: AuthService,
     private router: Router,
-    private userService: UserService,
-  ) {}
+  ) {
+    this.role$ = this.auth.role$;
+  }
 
   getInitials(): string {
     const name = this.auth.getCurrentUser() ?? '';
@@ -33,28 +36,13 @@ export class NavbarComponent {
     );
   }
 
-  isHost(): boolean {
-    return this.auth.getCurrentUserRole() === 'HOST';
-  }
-
   toggleMenu(): void {
     this.menuOpen = !this.menuOpen;
   }
 
   switchRole(): void {
-    const userId = this.auth.getCurrentUserId();
-    if (!userId || this.switchingRole) return;
-    this.switchingRole = true;
-    this.userService.switchRole(userId).subscribe({
-      next: (res: any) => {
-        this.auth.updateLocalRole(res.role);
-        this.switchingRole = false;
-        this.menuOpen = false;
-      },
-      error: () => {
-        this.switchingRole = false;
-      },
-    });
+    this.auth.toggleRole();
+    this.menuOpen = false;
   }
 
   logout(): void {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 interface AuthResponse {
@@ -12,6 +12,13 @@ interface AuthResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = environment.apiUrl;
+
+  // BehaviorSubject initialisé depuis le localStorage au démarrage
+  private roleSubject = new BehaviorSubject<string | null>(
+    localStorage.getItem('currentUserRole')
+  );
+
+  role$ = this.roleSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -43,6 +50,7 @@ export class AuthService {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('currentUserId');
     localStorage.removeItem('currentUserRole');
+    this.roleSubject.next(null);
   }
 
   getToken(): string | null {
@@ -64,6 +72,7 @@ export class AuthService {
 
   updateLocalRole(role: string): void {
     localStorage.setItem('currentUserRole', role);
+    this.roleSubject.next(role);
   }
 
   isLoggedIn(): boolean {
@@ -79,6 +88,17 @@ export class AuthService {
     localStorage.setItem('token', token);
     localStorage.setItem('currentUser', username);
     if (id != null) localStorage.setItem('currentUserId', String(id));
-    if (role != null) localStorage.setItem('currentUserRole', role);
+    if (role != null) {
+      localStorage.setItem('currentUserRole', role);
+      this.roleSubject.next(role);
+    }
+  }
+
+  toggleRole(): void {
+    const current = this.getCurrentUserRole();
+    const next = current === 'HOST' ? 'CLIENT' : 'HOST';
+    this.updateLocalRole(next);
   }
 }
+
+
