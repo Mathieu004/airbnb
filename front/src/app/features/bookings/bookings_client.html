@@ -1,12 +1,45 @@
-<div class="client-bookings-page">
-  <div class="client-bookings-container">
+<div class="booking-page">
+  <div class="booking-container">
     <section class="page-header">
-      <h1>Mes reservations</h1>
-      <p>{{ bookings.length }} reservation(s)</p>
+      <h1>Réservations</h1>
+      <p>{{ bookings.length }} reservations au total</p>
+    </section>
+
+    <section class="booking-toolbar" *ngIf="!isLoading && !errorMessage && bookings.length">
+      <label class="search-box" aria-label="Rechercher des reservations">
+        <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
+          <path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+        </svg>
+        <input
+          type="text"
+          [value]="searchTerm"
+          (input)="updateSearchTerm($event)"
+          placeholder="Rechercher des reservations..."
+        />
+      </label>
+
+      <div class="filter-group" aria-label="Filtres des reservations">
+        <button type="button" class="filter-icon-button" aria-hidden="true" tabindex="-1">
+          <svg viewBox="0 0 24 24" class="filter-icon" aria-hidden="true">
+            <path d="M4 6h16l-6 7v5l-4-2v-3L4 6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          class="filter-pill"
+          *ngFor="let tab of tabs"
+          [class.active]="selectedTab === tab.key"
+          (click)="setSelectedTab(tab.key)"
+        >
+          {{ tab.label }}
+        </button>
+      </div>
     </section>
 
     <section *ngIf="isLoading" class="bookings-state">
-      Chargement de vos reservations...
+      Chargement de vos réservations...
     </section>
 
     <section *ngIf="!isLoading && errorMessage" class="bookings-state bookings-state--error">
@@ -17,27 +50,47 @@
       Aucune reservation pour le moment.
     </section>
 
-    <section class="bookings-list" *ngIf="!isLoading && !errorMessage && bookings.length">
-      <article class="booking-card" *ngFor="let booking of bookings">
-        <div class="booking-main">
-          <div class="booking-details">
-            <h2>{{ booking.property?.name || ('Logement #' + (booking.property?.id ?? booking.id)) }}</h2>
-            <p class="booking-location">{{ formatLocation(booking) }}</p>
+    <section class="bookings-state" *ngIf="!isLoading && !errorMessage && bookings.length && filteredBookings.length === 0">
+      Aucune reservation ne correspond a votre recherche.
+    </section>
 
-            <div class="booking-date">
-              <svg viewBox="0 0 24 24" class="detail-icon" aria-hidden="true">
+    <section class="reservations-list" *ngIf="!isLoading && !errorMessage && filteredBookings.length">
+      <article class="reservation-card" *ngFor="let booking of filteredBookings; trackBy: trackByBooking">
+        <div class="reservation-left">
+          <div class="guest-avatar">{{ getBookingInitials(booking) }}</div>
+
+          <div class="reservation-info">
+            <h2>{{ getBookingTitle(booking) }}</h2>
+            <p>{{ formatLocation(booking) }}</p>
+          </div>
+        </div>
+
+        <div class="reservation-right">
+          <div class="reservation-meta">
+            <div class="meta-item">
+              <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
                 <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
                 <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
               </svg>
-              <span>
-                {{ booking.startDate | date:'dd MMM yyyy' }} - {{ booking.endDate | date:'dd MMM yyyy' }}
-              </span>
+              <span>{{ booking.startDate | date:'yyyy-MM-dd' }} au {{ booking.endDate | date:'yyyy-MM-dd' }}</span>
             </div>
+
+            <div class="meta-item">
+              <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                <path d="M8 7.5A2.5 2.5 0 1 1 8 12.5A2.5 2.5 0 0 1 8 7.5Z" fill="none" stroke="currentColor" stroke-width="1.8"></path>
+                <path d="M16.5 8.5A2 2 0 1 1 16.5 12.5A2 2 0 0 1 16.5 8.5Z" fill="none" stroke="currentColor" stroke-width="1.8"></path>
+                <path d="M3.5 18a4.5 4.5 0 0 1 9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                <path d="M13 18a3.5 3.5 0 0 1 7 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+              </svg>
+              <span>{{ getDurationLabel(booking) }}</span>
+            </div>
+
+            <span class="status" [ngClass]="getBookingStatusClass(booking)">
+              {{ getBookingStatusLabel(booking) }}
+            </span>
           </div>
 
-          <div class="booking-meta">
-            <div class="booking-price">{{ booking.totalPrice | currency:'EUR':'symbol':'1.0-0' }}</div>
-          </div>
+          <div class="reservation-price">{{ booking.totalPrice | currency:'EUR':'code':'1.0-0' }}</div>
         </div>
       </article>
     </section>

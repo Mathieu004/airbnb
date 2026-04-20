@@ -1,8 +1,6 @@
 <aside class="sidebar" [class.collapsed]="isCollapsed">
 
-  <!-- MODE CLIENT (par défaut) -->
   <ng-container *ngIf="(role$ | async) !== 'HOST'">
-
     <a routerLink="/properties" routerLinkActive="active" class="nav-item">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <span class="nav-label">Explorer</span>
@@ -27,12 +25,9 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       <span class="nav-label">Paramètres</span>
     </a>
-
   </ng-container>
 
-  <!-- MODE HOST -->
   <ng-container *ngIf="(role$ | async) === 'HOST'">
-
     <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       <span class="nav-label">Dashboard</span>
@@ -40,7 +35,7 @@
 
     <a routerLink="/calendrier" routerLinkActive="active" class="nav-item">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      <span class="nav-label">Calendrier partagé</span>
+      <span class="nav-label">Calendrier partage</span>
     </a>
 
     <a routerLink="/messagerie" routerLinkActive="active" class="nav-item">
@@ -48,9 +43,12 @@
       <span class="nav-label">Messagerie</span>
     </a>
 
+    <a routerLink="/bookings_proprietaire" routerLinkActive="active" class="nav-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span class="nav-label">Réservations</span>
+    </a>
   </ng-container>
 
-  <!-- BAS DE SIDEBAR -->
   <div class="sidebar-bottom">
     <a class="nav-item reduce" (click)="toggleSidebar()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>

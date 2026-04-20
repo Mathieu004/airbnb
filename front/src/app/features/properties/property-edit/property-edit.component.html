@@ -107,7 +107,7 @@
           <div class="booking-card__price">
             {{ property.pricePerNight | currency:'EUR':'symbol':'1.0-0' }} <span>/ nuit</span>
           </div>
-          <p class="booking-card__note">Menage inclus</p>
+          <p class="booking-card__note">Menage non inclus</p>
 
           <mat-form-field appearance="outline">
             <mat-label>Arrivee</mat-label>
@@ -132,6 +132,14 @@
             </mat-select>
           </mat-form-field>
 
+          <label class="booking-card__option">
+            <input type="checkbox" [(ngModel)]="includeCleaningService">
+            <span>
+              <strong>Ajouter le service de nettoyage</strong>
+              <small>Option facultative. +10% du montant de la reservation.</small>
+            </span>
+          </label>
+
           <div class="booking-card__summary">
             <div class="summary-row">
               <span>{{ property.pricePerNight | currency:'EUR':'symbol':'1.0-0' }} x {{ nightsLabel }}</span>
@@ -140,6 +148,10 @@
             <div class="summary-row">
               <span>Frais de service</span>
               <span>{{ serviceFee | currency:'EUR':'symbol':'1.0-0' }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Service de nettoyage</span>
+              <span>{{ cleaningFee | currency:'EUR':'symbol':'1.0-0' }}</span>
             </div>
             <div class="summary-row summary-row--total">
               <span>Total</span>

@@ -39,6 +39,7 @@ export class PropertyEditComponent implements OnInit {
   arrivalDate: Date | null = null;
   departureDate: Date | null = null;
   selectedGuests = 1;
+  includeCleaningService = false;
   successMessage = '';
   bookingError = '';
   private feedbackTimer?: ReturnType<typeof setTimeout>;
@@ -136,8 +137,15 @@ export class PropertyEditComponent implements OnInit {
     return Math.round(this.subtotalPrice * 0.1);
   }
 
+  get cleaningFee(): number {
+    if (!this.includeCleaningService) {
+      return 0;
+    }
+    return Math.round(this.subtotalPrice * 0.1);
+  }
+
   get totalDue(): number {
-    return this.subtotalPrice + this.serviceFee;
+    return this.subtotalPrice + this.serviceFee + this.cleaningFee;
   }
 
   reserve(): void {
@@ -168,11 +176,7 @@ export class PropertyEditComponent implements OnInit {
   }
 
   private computeTotalPrice(): number {
-    if (!this.property) {
-      return 0;
-    }
-    const nights = Math.max(this.nights, 1);
-    return Number(this.property.pricePerNight) * nights;
+    return this.totalDue;
   }
 
   private parseAmenities(value?: string | null): string[] {

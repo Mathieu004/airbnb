@@ -46,6 +46,12 @@ export const routes: Routes = [
       import('./features/bookings/bookings').then(m => m.BookingsComponent)
   },
   {
+    path: 'bookings_proprietaire',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/bookings/bookings_propriétaire.component').then(m => m.BookingsProprietaireComponent)
+  },
+  {
     path: 'avis',
     canActivate: [authGuard],
     loadComponent: () =>
@@ -69,4 +75,5 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/messages/message.component').then(m => m.MessagerieComponent)
   },
+
 ];
