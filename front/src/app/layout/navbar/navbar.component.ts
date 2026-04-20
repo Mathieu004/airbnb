@@ -41,8 +41,16 @@ export class NavbarComponent {
   }
 
   switchRole(): void {
+    const currentRole = this.auth.getCurrentUserRole();
     this.auth.toggleRole();
     this.menuOpen = false;
+
+    if (currentRole !== 'HOST') {
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/properties']);
+    }
+
   }
 
   logout(): void {

@@ -57,4 +57,16 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/settings/parametres/parametres.component').then(m => m.ParametresComponent)
   },
+  {
+    path: 'calendrier',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/calendars/calendar.component').then(m => m.CalendrierComponent)
+  },
+  {
+    path: 'messagerie',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/messages/message.component').then(m => m.MessagerieComponent)
+  },
 ];
