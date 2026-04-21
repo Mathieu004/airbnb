@@ -18,16 +18,19 @@ export class BookingsComponent implements OnInit {
   searchTerm = '';
   selectedTab: BookingTab = 'all';
   readonly tabs: ReadonlyArray<{ key: BookingTab; label: string }> = [
-    { key: 'all', label: 'Toutes' },
-    { key: 'current', label: 'En cours' },
-    { key: 'upcoming', label: 'A venir' },
-    { key: 'past', label: 'Passées' }
+    {key: 'all', label: 'Toutes'},
+    {key: 'current', label: 'En cours'},
+    {key: 'upcoming', label: 'A venir'},
+    {key: 'past', label: 'Passées'}
   ];
+  showCancelModal = false;
+  bookingToCancel: any = null;
 
   constructor(
     private bookingService: BookingService,
     private authService: AuthService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadBookings();
@@ -123,6 +126,10 @@ export class BookingsComponent implements OnInit {
 
   getBookingStatusLabel(booking: Booking): string {
     const status = this.getBookingStatus(booking);
+
+    if (status === 'cancelled') {
+      return 'Annulée';
+    }
     if (status === 'current') {
       return 'En cours';
     }
@@ -149,6 +156,9 @@ export class BookingsComponent implements OnInit {
   }
 
   private getBookingStatus(booking: Booking): Exclude<BookingTab, 'all'> {
+    if (this.isCancelled(booking)) {
+      return 'cancelled';
+    }
     const today = this.startOfDay(new Date());
     const startDate = this.startOfDay(new Date(booking.startDate));
     const endDate = this.startOfDay(new Date(booking.endDate));
@@ -191,6 +201,55 @@ export class BookingsComponent implements OnInit {
       .toLowerCase()
       .trim();
   }
+
+  cancelledBookingIds: number[] = [];
+
+  isCancelled(booking: Booking): boolean {
+    if (booking.id === undefined) {
+      return false;
+    }
+    return this.cancelledBookingIds.includes(booking.id);
+  }
+
+  openCancelModal(booking: any): void {
+    this.bookingToCancel = booking;
+    this.showCancelModal = true;
+  }
+
+  closeCancelModal(): void {
+    this.showCancelModal = false;
+    this.bookingToCancel = null;
+  }
+
+  confirmCancelBooking(): void {
+    if (!this.bookingToCancel) {
+      return;
+    }
+
+    if (!this.cancelledBookingIds.includes(this.bookingToCancel.id)) {
+      this.cancelledBookingIds.push(this.bookingToCancel.id);
+    }
+
+    this.closeCancelModal();
+  }
+
+
+  //
+  // closeCancelModal(): void {
+  //   this.showCancelModal = false;
+  //   this.bookingToCancel = null;
+  // }
+  //
+  // confirmCancelBooking(): void {
+  //   if (!this.bookingToCancel) {
+  //     return;
+  //   }
+  //
+  //   this.bookingToCancel.status = 'cancelled';
+  //
+  //   this.closeCancelModal();
+  //}
+
 }
 
-type BookingTab = 'all' | 'current' | 'upcoming' | 'past';
+type BookingTab = 'all' | 'current' | 'upcoming' | 'past' | 'cancelled';

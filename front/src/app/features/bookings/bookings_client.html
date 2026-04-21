@@ -90,9 +90,37 @@
             </span>
           </div>
 
-          <div class="reservation-price">{{ booking.totalPrice | currency:'EUR':'code':'1.0-0' }}</div>
+          <div class="reservation-actions">
+            <button *ngIf="!isCancelled(booking)" type="button" class="cancel-button" (click)="openCancelModal(booking)"> Annuler </button>
+            <div class="reservation-price">{{ booking.totalPrice | currency:'EUR':'code':'1.0-0' }}</div>
+          </div>
         </div>
       </article>
     </section>
+
+    <div class="modal-backdrop" *ngIf="showCancelModal" (click)="closeCancelModal()">
+      <div class="cancel-modal" (click)="$event.stopPropagation()">
+        <h2>Annuler la réservation ?</h2>
+
+        <p *ngIf="bookingToCancel">
+          Êtes-vous sûr de vouloir annuler votre réservation pour
+          <strong>{{ getBookingTitle(bookingToCancel) }}</strong>
+          du {{ bookingToCancel.startDate | date:'yyyy-MM-dd' }}
+          au {{ bookingToCancel.endDate | date:'yyyy-MM-dd' }} ?
+          Cette action est irréversible.
+        </p>
+
+        <div class="modal-actions">
+          <button type="button" class="modal-secondary-button" (click)="closeCancelModal()">
+            Retour
+          </button>
+
+          <button type="button" class="modal-danger-button" (click)="confirmCancelBooking()">
+            Confirmer l'annulation
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
