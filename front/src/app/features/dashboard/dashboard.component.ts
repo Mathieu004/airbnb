@@ -6,6 +6,8 @@ import { AuthService } from '../../core/auth.service';
 import { Booking } from '../bookings/booking.model';
 import { Property } from '../properties/property.model';
 
+type RevenueTimeline = 'week' | 'month' | 'year';
+
 type ChartBar = {
   label: string;
   value: number;
@@ -30,11 +32,14 @@ export class DashboardComponent implements OnInit {
 
   propertiesCount = 0;
   upcomingReservationsCount = 0;
-  weeklyRevenueTotal = 0;
+  revenueTotal = 0;
+  selectedTimeline: RevenueTimeline = 'week';
   chartBars: ChartBar[] = [];
   recentReservations: RecentReservation[] = [];
 
   private readonly dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  private readonly monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  private bookings: Booking[] = [];
 
   constructor(
     public auth: AuthService,
@@ -42,12 +47,27 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadProperties();
-    this.loadBookings();
+    if (this.isHostMode) {
+      this.loadDashboard();
+    }
   }
 
   get displayName(): string {
     return this.auth.getCurrentUser() || 'Jean';
+  }
+
+  get isHostMode(): boolean {
+    return this.auth.getCurrentUserRole() === 'HOST';
+  }
+
+  switchToHost(): void {
+    this.auth.updateLocalRole('HOST');
+    this.loadDashboard();
+  }
+
+  selectTimeline(timeline: RevenueTimeline): void {
+    this.selectedTimeline = timeline;
+    this.chartBars = this.buildRevenueChart(this.bookings);
   }
 
   formatCurrency(value: number): string {
@@ -60,6 +80,11 @@ export class DashboardComponent implements OnInit {
 
   formatDateRange(booking: Booking): string {
     return `${booking.startDate} -> ${booking.endDate}`;
+  }
+
+  private loadDashboard(): void {
+    this.loadProperties();
+    this.loadBookings();
   }
 
   private loadProperties(): void {
@@ -81,13 +106,15 @@ export class DashboardComponent implements OnInit {
   private loadBookings(): void {
     this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
       next: (bookings) => {
+        this.bookings = bookings;
         this.upcomingReservationsCount = this.countUpcomingReservations(bookings);
-        this.chartBars = this.buildWeeklyRevenueChart(bookings);
+        this.chartBars = this.buildRevenueChart(bookings);
         this.recentReservations = this.buildRecentReservations(bookings);
       },
       error: () => {
+        this.bookings = [];
         this.upcomingReservationsCount = 0;
-        this.chartBars = this.buildWeeklyRevenueChart([]);
+        this.chartBars = this.buildRevenueChart([]);
         this.recentReservations = [];
       }
     });
@@ -101,6 +128,14 @@ export class DashboardComponent implements OnInit {
       const startDate = this.parseDate(booking.startDate);
       return startDate != null && startDate >= today;
     }).length;
+  }
+
+  private buildRevenueChart(bookings: Booking[]): ChartBar[] {
+    return this.selectedTimeline === 'month'
+      ? this.buildMonthlyRevenueChart(bookings)
+      : this.selectedTimeline === 'year'
+        ? this.buildYearlyRevenueChart(bookings)
+      : this.buildWeeklyRevenueChart(bookings);
   }
 
   private buildWeeklyRevenueChart(bookings: Booking[]): ChartBar[] {
@@ -120,11 +155,66 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    this.weeklyRevenueTotal = totals.reduce((sum, value) => sum + value, 0);
+    this.revenueTotal = totals.reduce((sum, value) => sum + value, 0);
     const max = Math.max(...totals, 1);
 
     return totals.map((value, index) => ({
       label: this.dayLabels[index],
+      value,
+      height: Math.max(8, Math.round((value / max) * 100))
+    }));
+  }
+
+  private buildMonthlyRevenueChart(bookings: Booking[]): ChartBar[] {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const bucketSize = Math.ceil(daysInMonth / 4);
+    const totals = new Array(4).fill(0) as number[];
+
+    bookings.forEach((booking) => {
+      const startDate = this.parseDate(booking.startDate);
+      if (!startDate) return;
+
+      if (startDate.getFullYear() === year && startDate.getMonth() === month) {
+        const bucketIndex = Math.min(3, Math.floor((startDate.getDate() - 1) / bucketSize));
+        totals[bucketIndex] += Number(booking.totalPrice || 0);
+      }
+    });
+
+    this.revenueTotal = totals.reduce((sum, value) => sum + value, 0);
+    const max = Math.max(...totals, 1);
+
+    return totals.map((value, index) => {
+      const startDay = index * bucketSize + 1;
+      const endDay = Math.min(daysInMonth, (index + 1) * bucketSize);
+      return {
+        label: `${startDay}-${endDay}`,
+        value,
+        height: Math.max(8, Math.round((value / max) * 100))
+      };
+    });
+  }
+
+  private buildYearlyRevenueChart(bookings: Booking[]): ChartBar[] {
+    const year = new Date().getFullYear();
+    const totals = new Array(12).fill(0) as number[];
+
+    bookings.forEach((booking) => {
+      const startDate = this.parseDate(booking.startDate);
+      if (!startDate) return;
+
+      if (startDate.getFullYear() === year) {
+        totals[startDate.getMonth()] += Number(booking.totalPrice || 0);
+      }
+    });
+
+    this.revenueTotal = totals.reduce((sum, value) => sum + value, 0);
+    const max = Math.max(...totals, 1);
+
+    return totals.map((value, index) => ({
+      label: this.monthLabels[index],
       value,
       height: Math.max(8, Math.round((value / max) * 100))
     }));

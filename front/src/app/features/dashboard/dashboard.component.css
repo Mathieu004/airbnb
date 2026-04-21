@@ -9,6 +9,76 @@
   padding: 28px 24px 56px;
 }
 
+.dashboard-locked {
+  min-height: calc(100vh - 126px);
+  display: grid;
+  place-items: center;
+}
+
+.locked-card {
+  width: min(560px, 100%);
+  padding: 42px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #dde4ee;
+  border-radius: 18px;
+  box-shadow: 0 18px 55px rgba(31, 69, 104, 0.12);
+}
+
+.locked-icon {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+  border-radius: 20px;
+  background: #e9f3fb;
+  color: #1f4568;
+}
+
+.locked-icon svg {
+  width: 34px;
+  height: 34px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.locked-kicker {
+  margin: 0 0 10px;
+  color: #2e7eb9;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.locked-card h1 {
+  margin: 0 0 12px;
+  color: #172332;
+  font-size: 28px;
+}
+
+.locked-card p:not(.locked-kicker) {
+  max-width: 420px;
+  margin: 0 auto 24px;
+  color: #66758a;
+  line-height: 1.6;
+}
+
+.locked-card button {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 22px;
+  background: #1f4568;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
 .dashboard-hero {
   display: flex;
   align-items: flex-end;
@@ -147,6 +217,30 @@
   font-size: 14px;
 }
 
+.timeline-selector {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  background: #f1f5f9;
+  border-radius: 999px;
+}
+
+.timeline-selector button {
+  border: 0;
+  border-radius: 999px;
+  padding: 5px 12px;
+  background: transparent;
+  color: #66758a;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.timeline-selector button.active {
+  background: #1f4568;
+  color: #fff;
+}
+
 .revenue-growth {
   color: #16a34a;
   font-size: 14px;
@@ -172,12 +266,17 @@
 .bar-chart {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
   align-items: end;
   gap: 28px;
   min-height: 270px;
   padding: 10px 12px 44px;
   border-left: 1px dashed #dce4ee;
+}
+
+.bar-chart.year-view {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 14px;
 }
 
 .grid-lines {
@@ -204,6 +303,10 @@
   min-height: 10px;
   border-radius: 6px 6px 0 0;
   background: #1f4568;
+}
+
+.year-view .bar {
+  max-width: 42px;
 }
 
 .bar-value {

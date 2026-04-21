@@ -20,6 +20,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @EntityGraph(attributePaths = {"property", "guest"})
     List<Booking> findByGuestId(Long guestId);
 
+    @EntityGraph(attributePaths = {"property", "guest"})
+    List<Booking> findByPropertyHostId(Long hostId);
+
     default List<Booking> findAllWithRelations() {
         return findAll();
     }
@@ -30,5 +33,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     default List<Booking> findAllByGuestIdWithRelations(Long guestId) {
         return findByGuestId(guestId);
+    }
+
+    default List<Booking> findAllByPropertyHostIdWithRelations(Long hostId) {
+        return findByPropertyHostId(hostId);
     }
 }
