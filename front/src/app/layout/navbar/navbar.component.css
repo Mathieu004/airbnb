@@ -11,11 +11,7 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  font-family:
-    "Inter",
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
+  font-family: var(--app-font-family);
   color: #1a202c;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;

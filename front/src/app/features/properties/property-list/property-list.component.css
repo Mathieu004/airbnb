@@ -14,7 +14,7 @@ img {
   padding: 36px 32px;
   min-height: 100vh;
   background: #f7f7fb;
-  font-family: 'Inter', 'DM Sans', sans-serif;
+  font-family: var(--app-font-family);
   color: #111827;
   display: flex;
   flex-direction: column;
@@ -47,7 +47,7 @@ img {
   outline: none;
   font-size: 0.875rem;
   color: #374151;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--app-font-family);
 }
 
 /* ICONS */
