@@ -1,10 +1,198 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+<div class="messages-page">
+  <div class="messages-header">
+    <h1>Messages</h1>
+    <p>Communication avec les clients</p>
+  </div>
 
-</body>
-</html>
+  <div class="messages-layout">
+    <aside class="conversation-panel">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true">
+          <circle
+            cx="11"
+            cy="11"
+            r="6.5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.9"
+          />
+          <path
+            d="M16 16l4 4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <input
+          type="text"
+          placeholder="Rechercher un client ou logement"
+          aria-label="Rechercher un client ou logement"
+        />
+      </div>
+
+      <div class="conversation-list">
+        <button type="button" class="conversation-item active">
+          <div class="avatar">SM</div>
+
+          <div class="conversation-content">
+            <div class="conversation-name">Sophie Martin</div>
+
+            <div class="conversation-property">
+              <svg viewBox="0 0 24 24" class="conversation-icon" aria-hidden="true">
+                <path
+                  d="M4 10.5 12 4l8 6.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M6.5 10V19a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-9"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span>Appartement Haussmannien</span>
+            </div>
+
+            <div class="conversation-meta">Paris · 2026-04-02 → 2026-04-06</div>
+          </div>
+        </button>
+
+        <button type="button" class="conversation-item">
+          <div class="avatar">MD</div>
+
+          <div class="conversation-content">
+            <div class="conversation-name">Marie Dupont</div>
+
+            <div class="conversation-property">
+              <svg viewBox="0 0 24 24" class="conversation-icon" aria-hidden="true">
+                <path
+                  d="M4 10.5 12 4l8 6.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M6.5 10V19a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-9"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span>Appartement Haussmannien</span>
+            </div>
+
+            <div class="conversation-meta">Paris · 2026-04-10 → 2026-04-13</div>
+          </div>
+        </button>
+
+        <button type="button" class="conversation-item">
+          <div class="avatar">TA</div>
+
+          <div class="conversation-content">
+            <div class="conversation-name">Tom Anderson</div>
+
+            <div class="conversation-property">
+              <svg viewBox="0 0 24 24" class="conversation-icon" aria-hidden="true">
+                <path
+                  d="M4 10.5 12 4l8 6.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M6.5 10V19a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-9"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span>Studio Presqu'île</span>
+            </div>
+
+            <div class="conversation-meta">Lyon · 2026-03-28 → 2026-03-31</div>
+          </div>
+        </button>
+      </div>
+    </aside>
+
+    <section class="chat-panel">
+      <div class="chat-header">
+        <div class="chat-client">
+          <h2>Sophie Martin</h2>
+          <p>sophie&#64;email.com</p>
+        </div>
+
+        <div class="chat-booking">
+          <div class="chat-property-name">
+            <svg viewBox="0 0 24 24" class="chat-property-icon" aria-hidden="true">
+              <path
+                d="M4 10.5 12 4l8 6.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M6.5 10V19a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-9"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Appartement Haussmannien</span>
+          </div>
+
+          <div class="chat-booking-address">15 Rue de Rivoli, Paris</div>
+          <div class="chat-booking-dates">2026-04-02 → 2026-04-06</div>
+        </div>
+      </div>
+
+      <div class="chat-body empty">
+        <p>Les messages apparaîtront ici.</p>
+      </div>
+
+      <div class="chat-composer">
+        <input
+          type="text"
+          placeholder="Écrire un message..."
+          aria-label="Écrire un message"
+        />
+
+        <button type="button" class="send-button" aria-label="Envoyer">
+          <svg viewBox="0 0 24 24" class="send-icon" aria-hidden="true">
+            <path
+              d="M21 3 10 14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="m21 3-7 18-4-7-7-4 18-7Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+    </section>
+  </div>
+</div>
