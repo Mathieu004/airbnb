@@ -1,13 +1,13 @@
-*, *::before, *::after { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-body { 
-    font-family: var(--app-font-family); 
-    color: #1a202c; 
-    background: #fff; 
+body {
+    font-family: var(--app-font-family);
+    color: #1a202c;
+    background: #fff;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
 }
@@ -166,14 +166,14 @@ img { display: block; width: 100%; height: auto; }
 .section-title {
     font-size: 1.8rem;
     font-weight: 800;
-    color: #1e3a5f; 
-    margin-bottom: 8px; 
+    color: #1e3a5f;
+    margin-bottom: 8px;
 }
 
 .section-subtitle {
     font-size: 1rem;
     color: #6b7280;
-    margin-bottom: 48px; 
+    margin-bottom: 48px;
     font-weight: 400;
 }
 
@@ -197,7 +197,7 @@ img { display: block; width: 100%; height: auto; }
 .card:hover { transform: translateY(-8px); }
 
 .card-img-wrap {
-    position: relative; 
+    position: relative;
     height: 210px;
     overflow: hidden;
 }
