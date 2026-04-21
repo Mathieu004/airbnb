@@ -211,44 +211,28 @@ export class BookingsComponent implements OnInit {
     return this.cancelledBookingIds.includes(booking.id);
   }
 
+  // Fonction qui ouvre la pop-up
   openCancelModal(booking: any): void {
     this.bookingToCancel = booking;
     this.showCancelModal = true;
   }
 
+  // Fonction qui ferme la pop-up
   closeCancelModal(): void {
     this.showCancelModal = false;
     this.bookingToCancel = null;
   }
-
+  // Fonction qui confirme l'annulation de la réservation. Elle est déclencher dans le bouton de la pop-up.
+  // Elle permet de changer de status la réservation avec l'aide son id et affiche "Annulée" dans l'interface.
   confirmCancelBooking(): void {
     if (!this.bookingToCancel) {
       return;
     }
-
     if (!this.cancelledBookingIds.includes(this.bookingToCancel.id)) {
       this.cancelledBookingIds.push(this.bookingToCancel.id);
     }
-
     this.closeCancelModal();
   }
-
-
-  //
-  // closeCancelModal(): void {
-  //   this.showCancelModal = false;
-  //   this.bookingToCancel = null;
-  // }
-  //
-  // confirmCancelBooking(): void {
-  //   if (!this.bookingToCancel) {
-  //     return;
-  //   }
-  //
-  //   this.bookingToCancel.status = 'cancelled';
-  //
-  //   this.closeCancelModal();
-  //}
 
 }
 
