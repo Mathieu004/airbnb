@@ -24,12 +24,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByPropertyId(Long propertyId);
 
     boolean existsByUserIdAndPropertyId(Long userId, Long propertyId);
-
-    default List<Review> findAllWithRelations() {
-        return findAll();
-    }
-
-    default Optional<Review> findByIdWithRelations(Long id) {
-        return findById(id);
-    }
 }

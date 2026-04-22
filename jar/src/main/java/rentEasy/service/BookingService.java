@@ -36,6 +36,7 @@ public class BookingService {
                 .startDate(request.startDate())
                 .endDate(request.endDate())
                 .totalPrice(request.totalPrice())
+                .numberOfGuests(request.numberOfGuests())
                 .build();
 
         return bookingRepository.save(booking);
@@ -74,6 +75,9 @@ public class BookingService {
     public Booking partialUpdateStatus(Long bookingId, Booking updated) {
         Booking existing = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
+        if (updated.getStatus() != null) {
+            existing.setStatus(updated.getStatus());
+        }
         return bookingRepository.save(existing);
     }
 
@@ -106,6 +110,11 @@ public class BookingService {
     @Transactional
     public List<Booking> findAllByGuestId(Long guestId) {
         return bookingRepository.findAllByGuestIdWithRelations(guestId);
+    }
+
+    @Transactional
+    public List<Booking> findAllByOwnerId(Long ownerId) {
+        return bookingRepository.findAllByOwnerIdWithRelations(ownerId);
     }
 
     @Transactional
