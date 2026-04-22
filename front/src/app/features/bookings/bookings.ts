@@ -202,15 +202,6 @@ export class BookingsComponent implements OnInit {
       .trim();
   }
 
-  cancelledBookingIds: number[] = [];
-
-  // isCancelled(booking: Booking): boolean {
-  //   if (booking.id === undefined) {
-  //     return false;
-  //   }
-  //   return this.cancelledBookingIds.includes(booking.id);
-  // }
-
   // Fonction qui ouvre la pop-up
   openCancelModal(booking: any): void {
     this.bookingToCancel = booking;
@@ -240,13 +231,6 @@ export class BookingsComponent implements OnInit {
         this.errorMessage = "Impossible d'annuler la réservation.";
       }
     });
-    // if (!this.bookingToCancel) {
-    //   return;
-    // }
-    // if (!this.cancelledBookingIds.includes(this.bookingToCancel.id)) {
-    //   this.cancelledBookingIds.push(this.bookingToCancel.id);
-    // }
-    // this.closeCancelModal();
   }
 
 }
