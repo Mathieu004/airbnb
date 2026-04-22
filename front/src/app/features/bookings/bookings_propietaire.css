@@ -10,7 +10,7 @@
   min-height: calc(100vh - 80px);
   padding: 48px 28px 64px;
   background: #f5f7fb;
-  font-family: "DM Sans", "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: var(--app-font-family);
   color: #112b4c;
 }
 

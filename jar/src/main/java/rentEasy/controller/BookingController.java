@@ -19,8 +19,16 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping
-    public List<BookingDto> getAll() {
-        return bookingService.findAll()
+    public List<BookingDto> getAll(
+            @RequestParam(value = "userId", required = false) Long userId,
+            @RequestParam(value = "role", required = false) String role,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId,
+            @RequestHeader(value = "X-User-Role", required = false) String headerRole
+    ) {
+        Long effectiveUserId = userId != null ? userId : headerUserId;
+        String effectiveRole = role != null && !role.isBlank() ? role : headerRole;
+
+        return bookingService.findAll(effectiveUserId, effectiveRole)
                 .stream()
                 .map(this::toDto)
                 .toList();

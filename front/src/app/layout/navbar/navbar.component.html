@@ -43,6 +43,7 @@
 
       <div class="profile__menu" *ngIf="menuOpen">
         <a
+          *ngIf="(role$ | async) === 'HOST'"
           routerLink="/dashboard"
           class="profile__menu-item"
           (click)="menuOpen = false"
