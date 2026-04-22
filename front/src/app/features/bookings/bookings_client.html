@@ -91,7 +91,7 @@
           </div>
 
           <div class="reservation-actions">
-            <button *ngIf="!isCancelled(booking)" type="button" class="cancel-button" (click)="openCancelModal(booking)"> Annuler </button>
+            <button *ngIf="booking.status !== 'cancelled'" type="button" class="cancel-button" (click)="openCancelModal(booking)"> Annuler </button>
             <div class="reservation-price">{{ booking.totalPrice | currency:'EUR':'code':'1.0-0' }}</div>
           </div>
         </div>

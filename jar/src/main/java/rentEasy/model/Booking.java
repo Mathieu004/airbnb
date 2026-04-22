@@ -44,10 +44,16 @@ public class Booking {
     @Column(name = "reservation_date")
     private Timestamp reservationDate;
 
+    @Column(name = "status", nullable = false)
+    private String status;
+
     @PrePersist
     protected void onCreate() {
         if (reservationDate == null) {
             reservationDate = Timestamp.from(Instant.now());
+        }
+        if (status == null || status.isBlank()) {
+            status = "confirmed";
         }
     }
 }

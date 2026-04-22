@@ -15,6 +15,7 @@ public record BookingDto(
         LocalDate endDate,
         BigDecimal totalPrice,
         Timestamp reservationDate,
+        String status,
         PropertySummary property,
         GuestSummary guest
 ) {
@@ -33,6 +34,7 @@ public record BookingDto(
                 booking.getEndDate(),
                 booking.getTotalPrice(),
                 booking.getReservationDate(),
+                booking.getStatus(),
                 toPropertySummary(booking.getProperty()),
                 toGuestSummary(booking.getGuest())
         );

@@ -34,6 +34,7 @@ public class BookingService {
                 .startDate(request.startDate())
                 .endDate(request.endDate())
                 .totalPrice(request.totalPrice())
+                .status("confirmed")
                 .build();
 
         return bookingRepository.save(booking);
@@ -72,6 +73,11 @@ public class BookingService {
     public Booking partialUpdateStatus(Long bookingId, Booking updated) {
         Booking existing = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
+
+        if (updated.getStatus() != null && !updated.getStatus().isBlank()) {
+            existing.setStatus(updated.getStatus());
+        }
+
         return bookingRepository.save(existing);
     }
 

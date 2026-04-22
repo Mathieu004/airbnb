@@ -15,6 +15,7 @@ export interface Booking {
   endDate: string;
   totalPrice: number;
   reservationDate?: string;
+  status?: string;
   propertyId?: number;
   guestUsername?: string;
 }

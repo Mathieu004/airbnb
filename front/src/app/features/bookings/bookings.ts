@@ -24,7 +24,7 @@ export class BookingsComponent implements OnInit {
     {key: 'past', label: 'Passées'}
   ];
   showCancelModal = false;
-  bookingToCancel: any = null;
+  bookingToCancel: Booking | null = null;
 
   constructor(
     private bookingService: BookingService,
@@ -156,7 +156,7 @@ export class BookingsComponent implements OnInit {
   }
 
   private getBookingStatus(booking: Booking): Exclude<BookingTab, 'all'> {
-    if (this.isCancelled(booking)) {
+    if (booking.status === 'cancelled') {
       return 'cancelled';
     }
     const today = this.startOfDay(new Date());
@@ -204,12 +204,12 @@ export class BookingsComponent implements OnInit {
 
   cancelledBookingIds: number[] = [];
 
-  isCancelled(booking: Booking): boolean {
-    if (booking.id === undefined) {
-      return false;
-    }
-    return this.cancelledBookingIds.includes(booking.id);
-  }
+  // isCancelled(booking: Booking): boolean {
+  //   if (booking.id === undefined) {
+  //     return false;
+  //   }
+  //   return this.cancelledBookingIds.includes(booking.id);
+  // }
 
   // Fonction qui ouvre la pop-up
   openCancelModal(booking: any): void {
@@ -225,13 +225,28 @@ export class BookingsComponent implements OnInit {
   // Fonction qui confirme l'annulation de la réservation. Elle est déclencher dans le bouton de la pop-up.
   // Elle permet de changer de status la réservation avec l'aide son id et affiche "Annulée" dans l'interface.
   confirmCancelBooking(): void {
-    if (!this.bookingToCancel) {
+    if (!this.bookingToCancel || this.bookingToCancel.id === undefined) {
       return;
     }
-    if (!this.cancelledBookingIds.includes(this.bookingToCancel.id)) {
-      this.cancelledBookingIds.push(this.bookingToCancel.id);
-    }
-    this.closeCancelModal();
+
+    this.bookingService.updateStatus(this.bookingToCancel.id, 'cancelled').subscribe({
+      next: (updatedBooking) => {
+        this.bookings = this.bookings.map(booking =>
+          booking.id === updatedBooking.id ? updatedBooking : booking
+        );
+        this.closeCancelModal();
+      },
+      error: () => {
+        this.errorMessage = "Impossible d'annuler la réservation.";
+      }
+    });
+    // if (!this.bookingToCancel) {
+    //   return;
+    // }
+    // if (!this.cancelledBookingIds.includes(this.bookingToCancel.id)) {
+    //   this.cancelledBookingIds.push(this.bookingToCancel.id);
+    // }
+    // this.closeCancelModal();
   }
 
 }
