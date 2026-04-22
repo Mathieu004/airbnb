@@ -14,4 +14,12 @@ export class BookingService extends CrudService<Booking> {
   getByGuestId(guestId: number): Observable<Booking[]> {
     return this.http.get<Booking[]>(`${environment.apiUrl}/bookings/guest/${guestId}`);
   }
+
+  getByOwnerId(ownerId: number): Observable<Booking[]> {
+    return this.http.get<Booking[]>(`${environment.apiUrl}/bookings/owner/${ownerId}`);
+  }
+
+  updateStatus(bookingId: number, status: string): Observable<Booking> {
+    return this.http.patch<Booking>(`${environment.apiUrl}/bookings/${bookingId}/status`, { status });
+  }
 }

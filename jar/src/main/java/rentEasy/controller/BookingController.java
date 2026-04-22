@@ -34,6 +34,14 @@ public class BookingController {
                 .toList();
     }
 
+    @GetMapping("/owner/{ownerId}")
+    public List<BookingDto> getAllByOwnerId(@PathVariable Long ownerId) {
+        return bookingService.findAllByOwnerId(ownerId)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
     @GetMapping("/{id}")
     public BookingDto getById(@PathVariable Long id) {
         return toDto(bookingService.findById(id));

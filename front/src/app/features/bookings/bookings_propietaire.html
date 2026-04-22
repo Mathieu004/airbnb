@@ -2,7 +2,7 @@
   <div class="booking-container">
     <header class="page-header">
       <h1>Reservations</h1>
-      <p>5 reservations au total</p>
+      <p>{{ filteredBookings.length }} reservation{{ filteredBookings.length !== 1 ? 's' : '' }} au total</p>
     </header>
 
     <section class="booking-toolbar">
@@ -11,7 +11,8 @@
           <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
           <path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
         </svg>
-        <input type="text" placeholder="Rechercher des reservations..." />
+        <input type="text" placeholder="Rechercher des reservations..."
+               [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
       </div>
 
       <div class="filter-group">
@@ -21,21 +22,28 @@
           </svg>
         </button>
 
-        <button type="button" class="filter-pill active">All</button>
-        <button type="button" class="filter-pill">Pending</button>
-        <button type="button" class="filter-pill">Confirmed</button>
-        <button type="button" class="filter-pill">Cancelled</button>
-        <button type="button" class="filter-pill">Completed</button>
+        <button *ngFor="let f of filters"
+                type="button"
+                class="filter-pill"
+                [class.active]="activeFilter === f.value"
+                (click)="setFilter(f.value)">
+          {{ f.label }}
+        </button>
       </div>
     </section>
 
-    <section class="reservations-list">
-      <article class="reservation-card">
+    <div *ngIf="loading" class="loading-state">Chargement…</div>
+    <div *ngIf="error" class="error-state">{{ error }}</div>
+
+    <section class="reservations-list" *ngIf="!loading && !error">
+      <p *ngIf="filteredBookings.length === 0" class="empty-state">Aucune réservation trouvée.</p>
+
+      <article class="reservation-card" *ngFor="let booking of filteredBookings">
         <div class="reservation-left">
-          <div class="guest-avatar">SM</div>
+          <div class="guest-avatar">{{ getInitials(booking.guest?.username) }}</div>
           <div class="reservation-info">
-            <h2>Sophie Martin</h2>
-            <p>Appartement Haussmannien</p>
+            <h2>{{ booking.guest?.username }}</h2>
+            <p>{{ booking.property?.name }}</p>
           </div>
         </div>
 
@@ -46,51 +54,24 @@
                 <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
                 <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
               </svg>
-              <span>2026-04-02 to 2026-04-06</span>
+              <span>{{ booking.startDate }} to {{ booking.endDate }}</span>
             </div>
-            <div class="meta-item">
+            <div class="meta-item" *ngIf="booking.numberOfGuests">
               <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
                 <circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
                 <circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
                 <path d="M4 19a5 5 0 0 1 10 0M13 19a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
               </svg>
-              <span>2</span>
+              <span>{{ booking.numberOfGuests }}</span>
             </div>
-            <span class="status confirmed">confirmed</span>
+            <span class="status" [ngClass]="booking.status?.toLowerCase()">{{ booking.status?.toLowerCase() }}</span>
           </div>
-          <div class="reservation-price">EUR 740</div>
-        </div>
-      </article>
+          <div class="reservation-price">EUR {{ booking.totalPrice }}</div>
 
-      <article class="reservation-card">
-        <div class="reservation-left">
-          <div class="guest-avatar">JW</div>
-          <div class="reservation-info">
-            <h2>James Wilson</h2>
-            <p>Villa Mediterranee</p>
+          <div class="status-actions" *ngIf="booking.status === 'PENDING'">
+            <button class="btn-confirm" (click)="updateStatus(booking, 'CONFIRMED')">Confirmer</button>
+            <button class="btn-cancel" (click)="updateStatus(booking, 'CANCELLED')">Refuser</button>
           </div>
-        </div>
-
-        <div class="reservation-right">
-          <div class="reservation-meta">
-            <div class="meta-item">
-              <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
-                <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-                <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
-              </svg>
-              <span>2026-04-05 to 2026-04-12</span>
-            </div>
-            <div class="meta-item">
-              <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
-                <circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
-                <circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
-                <path d="M4 19a5 5 0 0 1 10 0M13 19a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
-              </svg>
-              <span>6</span>
-            </div>
-            <span class="status pending">pending</span>
-          </div>
-          <div class="reservation-price">EUR 2240</div>
         </div>
       </article>
     </section>
