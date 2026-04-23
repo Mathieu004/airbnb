@@ -1,6 +1,7 @@
 package rentEasy.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,7 @@ public class PropertyController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public PropertyDto create(@Valid @RequestBody Property property) {
         return PropertyDto.fromEntity(propertyService.create(property));
     }
