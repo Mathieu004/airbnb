@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import rentEasy.controller.dto.PropertyRequest;
 import rentEasy.dataBase.Role;
 import rentEasy.model.Property;
+import rentEasy.model.PropertyImage;
 import rentEasy.model.User;
 import rentEasy.repository.PropertyRepository;
 import rentEasy.repository.UserRepository;
@@ -51,69 +53,18 @@ public class PropertyService {
     }
 
     @Transactional
-    public Property create(Property property) {
+    public Property create(PropertyRequest request) {
+        Property property = new Property();
         property.setId(null);
-        preparePropertyRelations(property);
+        applyRequest(property, request);
         return propertyRepository.save(property);
     }
 
     @Transactional
-    public Property update(Long propertyId, Property property) {
+    public Property update(Long propertyId, PropertyRequest request) {
         Property existing = findById(propertyId);
 
-        existing.setName(property.getName());
-        existing.setAddress(property.getAddress());
-        existing.setCity(property.getCity());
-        existing.setCountry(property.getCountry());
-        existing.setDescription(property.getDescription());
-        existing.setPricePerNight(property.getPricePerNight());
-        existing.setMaxGuestnumber(property.getMaxGuestnumber());
-        existing.setBedroomNumber(property.getBedroomNumber());
-        existing.setBathroomNumber(property.getBathroomNumber());
-        existing.setHasHairDryer(property.getHasHairDryer());
-        existing.setHasWashMachine(property.getHasWashMachine());
-        existing.setHasDryerMachine(property.getHasDryerMachine());
-        existing.setHasAirConditioner(property.getHasAirConditioner());
-        existing.setHasKitchen(property.getHasKitchen());
-        existing.setHasHeater(property.getHasHeater());
-        existing.setHasOven(property.getHasOven());
-        existing.setHasCoffeeMachine(property.getHasCoffeeMachine());
-        existing.setHasTV(property.getHasTV());
-        existing.setHasWifi(property.getHasWifi());
-        existing.setHasGarden(property.getHasGarden());
-        existing.setAreAnimalsAllowed(property.getAreAnimalsAllowed());
-        existing.setCleaningOptionPrice(property.getCleaningOptionPrice());
-        existing.setType(property.getType());
-        existing.setSize(property.getSize());
-        existing.setIsActive(property.getIsActive());
-
-        if (property.getHost() != null && property.getHost().getId() != null) {
-            existing.setHost(getUserReference(property.getHost().getId()));
-        }
-
-        Set<rentEasy.model.PropertyImage> images = new LinkedHashSet<>();
-        if (property.getImages() != null) {
-            property.getImages().forEach(image -> {
-                image.setId(null);
-                image.setProperty(existing);
-                images.add(image);
-            });
-        }
-        existing.getImages().clear();
-        existing.getImages().addAll(images);
-
-        if (property.getReviewsList() != null) {
-            existing.getReviewsList().clear();
-            property.getReviewsList().forEach(review -> {
-                review.setId(null);
-                review.setProperty(existing);
-                if (review.getUser() != null && review.getUser().getId() != null) {
-                    review.setUser(getUserReference(review.getUser().getId()));
-                }
-                existing.getReviewsList().add(review);
-            });
-        }
-
+        applyRequest(existing, request);
         return propertyRepository.save(existing);
     }
 
@@ -125,27 +76,47 @@ public class PropertyService {
         propertyRepository.deleteById(propertyId);
     }
 
-    private void preparePropertyRelations(Property property) {
-        if (property.getHost() != null && property.getHost().getId() != null) {
-            property.setHost(getUserReference(property.getHost().getId()));
-        }
+    private void applyRequest(Property property, PropertyRequest request) {
+        property.setName(request.name().trim());
+        property.setAddress(request.address() == null ? null : request.address().trim());
+        property.setCity(request.city().trim());
+        property.setCountry(request.country().trim());
+        property.setDescription(request.description() == null ? null : request.description().trim());
+        property.setPricePerNight(request.pricePerNight());
+        property.setMaxGuestnumber(request.maxGuestnumber());
+        property.setBedroomNumber(request.bedroomNumber());
+        property.setBathroomNumber(request.bathroomNumber());
+        property.setHasHairDryer(Boolean.TRUE.equals(request.hasHairDryer()));
+        property.setHasWashMachine(Boolean.TRUE.equals(request.hasWashMachine()));
+        property.setHasDryerMachine(Boolean.TRUE.equals(request.hasDryerMachine()));
+        property.setHasAirConditioner(Boolean.TRUE.equals(request.hasAirConditioner()));
+        property.setHasKitchen(Boolean.TRUE.equals(request.hasKitchen()));
+        property.setHasHeater(Boolean.TRUE.equals(request.hasHeater()));
+        property.setHasOven(Boolean.TRUE.equals(request.hasOven()));
+        property.setHasCoffeeMachine(Boolean.TRUE.equals(request.hasCoffeeMachine()));
+        property.setHasTV(Boolean.TRUE.equals(request.hasTV()));
+        property.setHasWifi(Boolean.TRUE.equals(request.hasWifi()));
+        property.setHasGarden(Boolean.TRUE.equals(request.hasGarden()));
+        property.setAreAnimalsAllowed(Boolean.TRUE.equals(request.areAnimalsAllowed()));
+        property.setCleaningOptionPrice(request.cleaningOptionPrice() == null ? 0 : request.cleaningOptionPrice());
+        property.setType(request.type());
+        property.setSize(request.size() == null ? 0 : request.size());
+        property.setIsActive(request.isActive() == null || request.isActive());
+        property.setHost(getUserReference(request.host().id()));
 
-        if (property.getImages() != null) {
-            property.getImages().forEach(image -> {
-                image.setId(null);
-                image.setProperty(property);
+        Set<PropertyImage> images = new LinkedHashSet<>();
+        if (request.images() != null) {
+            request.images().forEach(imageRequest -> {
+                PropertyImage image = PropertyImage.builder()
+                        .imageUrl(imageRequest.imageUrl().trim())
+                        .isMain(Boolean.TRUE.equals(imageRequest.isMain()))
+                        .property(property)
+                        .build();
+                images.add(image);
             });
         }
-
-        if (property.getReviewsList() != null) {
-            property.getReviewsList().forEach(review -> {
-                review.setId(null);
-                review.setProperty(property);
-                if (review.getUser() != null && review.getUser().getId() != null) {
-                    review.setUser(getUserReference(review.getUser().getId()));
-                }
-            });
-        }
+        property.getImages().clear();
+        property.getImages().addAll(images);
     }
 
     private User getUserReference(Long userId) {
