@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import rentEasy.controller.dto.PropertyDto;
-import rentEasy.model.Property;
+import rentEasy.controller.dto.PropertyRequest;
 import rentEasy.service.PropertyService;
 
 import java.util.List;
@@ -43,13 +43,13 @@ public class PropertyController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public PropertyDto create(@Valid @RequestBody Property property) {
-        return PropertyDto.fromEntity(propertyService.create(property));
+    public PropertyDto create(@Valid @RequestBody PropertyRequest request) {
+        return PropertyDto.fromEntity(propertyService.create(request));
     }
 
     @PutMapping("/{id}")
-    public PropertyDto update(@PathVariable Long id, @Valid @RequestBody Property property) {
-        return PropertyDto.fromEntity(propertyService.update(id, property));
+    public PropertyDto update(@PathVariable Long id, @Valid @RequestBody PropertyRequest request) {
+        return PropertyDto.fromEntity(propertyService.update(id, request));
     }
 
     @PatchMapping("/{id}/status")
@@ -63,6 +63,6 @@ public class PropertyController {
         propertyService.delete(id);
     }
 
-    private record UpdatePropertyStatusRequest(@JsonProperty("isActive") Boolean isActive) {
+    public record UpdatePropertyStatusRequest(@JsonProperty("isActive") Boolean isActive) {
     }
 }

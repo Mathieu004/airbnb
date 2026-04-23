@@ -53,6 +53,7 @@ interface PropertyForm {
 export class LogementsComponent implements OnInit {
   properties: Property[] = [];
   statusUpdatingIds = new Set<number>();
+  deletingPropertyIds = new Set<number>();
   isLoading = true;
   errorMessage = '';
   isAddModalOpen = false;
@@ -62,6 +63,7 @@ export class LogementsComponent implements OnInit {
   imageUrlInput = '';
   imageError = '';
   modalClosing = false;
+  propertyToDelete: Property | null = null;
 
   readonly fallbackImage =
     'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80';
@@ -158,7 +160,7 @@ export class LogementsComponent implements OnInit {
     this.selectedAmenities = new Set(this.extractAmenities(property.includedFeatures));
     this.images = (property.images ?? []).map((image, index) => ({
       imageUrl: image.imageUrl,
-      isMain: index === 0 ? true : !!image.isMain,
+      isMain: index === 0 ? true : image.isMain,
     }));
     this.imageUrlInput = '';
     this.imageError = '';
@@ -244,6 +246,10 @@ export class LogementsComponent implements OnInit {
     return this.statusUpdatingIds.has(propertyId);
   }
 
+  isDeleting(propertyId: number): boolean {
+    return this.deletingPropertyIds.has(propertyId);
+  }
+
   toggleStatus(property: Property): void {
     if (this.isStatusUpdating(property.id)) return;
 
@@ -263,6 +269,45 @@ export class LogementsComponent implements OnInit {
       },
     });
   }
+
+  deleteProperty(property: Property, event?: Event): void {
+    event?.stopPropagation();
+
+    if (this.isDeleting(property.id)) {
+      return;
+    }
+
+    this.propertyToDelete = property;
+  }
+
+  closeDeleteModal(): void {
+    if (this.propertyToDelete && this.isDeleting(this.propertyToDelete.id)) {
+      return;
+    }
+
+    this.propertyToDelete = null;
+  }
+
+  confirmDeleteProperty(): void {
+    if (!this.propertyToDelete || this.isDeleting(this.propertyToDelete.id)) {
+      return;
+    }
+
+    const property = this.propertyToDelete;
+    this.deletingPropertyIds.add(property.id);
+    this.propertyService.delete(property.id).subscribe({
+      next: () => {
+        this.properties = this.properties.filter((current) => current.id !== property.id);
+        this.deletingPropertyIds.delete(property.id);
+        this.propertyToDelete = null;
+      },
+      error: () => {
+        this.errorMessage = 'Impossible de supprimer ce logement pour le moment.';
+        this.deletingPropertyIds.delete(property.id);
+      },
+    });
+  }
+
   toggleAmenity(label: string, checked: boolean): void {
     if (checked) {
       this.selectedAmenities.add(label);
@@ -335,8 +380,14 @@ export class LogementsComponent implements OnInit {
       return;
     }
 
-    this.isSaving = true;
     this.saveError = '';
+    this.imageError = '';
+
+    if (!this.validateForm()) {
+      return;
+    }
+
+    this.isSaving = true;
 
     const payload = this.buildPayload();
     const request$ = this.isEditMode
@@ -409,31 +460,54 @@ export class LogementsComponent implements OnInit {
     };
   }
 
-  private buildPayloadFromProperty(
-    property: Property,
-    isActive: boolean,
-  ): PropertyPayload {
-    return {
-      host: { id: this.userId! },
-      name: property.name?.trim() ?? '',
-      address: property.address?.trim() ?? '',
-      city: property.city?.trim() ?? '',
-      country: property.country?.trim() || 'France',
-      description: property.description?.trim() ?? '',
-      pricePerNight: Number(property.pricePerNight ?? 0),
-      maxGuestnumber: property.maxGuests ?? 1,
-      bedroomNumber: property.bedrooms ?? 0,
-      bathroomNumber: property.bathrooms ?? 0,
-      cleaningOptionPrice: 0,
-      type: this.mapPropertyType(property.propertyType),
-      size: property.size ?? 0,
-      isActive,
-      images: (property.images ?? []).map((image, index) => ({
-        imageUrl: image.imageUrl,
-        isMain: index === 0 ? true : !!image.isMain,
-      })),
-      ...this.mapAmenityFlags(this.extractAmenities(property.includedFeatures)),
-    };
+  private validateForm(): boolean {
+    if (!this.form.name.trim()) {
+      this.saveError = 'Le nom du logement est obligatoire.';
+      return false;
+    }
+
+    if (!this.form.city.trim()) {
+      this.saveError = 'La ville est obligatoire.';
+      return false;
+    }
+
+    if (!this.form.country.trim()) {
+      this.saveError = 'Le pays est obligatoire.';
+      return false;
+    }
+
+    if (this.form.pricePerNight == null || this.form.pricePerNight <= 0) {
+      this.saveError = 'Le prix par nuit doit etre superieur a 0.';
+      return false;
+    }
+
+    if (this.form.maxGuestnumber == null || this.form.maxGuestnumber < 1) {
+      this.saveError = 'La capacite doit etre au moins de 1 voyageur.';
+      return false;
+    }
+
+    if (this.form.bedroomNumber == null || this.form.bedroomNumber < 0) {
+      this.saveError = 'Le nombre de chambres ne peut pas etre negatif.';
+      return false;
+    }
+
+    if (this.form.bathroomNumber == null || this.form.bathroomNumber < 0) {
+      this.saveError = 'Le nombre de salles de bain ne peut pas etre negatif.';
+      return false;
+    }
+
+    if (this.form.size == null || this.form.size <= 0) {
+      this.saveError = 'La surface doit etre superieure a 0.';
+      return false;
+    }
+
+    if (!this.images.length) {
+      this.imageError = 'Ajoutez au moins une photo pour ce logement.';
+      this.saveError = this.imageError;
+      return false;
+    }
+
+    return true;
   }
 
   private resetForm(): void {

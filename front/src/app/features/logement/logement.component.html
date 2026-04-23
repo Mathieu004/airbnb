@@ -91,6 +91,15 @@
           <button type="button" class="property-card__edit" (click)="openEditModal(property, $event)">
             Modifier
           </button>
+
+          <button
+            type="button"
+            class="property-card__delete"
+            [disabled]="isDeleting(property.id)"
+            (click)="deleteProperty(property, $event)"
+          >
+            {{ isDeleting(property.id) ? 'Suppression...' : 'Supprimer' }}
+          </button>
         </div>
       </div>
     </article>
@@ -109,7 +118,7 @@
         </p>
       </div>
 
-      <button type="button" class="property-modal__close" (click)="closeAddModal()">×</button>
+      <button type="button" class="property-modal__close" (click)="closeAddModal()" aria-label="Fermer">X</button>
     </header>
 
     <form class="property-modal__form" (ngSubmit)="submit()">
@@ -159,19 +168,19 @@
 
         <label class="field">
           <span>Surface (m2)</span>
-          <input type="number" name="size" [(ngModel)]="form.size" min="0" />
+          <input type="number" name="size" [(ngModel)]="form.size"  />
         </label>
       </div>
 
       <div class="field-grid">
         <label class="field">
           <span>Chambres</span>
-          <input type="number" name="bedroomNumber" [(ngModel)]="form.bedroomNumber" min="0" />
+          <input type="number" name="bedroomNumber" [(ngModel)]="form.bedroomNumber" min="0" required />
         </label>
 
         <label class="field">
           <span>Salles de bain</span>
-          <input type="number" name="bathroomNumber" [(ngModel)]="form.bathroomNumber" min="0" />
+          <input type="number" name="bathroomNumber" [(ngModel)]="form.bathroomNumber" min="0" required />
         </label>
       </div>
 
@@ -204,7 +213,7 @@
           <div *ngFor="let image of images; let index = index" class="image-preview">
             <img [src]="image.imageUrl" [alt]="'Photo ' + (index + 1)" />
             <span *ngIf="image.isMain" class="image-preview__badge">Principale</span>
-            <button type="button" class="image-preview__remove" (click)="removeImage(index)">×</button>
+            <button type="button" class="image-preview__remove" (click)="removeImage(index)" aria-label="Retirer la photo">X</button>
           </div>
         </div>
       </div>
@@ -236,5 +245,45 @@
         </button>
       </footer>
     </form>
+  </section>
+</div>
+
+<div *ngIf="propertyToDelete" class="modal-backdrop">
+  <section class="delete-modal">
+    <header class="delete-modal__header">
+      <h2>Supprimer le logement</h2>
+      <button
+        type="button"
+        class="property-modal__close"
+        (click)="closeDeleteModal()"
+        [disabled]="isDeleting(propertyToDelete.id)"
+      >
+        X
+      </button>
+    </header>
+
+    <p>
+      Voulez-vous vraiment supprimer
+      <strong>{{ propertyToDelete.name || 'ce logement' }}</strong> ?
+    </p>
+
+    <div class="delete-modal__actions">
+      <button
+        type="button"
+        class="ghost-btn"
+        (click)="closeDeleteModal()"
+        [disabled]="isDeleting(propertyToDelete.id)"
+      >
+        Annuler
+      </button>
+      <button
+        type="button"
+        class="danger-btn"
+        (click)="confirmDeleteProperty()"
+        [disabled]="isDeleting(propertyToDelete.id)"
+      >
+        {{ isDeleting(propertyToDelete.id) ? 'Suppression...' : 'Supprimer' }}
+      </button>
+    </div>
   </section>
 </div>
