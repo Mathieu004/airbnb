@@ -118,6 +118,17 @@ public class PropertyService {
     }
 
     @Transactional
+    public Property updateStatus(Long propertyId, Boolean isActive) {
+        if (isActive == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Property status is required");
+        }
+
+        Property existing = findById(propertyId);
+        existing.setIsActive(isActive);
+        return propertyRepository.save(existing);
+    }
+
+    @Transactional
     public void delete(Long propertyId) {
         if (!propertyRepository.existsById(propertyId)) {
             throw new IllegalArgumentException("Property not found: " + propertyId);

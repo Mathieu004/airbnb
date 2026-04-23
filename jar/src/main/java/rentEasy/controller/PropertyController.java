@@ -1,5 +1,6 @@
 package rentEasy.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,18 +41,26 @@ public class PropertyController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Property create(@Valid @RequestBody Property property) {
-        return propertyService.create(property);
+    public PropertyDto create(@Valid @RequestBody Property property) {
+        return PropertyDto.fromEntity(propertyService.create(property));
     }
 
     @PutMapping("/{id}")
-    public Property update(@PathVariable Long id, @Valid @RequestBody Property property) {
-        return propertyService.update(id, property);
+    public PropertyDto update(@PathVariable Long id, @Valid @RequestBody Property property) {
+        return PropertyDto.fromEntity(propertyService.update(id, property));
+    }
+
+    @PatchMapping("/{id}/status")
+    public PropertyDto updateStatus(@PathVariable Long id, @RequestBody UpdatePropertyStatusRequest request) {
+        return PropertyDto.fromEntity(propertyService.updateStatus(id, request.isActive()));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         propertyService.delete(id);
+    }
+
+    private record UpdatePropertyStatusRequest(@JsonProperty("isActive") Boolean isActive) {
     }
 }

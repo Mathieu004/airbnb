@@ -40,6 +40,12 @@ export const routes: Routes = [
       import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
+    path: 'host/properties',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/logement/logement.component').then(m => m.LogementsComponent)
+  },
+  {
     path: 'bookings',
     canActivate: [authGuard],
     loadComponent: () =>
