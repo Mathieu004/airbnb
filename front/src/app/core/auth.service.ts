@@ -63,26 +63,7 @@ export class AuthService {
 
   getCurrentUserId(): number | null {
     const id = localStorage.getItem('currentUserId');
-    if (id) {
-      return parseInt(id, 10);
-    }
-
-    const token = this.getToken();
-    if (!token) {
-      return null;
-    }
-
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const tokenUserId = payload?.uid;
-      if (typeof tokenUserId === 'number') {
-        localStorage.setItem('currentUserId', String(tokenUserId));
-        return tokenUserId;
-      }
-      return null;
-    } catch {
-      return null;
-    }
+    return id ? parseInt(id, 10) : null;
   }
 
   getCurrentUserRole(): string | null {

@@ -1,6 +1,5 @@
 package rentEasy.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import rentEasy.model.Property;
 import rentEasy.model.PropertyImage;
 import rentEasy.model.Review;
@@ -21,9 +20,6 @@ public record PropertyDto(
         Integer maxGuests,
         Integer bedrooms,
         Integer bathrooms,
-        Integer size,
-        @JsonProperty("isActive")
-        Boolean isActive,
         String description,
         String includedFeatures,
         HostDetails host,
@@ -64,8 +60,6 @@ public record PropertyDto(
                 property.getMaxGuestnumber(),
                 property.getBedroomNumber(),
                 property.getBathroomNumber(),
-                property.getSize(),
-                property.getIsActive(),
                 property.getDescription(),
                 buildIncludedFeatures(property),
                 property.getHost() == null ? null : new HostDetails(
