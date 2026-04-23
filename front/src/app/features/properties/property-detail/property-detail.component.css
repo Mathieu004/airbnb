@@ -28,15 +28,36 @@
 
 .property-detail__hero {
   width: 100%;
-  height: clamp(500px, 62vh, 680px);
-  border-radius: 36px;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+  height: clamp(320px, 55vh, 520px);
+  border-radius: 24px;
   overflow: hidden;
+}
+
+.property-detail__hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.property-detail__thumbnails {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  isolation: isolate;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.property-detail__thumbnails img {
+  width: 100px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  flex-shrink: 0;
+}
+
+.property-detail__thumbnails img.active {
+  border-color: #111827;
 }
 
 .property-detail__hero::before {

@@ -8,8 +8,18 @@
   </div>
 
   <ng-container *ngIf="!isLoading && property">
-    <div class="property-detail__hero" [style.--hero-image]="'url(' + mainImage + ')'">
-      <img [src]="mainImage" [alt]="property.name">
+    <div class="property-detail__hero">
+      <img [src]="activeImage" [alt]="property.name">
+    </div>
+
+    <div class="property-detail__thumbnails" *ngIf="property.images && property.images.length > 1">
+      <img
+        *ngFor="let image of property.images"
+        [src]="image.imageUrl"
+        [alt]="property.name"
+        [class.active]="activeImage === image.imageUrl"
+        (click)="activeImage = image.imageUrl"
+      >
     </div>
 
     <header class="property-detail__header">
