@@ -40,6 +40,12 @@ export const routes: Routes = [
       import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
+    path: 'host/properties',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/logement/logement.component').then(m => m.LogementsComponent)
+  },
+  {
     path: 'bookings',
     canActivate: [authGuard],
     loadComponent: () =>
@@ -73,7 +79,7 @@ export const routes: Routes = [
     path: 'messagerie',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/messages/message.component').then(m => m.MessagerieComponent)
+      import('./features/messages/messages.component').then(m => m.MessagesComponent)
   },
 
 ];
