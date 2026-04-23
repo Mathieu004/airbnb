@@ -2,8 +2,6 @@ package rentEasy.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -104,8 +102,7 @@ public class Property {
     private Integer cleaningOptionPrice;
 
     @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "type", columnDefinition = "properties_type")
+    @Column(name = "type")
     private PropertyType type;
 
     @Column(name = "size")
