@@ -11,6 +11,7 @@ import rentEasy.repository.BookingRepository;
 import rentEasy.repository.PropertyRepository;
 import rentEasy.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -23,6 +24,9 @@ public class BookingService {
 
     @Transactional
     public Booking create(BookingRequest request) {
+        validateDates(request.startDate(), request.endDate());
+        validateAvailability(request.propertyId(), request.startDate(), request.endDate(), null);
+
         Property property = propertyRepository.findById(request.propertyId())
                 .orElseThrow(() -> new IllegalArgumentException("Property not found: " + request.propertyId()));
         User guest = userRepository.findByUsernameIgnoreCase(request.guestUsername())
@@ -44,6 +48,12 @@ public class BookingService {
     public Booking update(Long bookingId, Booking booking) {
         Booking existing = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
+        Long propertyId = booking.getProperty() != null && booking.getProperty().getId() != null
+                ? booking.getProperty().getId()
+                : existing.getProperty().getId();
+        validateDates(booking.getStartDate(), booking.getEndDate());
+        validateAvailability(propertyId, booking.getStartDate(), booking.getEndDate(), bookingId);
+
         existing.setStartDate(booking.getStartDate());
         existing.setEndDate(booking.getEndDate());
         existing.setTotalPrice(booking.getTotalPrice());
@@ -92,8 +102,32 @@ public class BookingService {
     }
 
     @Transactional
+    public List<Booking> findAllByPropertyId(Long propertyId) {
+        return bookingRepository.findAllByPropertyIdWithRelations(propertyId);
+    }
+
+    @Transactional
     public Booking findById(Long bookingId) {
         return bookingRepository.findByIdWithRelations(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
+    }
+
+    private void validateDates(LocalDate startDate, LocalDate endDate) {
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("Booking dates are required.");
+        }
+        if (!endDate.isAfter(startDate)) {
+            throw new IllegalArgumentException("End date must be after start date.");
+        }
+    }
+
+    private void validateAvailability(Long propertyId, LocalDate startDate, LocalDate endDate, Long bookingId) {
+        boolean overlaps = bookingId == null
+                ? bookingRepository.existsByPropertyIdAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(propertyId, "cancelled", endDate, startDate)
+                : bookingRepository.existsByPropertyIdAndIdNotAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(propertyId, bookingId, "cancelled", endDate, startDate);
+
+        if (overlaps) {
+            throw new IllegalArgumentException("Selected dates are not available for this property.");
+        }
     }
 }

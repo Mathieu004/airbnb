@@ -354,6 +354,12 @@
   color: #71839c;
 }
 
+.cancel-modal .modal-error {
+  margin-top: 14px;
+  color: #c53030;
+  font-weight: 700;
+}
+
 .modal-actions {
   margin-top: 28px;
   display: flex;
@@ -387,6 +393,12 @@
 
 .modal-danger-button:hover {
   background: #dc2626;
+}
+
+.modal-secondary-button:disabled,
+.modal-danger-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 

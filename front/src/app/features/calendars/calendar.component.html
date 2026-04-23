@@ -1,0 +1,67 @@
+<section class="calendar-page">
+  <header class="calendar-header">
+    <div>
+      <h1>Calendrier des disponibilites</h1>
+      <p *ngIf="calendarTitle">{{ calendarTitle }}</p>
+      <p *ngIf="!calendarTitle && !errorMessage">Selectionnez un logement pour afficher son calendrier.</p>
+    </div>
+
+    <div class="calendar-controls" *ngIf="hostProperties.length">
+      <label class="property-select">
+        <span>Logement</span>
+        <select [(ngModel)]="selectedPropertyId" (ngModelChange)="onPropertyChange($event)">
+          <option [ngValue]="'all'">Tous les logements</option>
+          <option *ngFor="let property of hostProperties" [ngValue]="property.id">{{ property.name }}</option>
+        </select>
+      </label>
+
+      <div class="calendar-nav" *ngIf="selectedPropertyId">
+        <button type="button" (click)="changeMonth(-1)">Mois precedent</button>
+        <strong>{{ monthLabel }}</strong>
+        <button type="button" (click)="changeMonth(1)">Mois suivant</button>
+      </div>
+    </div>
+  </header>
+
+  <div *ngIf="isLoading" class="calendar-state">Chargement des logements et reservations...</div>
+  <div *ngIf="!isLoading && errorMessage" class="calendar-state calendar-state--error">{{ errorMessage }}</div>
+
+  <ng-container *ngIf="!isLoading && !errorMessage && selectedPropertyId">
+    <div class="calendar-legend" *ngIf="showSinglePropertyLegend">
+      <span><i class="legend legend--available"></i>Disponible</span>
+      <span><i class="legend legend--today"></i>Aujourd'hui</span>
+      <span><i class="legend legend--reserved"></i>Reservee</span>
+    </div>
+
+    <div class="calendar-legend" *ngIf="showAllPropertiesLegend">
+      <span><i class="legend legend--available"></i>Disponible</span>
+      <span><i class="legend legend--today"></i>Aujourd'hui</span>
+      <span *ngFor="let property of hostProperties">
+        <i class="legend" [style.background]="getPropertyColor(property.id)"></i>{{ property.name }}
+      </span>
+    </div>
+
+    <div class="calendar-grid">
+      <div class="calendar-weekday" *ngFor="let weekday of weekdays">{{ weekday }}</div>
+      <div
+        *ngFor="let cell of calendarCells"
+        class="calendar-cell"
+        [class.calendar-cell--empty]="!cell.inCurrentMonth"
+        [class.calendar-cell--reserved]="cell.isReserved"
+        [class.calendar-cell--today]="cell.isToday"
+      >
+        <span>{{ cell.dayNumber || '' }}</span>
+        <div class="calendar-reservations" *ngIf="cell.reservations.length">
+          <span
+            class="reservation-pill"
+            *ngFor="let reservation of cell.reservations"
+            [style.background]="reservation.color"
+            [title]="reservation.guestName + ' - ' + reservation.propertyName"
+          >
+            {{ reservation.guestName }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</section>

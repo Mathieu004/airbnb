@@ -93,6 +93,7 @@
                 </div>
                 <div class="review-rating">
                   <mat-icon fontIcon="star"></mat-icon>
+                  <mat-icon fontIcon="star"></mat-icon>
                   <span>{{ review.rating }}/5</span>
                 </div>
               </div>
@@ -111,17 +112,21 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Arrivee</mat-label>
-            <input matInput [matDatepicker]="arrivalPicker" [(ngModel)]="arrivalDate">
+            <input matInput [matDatepicker]="arrivalPicker" [matDatepickerFilter]="arrivalDateFilter" [min]="minArrivalDate" [(ngModel)]="arrivalDate" (ngModelChange)="onArrivalDateChange($event)">
             <mat-datepicker-toggle matIconSuffix [for]="arrivalPicker"></mat-datepicker-toggle>
-            <mat-datepicker #arrivalPicker></mat-datepicker>
+            <mat-datepicker #arrivalPicker [dateClass]="dateClass"></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Depart</mat-label>
-            <input matInput [matDatepicker]="departurePicker" [(ngModel)]="departureDate">
+            <input matInput [matDatepicker]="departurePicker" [matDatepickerFilter]="departureDateFilter" [min]="arrivalDate || minArrivalDate" [(ngModel)]="departureDate" (ngModelChange)="onDepartureDateChange($event)">
             <mat-datepicker-toggle matIconSuffix [for]="departurePicker"></mat-datepicker-toggle>
-            <mat-datepicker #departurePicker></mat-datepicker>
+            <mat-datepicker #departurePicker [dateClass]="dateClass"></mat-datepicker>
           </mat-form-field>
+
+          <p class="booking-card__availability-note">
+            Les dates reservees pour ce logement sont indisponibles et affichees en gris.
+          </p>
 
           <mat-form-field appearance="outline">
             <mat-label>Voyageurs</mat-label>

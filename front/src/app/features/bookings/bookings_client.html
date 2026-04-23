@@ -91,7 +91,7 @@
           </div>
 
           <div class="reservation-actions">
-            <button *ngIf="booking.status !== 'cancelled'" type="button" class="cancel-button" (click)="openCancelModal(booking)"> Annuler </button>
+            <button *ngIf="canCancel(booking)" type="button" class="cancel-button" (click)="openCancelModal(booking)"> Annuler </button>
             <div class="reservation-price">{{ booking.totalPrice | currency:'EUR':'code':'1.0-0' }}</div>
           </div>
         </div>
@@ -110,13 +110,15 @@
           Cette action est irréversible.
         </p>
 
+        <p class="modal-error" *ngIf="cancellationError">{{ cancellationError }}</p>
+
         <div class="modal-actions">
-          <button type="button" class="modal-secondary-button" (click)="closeCancelModal()">
+          <button type="button" class="modal-secondary-button" (click)="closeCancelModal()" [disabled]="isCancelling">
             Retour
           </button>
 
-          <button type="button" class="modal-danger-button" (click)="confirmCancelBooking()">
-            Confirmer l'annulation
+          <button type="button" class="modal-danger-button" (click)="confirmCancelBooking()" [disabled]="isCancelling">
+            {{ isCancelling ? 'Annulation...' : 'Confirmer l annulation' }}
           </button>
         </div>
       </div>

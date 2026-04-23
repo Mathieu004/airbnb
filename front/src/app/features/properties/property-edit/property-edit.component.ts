@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { PropertyService } from '../propertyService';
 import { Property } from '../property.model';
 import { BookingService } from '../../bookings/bookingService';
+import { Booking } from '../../bookings/booking.model';
+import { BookingDateRange, isDateReserved, isRangeAvailable, startOfDay, toBookingRanges } from '../../bookings/booking-date.util';
 import { AuthService } from '../../../core/auth.service';
 import { ReviewService } from '../../reviews/reviewService';
 import { Review } from '../../reviews/review.model';
@@ -47,6 +49,13 @@ export class PropertyEditComponent implements OnInit {
   reviews: Review[] = [];
   reviewsError = '';
   reviewsLoading = false;
+  propertyBookings: Booking[] = [];
+  unavailableRanges: BookingDateRange[] = [];
+  readonly minArrivalDate = startOfDay(new Date());
+  readonly arrivalDateFilter = (date: Date | null): boolean => this.canSelectArrivalDate(date);
+  readonly departureDateFilter = (date: Date | null): boolean => this.canSelectDepartureDate(date);
+  readonly dateClass = (date: Date): string =>
+    isDateReserved(date, this.unavailableRanges) ? 'property-edit__date--unavailable' : '';
 
   constructor(
     private route: ActivatedRoute,
@@ -108,7 +117,12 @@ export class PropertyEditComponent implements OnInit {
   }
 
   get canReserve(): boolean {
-    return !!(this.property && this.arrivalDate && this.departureDate && this.arrivalDate < this.departureDate);
+    return !!(
+      this.property &&
+      this.arrivalDate &&
+      this.departureDate &&
+      isRangeAvailable(this.arrivalDate, this.departureDate, this.unavailableRanges)
+    );
   }
 
   get nights(): number {
@@ -150,6 +164,7 @@ export class PropertyEditComponent implements OnInit {
 
   reserve(): void {
     if (!this.canReserve || !this.property) {
+      this.bookingError = 'Les dates selectionnees ne sont pas disponibles.';
       return;
     }
 
@@ -165,11 +180,12 @@ export class PropertyEditComponent implements OnInit {
 
     this.bookingService.create(payload as any).subscribe({
       next: () => {
-        this.successMessage = 'Reservation envoyee. Le proprietaire doit valider pour confirmer.';
+        this.successMessage = 'Reservation confirmée.';
+        this.refreshBookings();
         this.startFeedbackTimer();
       },
-      error: () => {
-        this.bookingError = 'Impossible d\'enregistrer la reservation. Merci de reessayer.';
+      error: (error) => {
+        this.bookingError = error.error?.message || 'Impossible d\'enregistrer la reservation. Merci de reessayer.';
         this.startFeedbackTimer();
       }
     });
@@ -195,8 +211,22 @@ export class PropertyEditComponent implements OnInit {
     this.errorMessage = '';
     this.mainImageUrl = this.computeMainImage();
     if (data.id) {
+      this.loadPropertyBookings(data.id);
       this.loadReviews(data.id);
     }
+  }
+
+  onArrivalDateChange(date: Date | null): void {
+    this.arrivalDate = date ? startOfDay(date) : null;
+    if (this.arrivalDate && this.departureDate && !this.canSelectDepartureDate(this.departureDate)) {
+      this.departureDate = null;
+    }
+    this.bookingError = '';
+  }
+
+  onDepartureDateChange(date: Date | null): void {
+    this.departureDate = date ? startOfDay(date) : null;
+    this.bookingError = '';
   }
 
   setMainImage(imageUrl: string): void {
@@ -266,5 +296,42 @@ export class PropertyEditComponent implements OnInit {
     }
     const totalRating = this.reviews.reduce((sum, review) => sum + (review.rating ?? 0), 0);
     this.property.reviewAverage = totalRating / reviewCount;
+  }
+
+  private loadPropertyBookings(propertyId: number): void {
+    this.bookingService.getByPropertyId(propertyId).subscribe({
+      next: (data) => {
+        this.propertyBookings = data ?? [];
+        this.unavailableRanges = toBookingRanges(this.propertyBookings);
+      },
+      error: () => {
+        this.propertyBookings = [];
+        this.unavailableRanges = [];
+      }
+    });
+  }
+
+  private refreshBookings(): void {
+    if (this.property?.id) {
+      this.loadPropertyBookings(this.property.id);
+    }
+  }
+
+  private canSelectArrivalDate(date: Date | null): boolean {
+    if (!date) {
+      return false;
+    }
+
+    const normalized = startOfDay(date);
+    return normalized >= this.minArrivalDate && !isDateReserved(normalized, this.unavailableRanges);
+  }
+
+  private canSelectDepartureDate(date: Date | null): boolean {
+    if (!date || !this.arrivalDate) {
+      return false;
+    }
+
+    const normalized = startOfDay(date);
+    return normalized > this.arrivalDate && isRangeAvailable(this.arrivalDate, normalized, this.unavailableRanges);
   }
 }

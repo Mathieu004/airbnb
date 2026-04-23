@@ -18,44 +18,23 @@ export class BookingsComponent implements OnInit {
   searchTerm = '';
   selectedTab: BookingTab = 'all';
   readonly tabs: ReadonlyArray<{ key: BookingTab; label: string }> = [
-    {key: 'all', label: 'Toutes'},
-    {key: 'current', label: 'En cours'},
-    {key: 'upcoming', label: 'A venir'},
-    {key: 'past', label: 'Passées'}
+    { key: 'all', label: 'Toutes' },
+    { key: 'current', label: 'En cours' },
+    { key: 'upcoming', label: 'A venir' },
+    { key: 'past', label: 'Passees' }
   ];
   showCancelModal = false;
   bookingToCancel: Booking | null = null;
+  isCancelling = false;
+  cancellationError = '';
 
   constructor(
     private bookingService: BookingService,
     private authService: AuthService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadBookings();
-  }
-
-  private loadBookings(): void {
-    const currentUserId = this.authService.getCurrentUserId();
-    if (currentUserId == null) {
-      this.bookings = [];
-      this.errorMessage = 'Utilisateur non connecté.';
-      return;
-    }
-
-    this.isLoading = true;
-    this.errorMessage = '';
-    this.bookingService.getByGuestId(currentUserId).subscribe({
-      next: data => {
-        this.bookings = data;
-        this.isLoading = false;
-      },
-      error: () => {
-        this.errorMessage = 'Impossible de charger vos réservations.';
-        this.isLoading = false;
-      }
-    });
   }
 
   setSelectedTab(tab: BookingTab): void {
@@ -70,7 +49,7 @@ export class BookingsComponent implements OnInit {
   get filteredBookings(): Booking[] {
     const query = this.normalize(this.searchTerm);
 
-    return this.bookings.filter(booking => {
+    return this.bookings.filter((booking) => {
       if (!this.matchesTab(booking, this.selectedTab)) {
         return false;
       }
@@ -94,7 +73,7 @@ export class BookingsComponent implements OnInit {
     if (tab === 'all') {
       return this.bookings.length;
     }
-    return this.bookings.filter(booking => this.matchesTab(booking, tab)).length;
+    return this.bookings.filter((booking) => this.matchesTab(booking, tab)).length;
   }
 
   trackByBooking(_: number, booking: Booking): number | string {
@@ -107,7 +86,7 @@ export class BookingsComponent implements OnInit {
     if (city && country) {
       return `${city}, ${country}`;
     }
-    return city || country || 'Lieu non renseigné';
+    return city || country || 'Lieu non renseigne';
   }
 
   getBookingTitle(booking: Booking): string {
@@ -119,16 +98,15 @@ export class BookingsComponent implements OnInit {
     return source
       .split(' ')
       .filter(Boolean)
-      .map(word => word[0]?.toUpperCase() ?? '')
+      .map((word) => word[0]?.toUpperCase() ?? '')
       .slice(0, 2)
       .join('') || 'RE';
   }
 
   getBookingStatusLabel(booking: Booking): string {
     const status = this.getBookingStatus(booking);
-
     if (status === 'cancelled') {
-      return 'Annulée';
+      return 'Annulee';
     }
     if (status === 'current') {
       return 'En cours';
@@ -148,6 +126,76 @@ export class BookingsComponent implements OnInit {
     return `${nights} ${nights > 1 ? 'nuits' : 'nuit'}`;
   }
 
+  isCancelled(booking: Booking): boolean {
+    return this.getBookingStatus(booking) === 'cancelled';
+  }
+
+  canCancel(booking: Booking): boolean {
+    return this.getBookingStatus(booking) === 'upcoming';
+  }
+
+  openCancelModal(booking: Booking): void {
+    this.bookingToCancel = booking;
+    this.cancellationError = '';
+    this.showCancelModal = true;
+  }
+
+  closeCancelModal(): void {
+    if (this.isCancelling) {
+      return;
+    }
+    this.showCancelModal = false;
+    this.bookingToCancel = null;
+    this.cancellationError = '';
+  }
+
+  confirmCancelBooking(): void {
+    if (!this.bookingToCancel?.id || this.isCancelling) {
+      return;
+    }
+
+    const bookingId = this.bookingToCancel.id;
+    this.isCancelling = true;
+    this.cancellationError = '';
+
+    this.bookingService.cancel(bookingId).subscribe({
+      next: (updatedBooking) => {
+        this.bookings = this.bookings.map((booking) =>
+          booking.id === updatedBooking.id ? updatedBooking : booking
+        );
+        this.isCancelling = false;
+        this.showCancelModal = false;
+        this.bookingToCancel = null;
+      },
+      error: () => {
+        this.cancellationError = 'Impossible d annuler cette reservation. Merci de reessayer.';
+        this.isCancelling = false;
+      }
+    });
+  }
+
+  private loadBookings(): void {
+    const currentUserId = this.authService.getCurrentUserId();
+    if (currentUserId == null) {
+      this.bookings = [];
+      this.errorMessage = 'Utilisateur non connecte.';
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.bookingService.getByGuestId(currentUserId).subscribe({
+      next: (data) => {
+        this.bookings = data;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Impossible de charger vos reservations.';
+        this.isLoading = false;
+      }
+    });
+  }
+
   private matchesTab(booking: Booking, tab: BookingTab): boolean {
     if (tab === 'all') {
       return true;
@@ -159,6 +207,7 @@ export class BookingsComponent implements OnInit {
     if (booking.status === 'cancelled') {
       return 'cancelled';
     }
+
     const today = this.startOfDay(new Date());
     const startDate = this.startOfDay(new Date(booking.startDate));
     const endDate = this.startOfDay(new Date(booking.endDate));
@@ -201,38 +250,6 @@ export class BookingsComponent implements OnInit {
       .toLowerCase()
       .trim();
   }
-
-  // Fonction qui ouvre la pop-up
-  openCancelModal(booking: any): void {
-    this.bookingToCancel = booking;
-    this.showCancelModal = true;
-  }
-
-  // Fonction qui ferme la pop-up
-  closeCancelModal(): void {
-    this.showCancelModal = false;
-    this.bookingToCancel = null;
-  }
-  // Fonction qui confirme l'annulation de la réservation. Elle est déclencher dans le bouton de la pop-up.
-  // Elle permet de changer de status la réservation avec l'aide son id et affiche "Annulée" dans l'interface.
-  confirmCancelBooking(): void {
-    if (!this.bookingToCancel || this.bookingToCancel.id === undefined) {
-      return;
-    }
-
-    this.bookingService.updateStatus(this.bookingToCancel.id, 'cancelled').subscribe({
-      next: (updatedBooking) => {
-        this.bookings = this.bookings.map(booking =>
-          booking.id === updatedBooking.id ? updatedBooking : booking
-        );
-        this.closeCancelModal();
-      },
-      error: () => {
-        this.errorMessage = "Impossible d'annuler la réservation.";
-      }
-    });
-  }
-
 }
 
 type BookingTab = 'all' | 'current' | 'upcoming' | 'past' | 'cancelled';

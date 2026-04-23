@@ -20,6 +20,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @EntityGraph(attributePaths = {"property", "guest"})
     List<Booking> findByGuestId(Long guestId);
 
+    @EntityGraph(attributePaths = {"property", "guest"})
+    List<Booking> findByPropertyId(Long propertyId);
+
+    boolean existsByPropertyIdAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(Long propertyId, String status, java.time.LocalDate endDate, java.time.LocalDate startDate);
+
+    boolean existsByPropertyIdAndIdNotAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(Long propertyId, Long bookingId, String status, java.time.LocalDate endDate, java.time.LocalDate startDate);
+
     default List<Booking> findAllWithRelations() {
         return findAll();
     }
@@ -30,5 +37,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     default List<Booking> findAllByGuestIdWithRelations(Long guestId) {
         return findByGuestId(guestId);
+    }
+
+    default List<Booking> findAllByPropertyIdWithRelations(Long propertyId) {
+        return findByPropertyId(propertyId);
     }
 }
