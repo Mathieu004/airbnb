@@ -53,7 +53,7 @@ public class UserController {
             if (request.email() != null && !request.email().isBlank()) {
                 existing.setEmail(request.email().trim());
             }
-            userService.saveDirectly(existing);
+            userService.updateProfile(existing);
             return ResponseEntity.ok(existing);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));

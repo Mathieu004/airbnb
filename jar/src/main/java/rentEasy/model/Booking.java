@@ -8,6 +8,8 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 
+import rentEasy.model.BookingStatus;
+
 @Entity
 @Table(name = "bookings")
 @Getter
@@ -43,6 +45,14 @@ public class Booking {
 
     @Column(name = "reservation_date")
     private Timestamp reservationDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private BookingStatus status = BookingStatus.PENDING;
+
+    @Column(name = "num_guests")
+    private Integer numberOfGuests;
 
     @Column(name = "status", nullable = false)
     private String status;

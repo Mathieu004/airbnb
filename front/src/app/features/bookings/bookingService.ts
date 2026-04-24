@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CrudService } from '../crudService';
 import { Booking } from './booking.model';
 import { environment } from '../../../environments/environment';
@@ -22,6 +22,14 @@ export class BookingService extends CrudService<Booking> {
 
   getByGuestId(guestId: number): Observable<Booking[]> {
     return this.http.get<Booking[]>(`${environment.apiUrl}/bookings/guest/${guestId}`);
+  }
+
+  getByOwnerId(ownerId: number): Observable<Booking[]> {
+    return this.http.get<Booking[]>(`${environment.apiUrl}/bookings/owner/${ownerId}`);
+  }
+
+  updateStatus(bookingId: number, status: string): Observable<Booking> {
+    return this.http.patch<Booking>(`${environment.apiUrl}/bookings/${bookingId}/status`, { status });
   }
 
   getByPropertyId(propertyId: number): Observable<Booking[]> {

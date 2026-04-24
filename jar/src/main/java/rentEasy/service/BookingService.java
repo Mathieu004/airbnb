@@ -13,6 +13,7 @@ import rentEasy.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +39,7 @@ public class BookingService {
                 .startDate(request.startDate())
                 .endDate(request.endDate())
                 .totalPrice(request.totalPrice())
+                .numberOfGuests(request.numberOfGuests())
                 .status("confirmed")
                 .build();
 
@@ -88,12 +90,36 @@ public class BookingService {
             existing.setStatus(updated.getStatus());
         }
 
+        if (updated.getStatus() != null) {
+            existing.setStatus(updated.getStatus());
+        }
         return bookingRepository.save(existing);
     }
 
     @Transactional
     public List<Booking> findAll() {
         return bookingRepository.findAllWithRelations();
+    }
+
+    @Transactional
+    public List<Booking> findAll(Long userId, String requestedRoleValue) {
+        if (userId == null) {
+            return bookingRepository.findAllWithRelations();
+        }
+
+        User user = userRepository.findByIdWithRelations(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+
+        if (user.getRole() == rentEasy.dataBase.Role.ADMIN) {
+            return bookingRepository.findAllWithRelations();
+        }
+
+        BookingAccessMode requestedRole = BookingAccessMode.fromRequestValue(requestedRoleValue);
+        return switch (requestedRole) {
+            case CLIENT, GUEST -> bookingRepository.findAllByGuestIdWithRelations(userId);
+            case HOST -> bookingRepository.findAllByOwnerIdWithRelations(userId);
+            case ADMIN -> bookingRepository.findAllWithRelations();
+        };
     }
 
     @Transactional
@@ -107,9 +133,39 @@ public class BookingService {
     }
 
     @Transactional
+    public List<Booking> findAllByOwnerId(Long ownerId) {
+        return bookingRepository.findAllByOwnerIdWithRelations(ownerId);
+    }
+
+    @Transactional
     public Booking findById(Long bookingId) {
         return bookingRepository.findByIdWithRelations(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
+    }
+
+    private enum BookingAccessMode {
+        CLIENT,
+        GUEST,
+        HOST,
+        ADMIN;
+
+        private static BookingAccessMode fromRequestValue(String value) {
+            if (value == null || value.isBlank()) {
+                return CLIENT;
+            }
+
+            String normalized = Normalizer.normalize(value, Normalizer.Form.NFD)
+                    .replaceAll("\\p{M}", "")
+                    .trim()
+                    .toLowerCase(Locale.ROOT);
+
+            return switch (normalized) {
+                case "client", "guest" -> CLIENT;
+                case "host", "owner", "proprietaire", "proprietary" -> HOST;
+                case "admin", "administrator" -> ADMIN;
+                default -> throw new IllegalArgumentException("Unsupported role value: " + value);
+            };
+        }
     }
 
     private void validateDates(LocalDate startDate, LocalDate endDate) {

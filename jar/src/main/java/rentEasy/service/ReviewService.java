@@ -78,12 +78,12 @@ public class ReviewService {
 
     @Transactional
     public List<Review> findAll() {
-        return reviewRepository.findAllWithRelations();
+        return reviewRepository.findAll();
     }
 
     @Transactional
     public Review findById(Long reviewId) {
-        return reviewRepository.findByIdWithRelations(reviewId)
+        return reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("Review not found: " + reviewId));
     }
 }

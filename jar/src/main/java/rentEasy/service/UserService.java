@@ -130,6 +130,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public User updateProfile(User user) {
+        userRepository.findByEmailIgnoreCase(user.getEmail())
+                .filter(existing -> !Objects.equals(existing.getId(), user.getId()))
+                .ifPresent(existing -> {
+                    throw new IllegalArgumentException("Cet email est déjà utilisé");
+                });
+
+        return userRepository.save(user);
+    }
+
     private String normalize(String value) {
         return value == null ? null : value.trim();
     }

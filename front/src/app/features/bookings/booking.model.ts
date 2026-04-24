@@ -1,3 +1,5 @@
+export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
+
 export interface Booking {
   id?: number;
   property?: {
@@ -15,6 +17,8 @@ export interface Booking {
   endDate: string;
   totalPrice: number;
   reservationDate?: string;
+  status?: BookingStatus;
+  numberOfGuests?: number;
   status?: string;
   propertyId?: number;
   guestUsername?: string;
