@@ -118,6 +118,17 @@ public class PropertyService {
     }
 
     @Transactional
+    public Property partialUpdateStatus(Long propertyId, Property property) {
+        Property existing = findById(propertyId);
+
+        if (property.getIsActive() != null) {
+            existing.setIsActive(property.getIsActive());
+        }
+
+        return propertyRepository.save(existing);
+    }
+
+    @Transactional
     public void delete(Long propertyId) {
         if (!propertyRepository.existsById(propertyId)) {
             throw new IllegalArgumentException("Property not found: " + propertyId);

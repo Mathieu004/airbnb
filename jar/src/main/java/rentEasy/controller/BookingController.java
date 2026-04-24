@@ -50,6 +50,14 @@ public class BookingController {
                 .toList();
     }
 
+    @GetMapping("/property/{propertyId}")
+    public List<BookingDto> getAllByPropertyId(@PathVariable Long propertyId) {
+        return bookingService.findAllByPropertyId(propertyId)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
     @GetMapping("/{id}")
     public BookingDto getById(@PathVariable Long id) {
         return toDto(bookingService.findById(id));

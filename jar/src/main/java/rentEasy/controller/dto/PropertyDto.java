@@ -22,6 +22,8 @@ public record PropertyDto(
         Integer bathrooms,
         String description,
         String includedFeatures,
+        Integer size,
+        Boolean isActive,
         HostDetails host,
         List<ImageDetails> images,
         List<ReviewDetails> reviews,
@@ -62,6 +64,8 @@ public record PropertyDto(
                 property.getBathroomNumber(),
                 property.getDescription(),
                 buildIncludedFeatures(property),
+                property.getSize(),
+                property.getIsActive(),
                 property.getHost() == null ? null : new HostDetails(
                         property.getHost().getUsername(),
                         property.getHost().getEmail()

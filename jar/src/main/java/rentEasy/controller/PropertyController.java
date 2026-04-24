@@ -54,6 +54,11 @@ public class PropertyController {
         return propertyService.update(id, property);
     }
 
+    @PatchMapping("/{id}/status")
+    public PropertyDto updateStatus(@PathVariable Long id, @RequestBody Property property) {
+        return PropertyDto.fromEntity(propertyService.partialUpdateStatus(id, property));
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
