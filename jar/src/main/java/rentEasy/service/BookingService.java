@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rentEasy.controller.dto.BookingRequest;
 import rentEasy.model.Booking;
+import rentEasy.model.BookingStatus;
 import rentEasy.model.Property;
 import rentEasy.model.User;
 import rentEasy.repository.BookingRepository;
 import rentEasy.repository.PropertyRepository;
 import rentEasy.repository.UserRepository;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +42,7 @@ public class BookingService {
                 .endDate(request.endDate())
                 .totalPrice(request.totalPrice())
                 .numberOfGuests(request.numberOfGuests())
-                .status("confirmed")
+                .status(BookingStatus.CONFIRMED)
                 .build();
 
         return bookingRepository.save(booking);
@@ -85,10 +87,6 @@ public class BookingService {
     public Booking partialUpdateStatus(Long bookingId, Booking updated) {
         Booking existing = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
-
-        if (updated.getStatus() != null && !updated.getStatus().isBlank()) {
-            existing.setStatus(updated.getStatus());
-        }
 
         if (updated.getStatus() != null) {
             existing.setStatus(updated.getStatus());
@@ -179,8 +177,8 @@ public class BookingService {
 
     private void validateAvailability(Long propertyId, LocalDate startDate, LocalDate endDate, Long bookingId) {
         boolean overlaps = bookingId == null
-                ? bookingRepository.existsByPropertyIdAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(propertyId, "cancelled", endDate, startDate)
-                : bookingRepository.existsByPropertyIdAndIdNotAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(propertyId, bookingId, "cancelled", endDate, startDate);
+                ? bookingRepository.existsByPropertyIdAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(propertyId, BookingStatus.CANCELLED, endDate, startDate)
+                : bookingRepository.existsByPropertyIdAndIdNotAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(propertyId, bookingId, BookingStatus.CANCELLED, endDate, startDate);
 
         if (overlaps) {
             throw new IllegalArgumentException("Selected dates are not available for this property.");

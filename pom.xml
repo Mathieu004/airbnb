@@ -70,18 +70,6 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>jar/src/main/java</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>jar/src/main/resources</directory>
-            </resource>
-        </resources>
-        <testSourceDirectory>jar/src/test/java</testSourceDirectory>
-        <testResources>
-            <testResource>
-                <directory>jar/src/test/resources</directory>
-            </testResource>
-        </testResources>
         <plugins>
 
             <!-- Spring Boot plugin -->

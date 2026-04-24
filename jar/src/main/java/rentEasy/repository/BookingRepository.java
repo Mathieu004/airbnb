@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import rentEasy.model.Booking;
+import rentEasy.model.BookingStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +26,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @EntityGraph(attributePaths = {"property", "guest"})
     List<Booking> findByPropertyId(Long propertyId);
 
-    boolean existsByPropertyIdAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(Long propertyId, String status, java.time.LocalDate endDate, java.time.LocalDate startDate);
+    boolean existsByPropertyIdAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(Long propertyId, BookingStatus status, java.time.LocalDate endDate, java.time.LocalDate startDate);
 
-    boolean existsByPropertyIdAndIdNotAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(Long propertyId, Long bookingId, String status, java.time.LocalDate endDate, java.time.LocalDate startDate);
+    boolean existsByPropertyIdAndIdNotAndStatusNotAndStartDateLessThanAndEndDateGreaterThan(Long propertyId, Long bookingId, BookingStatus status, java.time.LocalDate endDate, java.time.LocalDate startDate);
 
     @EntityGraph(attributePaths = {"property", "guest"})
     @Query("SELECT b FROM Booking b WHERE b.property.host.id = :ownerId")

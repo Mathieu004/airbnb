@@ -18,7 +18,6 @@ public record BookingDto(
         Timestamp reservationDate,
         BookingStatus status,
         Integer numberOfGuests,
-        String status,
         PropertySummary property,
         GuestSummary guest
 ) {
@@ -39,7 +38,6 @@ public record BookingDto(
                 booking.getReservationDate(),
                 booking.getStatus(),
                 booking.getNumberOfGuests(),
-                booking.getStatus(),
                 toPropertySummary(booking.getProperty()),
                 toGuestSummary(booking.getGuest())
         );

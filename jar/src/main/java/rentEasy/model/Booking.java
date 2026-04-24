@@ -8,8 +8,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 
-import rentEasy.model.BookingStatus;
-
 @Entity
 @Table(name = "bookings")
 @Getter
@@ -47,23 +45,20 @@ public class Booking {
     private Timestamp reservationDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     @Builder.Default
     private BookingStatus status = BookingStatus.PENDING;
 
     @Column(name = "num_guests")
     private Integer numberOfGuests;
 
-    @Column(name = "status", nullable = false)
-    private String status;
-
     @PrePersist
     protected void onCreate() {
         if (reservationDate == null) {
             reservationDate = Timestamp.from(Instant.now());
         }
-        if (status == null || status.isBlank()) {
-            status = "confirmed";
+        if (status == null) {
+            status = BookingStatus.CONFIRMED;
         }
     }
 }
