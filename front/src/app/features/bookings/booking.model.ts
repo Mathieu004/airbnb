@@ -19,7 +19,6 @@ export interface Booking {
   reservationDate?: string;
   status?: BookingStatus;
   numberOfGuests?: number;
-  status?: string;
   propertyId?: number;
   guestUsername?: string;
 }
