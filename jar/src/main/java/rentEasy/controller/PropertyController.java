@@ -22,9 +22,14 @@ public class PropertyController {
     @GetMapping
     public List<PropertyDto> getAll(
             @RequestParam(value = "userId", required = false) Long userId,
-            @RequestParam(value = "role", required = false) String role
+            @RequestParam(value = "role", required = false) String role,
+            @RequestHeader(value = "X-User-Id", required = false) Long headerUserId,
+            @RequestHeader(value = "X-User-Role", required = false) String headerRole
     ) {
-        return propertyService.findAll(userId, role)
+        Long effectiveUserId = userId != null ? userId : headerUserId;
+        String effectiveRole = role != null && !role.isBlank() ? role : headerRole;
+
+        return propertyService.findAll(effectiveUserId, effectiveRole)
                 .stream()
                 .map(PropertyDto::fromEntity)
                 .toList();

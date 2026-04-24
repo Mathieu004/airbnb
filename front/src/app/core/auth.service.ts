@@ -12,10 +12,10 @@ interface AuthResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = environment.apiUrl;
+  private readonly defaultRole = 'CLIENT';
 
-  // BehaviorSubject initialisé depuis le localStorage au démarrage
   private roleSubject = new BehaviorSubject<string | null>(
-    localStorage.getItem('currentUserRole')
+    localStorage.getItem('currentUserRole') || this.defaultRole
   );
 
   role$ = this.roleSubject.asObservable();
@@ -49,8 +49,7 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
     localStorage.removeItem('currentUserId');
-    localStorage.removeItem('currentUserRole');
-    this.roleSubject.next(null);
+    this.updateLocalRole(this.defaultRole);
   }
 
   getToken(): string | null {
@@ -86,7 +85,7 @@ export class AuthService {
   }
 
   getCurrentUserRole(): string | null {
-    return localStorage.getItem('currentUserRole');
+    return localStorage.getItem('currentUserRole') || this.defaultRole;
   }
 
   updateLocalRole(role: string): void {
@@ -98,6 +97,12 @@ export class AuthService {
     return !!this.getToken();
   }
 
+  toggleRole(): void {
+    const current = this.getCurrentUserRole();
+    const next = current === 'HOST' ? 'CLIENT' : 'HOST';
+    this.updateLocalRole(next);
+  }
+
   private persistSession(
     token: string,
     username: string,
@@ -107,17 +112,11 @@ export class AuthService {
     localStorage.setItem('token', token);
     localStorage.setItem('currentUser', username);
     if (id != null) localStorage.setItem('currentUserId', String(id));
-    if (role != null) {
-      localStorage.setItem('currentUserRole', role);
-      this.roleSubject.next(role);
-    }
-  }
 
-  toggleRole(): void {
-    const current = this.getCurrentUserRole();
-    const next = current === 'HOST' ? 'CLIENT' : 'HOST';
-    this.updateLocalRole(next);
+    const currentRole = localStorage.getItem('currentUserRole');
+    const initialRole = currentRole === 'HOST' || currentRole === 'CLIENT'
+      ? currentRole
+      : this.defaultRole;
+    this.updateLocalRole(initialRole);
   }
 }
-
-

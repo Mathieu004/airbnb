@@ -1,5 +1,137 @@
-<div>
-  <h2>Mon espace</h2>
-  <p>Bienvenue ! Vous êtes connecté.</p>
-  <button (click)="logout()">Se déconnecter</button>
-</div>
+<section class="dashboard-page" *ngIf="isHostMode; else clientDashboardMessage">
+  <div class="dashboard-hero">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Welcome back, {{ displayName }}. Here's your overview.</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card">
+      <div class="stat-icon neutral">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 21V9l8-6 8 6v12h-5v-7H9v7H4Z" />
+        </svg>
+      </div>
+      <span class="stat-trend positive">+1</span>
+      <strong>{{ propertiesCount }}</strong>
+      <p>Properties</p>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon blue">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 2v3M17 2v3M4 9h16M6 5h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" />
+        </svg>
+      </div>
+      <span class="stat-trend positive">+2</span>
+      <strong>{{ upcomingReservationsCount }}</strong>
+      <p>Upcoming Reservations</p>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon amber">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m12 3 1.7 5.2L19 10l-5.3 1.8L12 17l-1.7-5.2L5 10l5.3-1.8L12 3Z" />
+        </svg>
+      </div>
+      <span class="stat-trend negative">-1</span>
+      <strong>{{ pendingCleaning }}</strong>
+      <p>Pending Cleaning</p>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon green">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z" />
+        </svg>
+      </div>
+      <span class="stat-trend positive">+3</span>
+      <strong>{{ unreadMessages }}</strong>
+      <p>Unread Messages</p>
+    </article>
+  </div>
+
+  <div class="dashboard-grid">
+    <article class="panel revenue-panel">
+      <header class="panel-header">
+        <div>
+          <h2>Revenue</h2>
+          <div class="timeline-selector" aria-label="Revenue timeline">
+            <button type="button" [class.active]="selectedTimeline === 'week'" (click)="selectTimeline('week')">
+              Week
+            </button>
+            <button type="button" [class.active]="selectedTimeline === 'month'" (click)="selectTimeline('month')">
+              Month
+            </button>
+            <button type="button" [class.active]="selectedTimeline === 'year'" (click)="selectTimeline('year')">
+              Year
+            </button>
+          </div>
+        </div>
+        <span class="revenue-growth">+12.5%</span>
+      </header>
+
+      <div class="chart-shell">
+        <div class="chart-axis">
+          <span>{{ formatCurrency(revenueTotal) }}</span>
+          <span>{{ formatCurrency(revenueTotal * 0.75) }}</span>
+          <span>{{ formatCurrency(revenueTotal * 0.5) }}</span>
+          <span>{{ formatCurrency(revenueTotal * 0.25) }}</span>
+          <span>€0</span>
+        </div>
+
+        <div class="bar-chart" [class.year-view]="selectedTimeline === 'year'">
+          <div class="grid-lines" aria-hidden="true"></div>
+          <div class="bar-item" *ngFor="let bar of chartBars">
+            <div class="bar-value">{{ formatCurrency(bar.value) }}</div>
+            <div class="bar" [style.height.%]="bar.height"></div>
+            <span>{{ bar.label }}</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel reservations-panel">
+      <h2>Recent Reservations</h2>
+
+      <div class="reservation-list" *ngIf="recentReservations.length; else emptyReservations">
+        <div class="reservation-row" *ngFor="let reservation of recentReservations">
+          <div>
+            <strong>{{ reservation.guest?.username || reservation.guestUsername || 'Guest' }}</strong>
+            <p>{{ reservation.property?.name || 'Property' }}</p>
+            <span>{{ formatDateRange(reservation) }}</span>
+          </div>
+
+          <div class="reservation-meta">
+            <span class="status-pill" [class]="reservation.statusClass">{{ reservation.statusLabel }}</span>
+            <strong>{{ formatCurrency(reservation.totalPrice || 0) }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #emptyReservations>
+        <p class="empty-state">No reservations yet.</p>
+      </ng-template>
+    </article>
+  </div>
+</section>
+
+<ng-template #clientDashboardMessage>
+  <section class="dashboard-page dashboard-locked">
+    <article class="locked-card">
+      <div class="locked-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1v-8.5Z" />
+        </svg>
+      </div>
+      <p class="locked-kicker">Zone propriétaire</p>
+      <h1>Oups, vous vous êtes sans doute trompé de page</h1>
+      <p>
+        Ce dashboard garde les clés, les revenus et les réservations des hôtes.
+        En mode client, il fait semblant de ne pas vous connaître.
+      </p>
+      <button type="button" (click)="switchToHost()">Passer en mode propriétaire</button>
+    </article>
+  </section>
+</ng-template>

@@ -11,6 +11,7 @@ public record BookingRequest(
         @NotBlank String guestUsername,
         @NotNull LocalDate startDate,
         @NotNull LocalDate endDate,
-        @NotNull BigDecimal totalPrice
+        @NotNull BigDecimal totalPrice,
+        Integer numberOfGuests
 ) {
 }
