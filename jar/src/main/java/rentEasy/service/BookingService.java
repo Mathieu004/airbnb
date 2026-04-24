@@ -102,7 +102,7 @@ public class BookingService {
         BookingAccessMode requestedRole = BookingAccessMode.fromRequestValue(requestedRoleValue);
         return switch (requestedRole) {
             case CLIENT, GUEST -> bookingRepository.findAllByGuestIdWithRelations(userId);
-            case HOST -> bookingRepository.findAllByPropertyHostIdWithRelations(userId);
+            case HOST -> bookingRepository.findAllByOwnerIdWithRelations(userId);
             case ADMIN -> bookingRepository.findAllWithRelations();
         };
     }
