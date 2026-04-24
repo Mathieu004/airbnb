@@ -15,6 +15,9 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     List<Property> findAllBy();
 
     @EntityGraph(attributePaths = {"host", "images", "reviewsList", "reviewsList.user"})
+    List<Property> findAllByIsActiveTrue();
+
+    @EntityGraph(attributePaths = {"host", "images", "reviewsList", "reviewsList.user"})
     Optional<Property> findOneById(Long id);
 
     @EntityGraph(attributePaths = {"host", "images", "reviewsList", "reviewsList.user"})

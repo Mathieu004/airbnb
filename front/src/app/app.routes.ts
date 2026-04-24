@@ -79,7 +79,7 @@ export const routes: Routes = [
     path: 'messagerie',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/messages/message.component').then(m => m.MessagerieComponent)
+      import('./features/messages/messages.component').then(m => m.MessagesComponent)
   },
 
 ];

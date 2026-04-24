@@ -24,7 +24,12 @@
   </div>
 
   <ng-container *ngIf="!isLoading && property">
-    <div class="property-edit__hero">
+    <button type="button" class="property-edit__back-link" onclick="history.back()">
+      <mat-icon fontIcon="arrow_back"></mat-icon>
+      Retour aux logements
+    </button>
+
+    <div class="property-edit__hero" [style.--hero-image]="'url(' + mainImageUrl + ')'">
       <img [src]="mainImageUrl" [alt]="property.name">
     </div>
     <div class="property-edit__gallery" *ngIf="(property.images?.length ?? 0) > 1">
@@ -43,12 +48,13 @@
         <h1>{{ property.name }}</h1>
         <p class="property-edit__location">
           <mat-icon fontIcon="place"></mat-icon>
-          {{ property.address || property.city || 'Adresse non renseignee' }}, {{ property.country || 'Pays inconnu' }}
+          {{ property.address || property.city || 'Adresse non renseignee' }}{{ property.city ? ', ' + property.city : '' }}
         </p>
         <ul class="property-edit__meta">
           <li><mat-icon fontIcon="king_bed"></mat-icon>{{ property.bedrooms }} chambres</li>
           <li><mat-icon fontIcon="bathtub"></mat-icon>{{ property.bathrooms }} SDB</li>
           <li><mat-icon fontIcon="groups"></mat-icon>{{ property.maxGuests }} voyageurs</li>
+          <li><mat-icon fontIcon="open_in_full"></mat-icon>{{ property.size || 0 }}m²</li>
         </ul>
       </div>
       <div class="property-edit__rating">
@@ -93,7 +99,6 @@
                 </div>
                 <div class="review-rating">
                   <mat-icon fontIcon="star"></mat-icon>
-                  <mat-icon fontIcon="star"></mat-icon>
                   <span>{{ review.rating }}/5</span>
                 </div>
               </div>
@@ -108,25 +113,21 @@
           <div class="booking-card__price">
             {{ property.pricePerNight | currency:'EUR':'symbol':'1.0-0' }} <span>/ nuit</span>
           </div>
-          <p class="booking-card__note">Menage non inclus</p>
+          <p class="booking-card__note">Menage inclus</p>
 
           <mat-form-field appearance="outline">
             <mat-label>Arrivee</mat-label>
-            <input matInput [matDatepicker]="arrivalPicker" [matDatepickerFilter]="arrivalDateFilter" [min]="minArrivalDate" [(ngModel)]="arrivalDate" (ngModelChange)="onArrivalDateChange($event)">
+            <input matInput [matDatepicker]="arrivalPicker" [(ngModel)]="arrivalDate">
             <mat-datepicker-toggle matIconSuffix [for]="arrivalPicker"></mat-datepicker-toggle>
-            <mat-datepicker #arrivalPicker [dateClass]="dateClass"></mat-datepicker>
+            <mat-datepicker #arrivalPicker></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Depart</mat-label>
-            <input matInput [matDatepicker]="departurePicker" [matDatepickerFilter]="departureDateFilter" [min]="arrivalDate || minArrivalDate" [(ngModel)]="departureDate" (ngModelChange)="onDepartureDateChange($event)">
+            <input matInput [matDatepicker]="departurePicker" [(ngModel)]="departureDate">
             <mat-datepicker-toggle matIconSuffix [for]="departurePicker"></mat-datepicker-toggle>
-            <mat-datepicker #departurePicker [dateClass]="dateClass"></mat-datepicker>
+            <mat-datepicker #departurePicker></mat-datepicker>
           </mat-form-field>
-
-          <p class="booking-card__availability-note">
-            Les dates reservees pour ce logement sont indisponibles et affichees en gris.
-          </p>
 
           <mat-form-field appearance="outline">
             <mat-label>Voyageurs</mat-label>
@@ -172,13 +173,13 @@
             Reserver
           </button>
           <button type="button" class="booking-card__secondary">
-            <mat-icon fontIcon="chat_bubble"></mat-icon>
-            Contacter l'hote
+            <mat-icon fontIcon="chat_bubble_outline"></mat-icon>
+            Contacter le proprietaire
           </button>
         </div>
 
         <div class="host-card" *ngIf="property.host">
-          <p class="host-card__label">Hote</p>
+          <p class="host-card__label">Proprietaire</p>
           <p class="host-card__name">{{ property.host.username }}</p>
           <p class="host-card__email">{{ property.host.email }}</p>
         </div>

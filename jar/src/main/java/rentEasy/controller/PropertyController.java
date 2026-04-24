@@ -1,11 +1,13 @@
 package rentEasy.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import rentEasy.controller.dto.PropertyDto;
-import rentEasy.model.Property;
+import rentEasy.controller.dto.PropertyRequest;
 import rentEasy.service.PropertyService;
 
 import java.util.List;
@@ -45,23 +47,29 @@ public class PropertyController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Property create(@Valid @RequestBody Property property) {
-        return propertyService.create(property);
+    @Transactional
+    public PropertyDto create(@Valid @RequestBody PropertyRequest request) {
+        return PropertyDto.fromEntity(propertyService.create(request));
     }
 
     @PutMapping("/{id}")
-    public Property update(@PathVariable Long id, @Valid @RequestBody Property property) {
-        return propertyService.update(id, property);
+    @Transactional
+    public PropertyDto update(@PathVariable Long id, @Valid @RequestBody PropertyRequest request) {
+        return PropertyDto.fromEntity(propertyService.update(id, request));
     }
 
     @PatchMapping("/{id}/status")
-    public PropertyDto updateStatus(@PathVariable Long id, @RequestBody Property property) {
-        return PropertyDto.fromEntity(propertyService.partialUpdateStatus(id, property));
+    @Transactional
+    public PropertyDto updateStatus(@PathVariable Long id, @RequestBody UpdatePropertyStatusRequest request) {
+        return PropertyDto.fromEntity(propertyService.updateStatus(id, request.isActive()));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         propertyService.delete(id);
+    }
+
+    public record UpdatePropertyStatusRequest(@JsonProperty("isActive") Boolean isActive) {
     }
 }

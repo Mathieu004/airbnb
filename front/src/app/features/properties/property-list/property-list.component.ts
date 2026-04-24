@@ -40,6 +40,7 @@ export class PropertyListComponent implements OnInit {
     const globalTerm = this.globalSearchTerm.trim().toLowerCase();
     const activeFilter = this.activeFilter.toLowerCase();
     return this.properties.filter(property => {
+      if (property.isActive === false) return false;
       const haystack = `${property.name} ${property.city} ${property.country}`.toLowerCase();
       const matchesLocal = !term || haystack.includes(term);
       const matchesGlobal = !globalTerm || haystack.includes(globalTerm);
@@ -103,7 +104,7 @@ export class PropertyListComponent implements OnInit {
   private loadProperties(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    this.propertyService.getAll().subscribe({
+    this.propertyService.getForGuest().subscribe({
       next: data => {
         this.properties = data;
         this.isLoading = false;

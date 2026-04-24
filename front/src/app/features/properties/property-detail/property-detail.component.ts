@@ -28,6 +28,7 @@ export class PropertyDetailComponent implements OnInit {
   reviewError = '';
   reviewSuccess = '';
   submittingReview = false;
+  activeImage = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -46,6 +47,7 @@ export class PropertyDetailComponent implements OnInit {
       next: data => {
         this.property = data;
         this.amenities = this.extractAmenities(data.includedFeatures);
+        this.activeImage = this.mainImage;
         this.isLoading = false;
       },
       error: () => {
