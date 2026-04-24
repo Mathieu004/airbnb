@@ -16,7 +16,7 @@ export function startOfDay(date: Date): Date {
 
 export function toBookingRanges(bookings: Booking[]): BookingDateRange[] {
   return bookings
-    .filter((booking) => booking.status !== 'cancelled' && !!booking.startDate && !!booking.endDate)
+    .filter((booking) => booking.status !== 'CANCELLED' && !!booking.startDate && !!booking.endDate)
     .map((booking) => ({
       start: startOfDay(parseLocalDate(booking.startDate)),
       end: startOfDay(parseLocalDate(booking.endDate))

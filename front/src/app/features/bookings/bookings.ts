@@ -204,7 +204,7 @@ export class BookingsComponent implements OnInit {
   }
 
   private getBookingStatus(booking: Booking): Exclude<BookingTab, 'all'> {
-    if (booking.status === 'cancelled') {
+    if (booking.status === 'CANCELLED') {
       return 'cancelled';
     }
 

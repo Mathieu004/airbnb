@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { CrudService } from '../crudService';
-import { Booking } from './booking.model';
+import { Booking, BookingStatus } from './booking.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -28,21 +28,17 @@ export class BookingService extends CrudService<Booking> {
     return this.http.get<Booking[]>(`${environment.apiUrl}/bookings/owner/${ownerId}`);
   }
 
-  updateStatus(bookingId: number, status: string): Observable<Booking> {
-    return this.http.patch<Booking>(`${environment.apiUrl}/bookings/${bookingId}/status`, { status });
-  }
-
   getByPropertyId(propertyId: number): Observable<Booking[]> {
     return this.http.get<Booking[]>(`${environment.apiUrl}/bookings/property/${propertyId}`);
   }
 
-  updateStatus(id: number, status: string): Observable<Booking> {
+  updateStatus(id: number, status: BookingStatus): Observable<Booking> {
     return this.http.patch<Booking>(`${environment.apiUrl}/bookings/${id}/status`, { status }).pipe(
       tap(() => this.bookingChangedSubject.next())
     );
   }
 
   cancel(bookingId: number): Observable<Booking> {
-    return this.updateStatus(bookingId, 'cancelled');
+    return this.updateStatus(bookingId, 'CANCELLED');
   }
 }
