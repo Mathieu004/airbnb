@@ -141,7 +141,7 @@
               placeholder="Ecrire un message..."
               [disabled]="isMessageLoading(booking)"
             />
-            <button type="submit" [disabled]="isMessageLoading(booking) || !messageDrafts[getBookingKey(booking)]?.trim()">
+            <button type="submit" [disabled]="isMessageLoading(booking) || !messageDrafts[getBookingKey(booking)].trim()">
               <svg viewBox="0 0 24 24" class="message-icon" aria-hidden="true">
                 <path d="M21 3 10 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                 <path d="m21 3-7 18-4-7-7-4 18-7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
