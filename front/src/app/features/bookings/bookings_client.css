@@ -10,8 +10,7 @@
   min-height: calc(100vh - 80px);
   padding: 48px 28px 64px;
   background: #f5f7fb;
-  font-family: var(--app-font-family);
-  color: #112b4c;
+  font-family: var(--app-font-family), sans-serif;  color: #112b4c;
 }
 
 .booking-container {
@@ -517,4 +516,95 @@
   .reservation-price {
     text-align: left;
   }
+}
+
+/* ─── Bouton avis ─── */
+.review-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  min-height: 44px;
+  border: none;
+  border-radius: 14px;
+  background: #fff5e7;
+  color: #d48c14;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.review-button:hover {
+  background: #fde9bc;
+}
+
+/* ─── Modal avis ─── */
+.review-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 14px;
+}
+.review-stars-label {
+  font-weight: 600;
+  font-size: 16px;
+  color: #112b4c;
+}
+.review-stars {
+  display: flex;
+  gap: 4px;
+}
+.star-btn {
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  line-height: 0;
+}
+.star-btn:hover {
+  transform: scale(1.15);
+}
+.review-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #dbe3ee;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+  margin: 4px 0 8px;
+  color: #112b4c;
+}
+.review-textarea:focus {
+  border-color: #4f8eff;
+}
+.modal-primary-button {
+  min-height: 50px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 14px;
+  background: #234d79;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.modal-primary-button:hover:not(:disabled) {
+  background: #1a3a5c;
+}
+.modal-primary-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.review-success {
+  color: #16a34a;
+  font-weight: 700;
+  font-size: 16px;
+  margin: 12px 0 0;
 }
