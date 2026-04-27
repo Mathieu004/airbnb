@@ -557,6 +557,12 @@
   margin-right: 6px;
 }
 
+::ng-deep .property-edit__date--unavailable .mat-calendar-body-cell-content {
+  background: lightsteelblue;
+  color: #6b7280;
+  border-radius: 999px;
+}
+
 @media (max-width: 1024px) {
   .property-edit {
     padding: 20px;
