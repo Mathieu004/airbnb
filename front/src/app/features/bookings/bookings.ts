@@ -5,6 +5,8 @@ import { BookingService } from './bookingService';
 import { Booking } from './booking.model';
 import { AuthService } from '../../core/auth.service';
 import { ReviewService } from '../reviews/reviewService';
+import { Message } from '../messages/message.model';
+import { MessageService } from '../messages/messageService';
 
 @Component({
   selector: 'app-bookings',
@@ -19,6 +21,11 @@ export class BookingsComponent implements OnInit {
   errorMessage = '';
   searchTerm = '';
   selectedTab: BookingTab = 'all';
+  expandedMessageKey: string | null = null;
+  messageThreads: Record<string, Message[]> = {};
+  messageDrafts: Record<string, string> = {};
+  messageLoadingKey: string | null = null;
+  messageError = '';
   readonly tabs: ReadonlyArray<{ key: BookingTab; label: string }> = [
     { key: 'all', label: 'Toutes' },
     { key: 'current', label: 'En cours' },
@@ -45,8 +52,9 @@ export class BookingsComponent implements OnInit {
 
   constructor(
     private bookingService: BookingService,
+    private reviewService: ReviewService,
     private authService: AuthService,
-    private reviewService: ReviewService
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -278,6 +286,89 @@ export class BookingsComponent implements OnInit {
       },
       error: () => { /* silencieux */ }
     });
+  }
+
+  toggleMessages(booking: Booking): void {
+    const key = this.getBookingKey(booking);
+    this.expandedMessageKey = this.expandedMessageKey === key ? null : key;
+    this.messageError = '';
+
+    if (this.expandedMessageKey === key && !this.messageThreads[key]) {
+      this.loadMessageThread(booking);
+    }
+  }
+
+  isMessagePanelOpen(booking: Booking): boolean {
+    return this.expandedMessageKey === this.getBookingKey(booking);
+  }
+
+  getHostName(booking: Booking): string {
+    return booking.property?.host?.username || 'l hote';
+  }
+
+  getMessages(booking: Booking): Message[] {
+    return this.messageThreads[this.getBookingKey(booking)] ?? [];
+  }
+
+  isMessageLoading(booking: Booking): boolean {
+    return this.messageLoadingKey === this.getBookingKey(booking);
+  }
+
+  isOwnMessage(message: Message): boolean {
+    return message.sender.id === this.authService.getCurrentUserId();
+  }
+
+  sendMessage(booking: Booking): void {
+    const senderId = this.authService.getCurrentUserId();
+    const propertyId = booking.property?.id ?? booking.propertyId;
+    const bookingId = booking.id;
+    const key = this.getBookingKey(booking);
+    const content = (this.messageDrafts[key] ?? '').trim();
+
+    if (!senderId || !propertyId || !bookingId || !content) {
+      return;
+    }
+
+    this.messageLoadingKey = key;
+    this.messageError = '';
+    this.messageService.create({ senderId, propertyId, bookingId, content }).subscribe({
+      next: () => {
+        this.messageDrafts[key] = '';
+        this.loadMessageThread(booking);
+      },
+      error: () => {
+        this.messageError = 'Impossible d envoyer le message.';
+        this.messageLoadingKey = null;
+      }
+    });
+  }
+
+  private loadMessageThread(booking: Booking): void {
+    const userId = this.authService.getCurrentUserId();
+    const propertyId = booking.property?.id ?? booking.propertyId;
+    const bookingId = booking.id;
+    const key = this.getBookingKey(booking);
+
+    if (!userId || !propertyId || !bookingId) {
+      this.messageThreads[key] = [];
+      return;
+    }
+
+    this.messageLoadingKey = key;
+    this.messageService.getThread(userId, propertyId, bookingId).subscribe({
+      next: messages => {
+        this.messageThreads[key] = messages;
+        this.messageLoadingKey = null;
+      },
+      error: () => {
+        this.messageError = 'Impossible de charger la conversation.';
+        this.messageLoadingKey = null;
+      }
+    });
+  }
+
+  getBookingKey(booking: Booking): string {
+    return String(booking.id ?? `${booking.property?.id ?? booking.propertyId}-${booking.startDate}-${booking.endDate}`);
   }
 
   private matchesTab(booking: Booking, tab: BookingTab): boolean {

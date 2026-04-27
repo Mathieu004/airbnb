@@ -31,7 +31,7 @@ public record PropertyDto(
         Double reviewAverage
 ) {
 
-    public record HostDetails(String username, String email) {
+    public record HostDetails(Long id, String username, String email) {
     }
 
     public record ImageDetails(String imageUrl, Boolean isMain) {
@@ -67,6 +67,7 @@ public record PropertyDto(
                 property.getSize(),
                 property.getIsActive(),
                 property.getHost() == null ? null : new HostDetails(
+                        property.getHost().getId(),
                         property.getHost().getUsername(),
                         property.getHost().getEmail()
                 ),

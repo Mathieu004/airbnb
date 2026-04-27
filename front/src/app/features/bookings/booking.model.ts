@@ -7,6 +7,11 @@ export interface Booking {
     name?: string;
     city?: string;
     country?: string;
+    host?: {
+      id?: number;
+      username?: string;
+      email?: string;
+    };
   };
   guest?: {
     id?: number;

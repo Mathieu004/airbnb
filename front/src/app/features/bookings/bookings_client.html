@@ -56,51 +56,99 @@
 
     <section class="reservations-list" *ngIf="!isLoading && !errorMessage && filteredBookings.length">
       <article class="reservation-card" *ngFor="let booking of filteredBookings; trackBy: trackByBooking">
-        <div class="reservation-left">
-          <div class="guest-avatar">{{ getBookingInitials(booking) }}</div>
+        <div class="reservation-summary">
+          <div class="reservation-left">
+            <div class="guest-avatar">{{ getBookingInitials(booking) }}</div>
 
-          <div class="reservation-info">
-            <h2>{{ getBookingTitle(booking) }}</h2>
-            <p>{{ formatLocation(booking) }}</p>
+            <div class="reservation-info">
+              <h2>{{ getBookingTitle(booking) }}</h2>
+              <p>{{ formatLocation(booking) }}</p>
+            </div>
+          </div>
+
+          <div class="reservation-right">
+            <div class="reservation-meta">
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+                  <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>{{ booking.startDate | date:'yyyy-MM-dd' }} au {{ booking.endDate | date:'yyyy-MM-dd' }}</span>
+              </div>
+
+              <div class="meta-item">
+                <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
+                  <path d="M8 7.5A2.5 2.5 0 1 1 8 12.5A2.5 2.5 0 0 1 8 7.5Z" fill="none" stroke="currentColor" stroke-width="1.8"></path>
+                  <path d="M16.5 8.5A2 2 0 1 1 16.5 12.5A2 2 0 0 1 16.5 8.5Z" fill="none" stroke="currentColor" stroke-width="1.8"></path>
+                  <path d="M3.5 18a4.5 4.5 0 0 1 9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                  <path d="M13 18a3.5 3.5 0 0 1 7 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                </svg>
+                <span>{{ getDurationLabel(booking) }}</span>
+              </div>
+
+              <span class="status" [ngClass]="getBookingStatusClass(booking)">
+                {{ getBookingStatusLabel(booking) }}
+              </span>
+            </div>
+            <div class="reservation-actions">
+              <div class="reservation-price">{{ booking.totalPrice | currency:'EUR':'code':'1.0-0' }}</div>
+              <button *ngIf="canCancel(booking)" type="button" class="cancel-button" (click)="openCancelModal(booking)"> Annuler </button>
+              <button *ngIf="canReview(booking)" type="button" class="review-button" (click)="openReviewModal(booking)">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                Laisser un avis
+              </button>
+              <button type="button" class="reservation-message-button" [class.active]="isMessagePanelOpen(booking)" (click)="toggleMessages(booking)">
+                <svg viewBox="0 0 24 24" class="message-icon" aria-hidden="true">
+                  <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                </svg>
+                Message
+                <span class="message-chevron">{{ isMessagePanelOpen(booking) ? '^' : 'v' }}</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="reservation-right">
-          <div class="reservation-meta">
-            <div class="meta-item">
-              <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
-                <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-                <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
-              </svg>
-              <span>{{ booking.startDate | date:'yyyy-MM-dd' }} au {{ booking.endDate | date:'yyyy-MM-dd' }}</span>
-            </div>
+        <section class="reservation-chat" *ngIf="isMessagePanelOpen(booking)">
+          <header class="reservation-chat__header">
+            <strong>Conversation avec {{ getHostName(booking) }}</strong>
+            <span>{{ getBookingTitle(booking) }}</span>
+          </header>
 
-            <div class="meta-item">
-              <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
-                <path d="M8 7.5A2.5 2.5 0 1 1 8 12.5A2.5 2.5 0 0 1 8 7.5Z" fill="none" stroke="currentColor" stroke-width="1.8"></path>
-                <path d="M16.5 8.5A2 2 0 1 1 16.5 12.5A2 2 0 0 1 16.5 8.5Z" fill="none" stroke="currentColor" stroke-width="1.8"></path>
-                <path d="M3.5 18a4.5 4.5 0 0 1 9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
-                <path d="M13 18a3.5 3.5 0 0 1 7 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
-              </svg>
-              <span>{{ getDurationLabel(booking) }}</span>
-            </div>
+          <div class="reservation-chat__body">
+            <p class="reservation-chat__state" *ngIf="isMessageLoading(booking)">Chargement de la conversation...</p>
+            <p class="reservation-chat__state reservation-chat__state--error" *ngIf="!isMessageLoading(booking) && messageError">{{ messageError }}</p>
+            <p class="reservation-chat__state" *ngIf="!isMessageLoading(booking) && !messageError && !getMessages(booking).length">
+              Aucun message pour cette reservation.
+            </p>
 
-            <span class="status" [ngClass]="getBookingStatusClass(booking)">
-              {{ getBookingStatusLabel(booking) }}
-            </span>
+            <div
+              class="reservation-chat__bubble"
+              *ngFor="let message of getMessages(booking)"
+              [class.reservation-chat__bubble--own]="isOwnMessage(message)"
+            >
+              <p>{{ message.content }}</p>
+              <span>{{ message.sentAt | date:'dd MMM, HH:mm' }}</span>
+            </div>
           </div>
 
-          <div class="reservation-actions">
-            <button *ngIf="canCancel(booking)" type="button" class="cancel-button" (click)="openCancelModal(booking)"> Annuler </button>
-            <button *ngIf="canReview(booking)" type="button" class="review-button" (click)="openReviewModal(booking)">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          <form class="reservation-chat__composer" (ngSubmit)="sendMessage(booking)">
+            <input
+              type="text"
+              name="message-{{ booking.id }}"
+              [(ngModel)]="messageDrafts[getBookingKey(booking)]"
+              placeholder="Ecrire un message..."
+              [disabled]="isMessageLoading(booking)"
+            />
+            <button type="submit" [disabled]="isMessageLoading(booking) || !messageDrafts[getBookingKey(booking)]?.trim()">
+              <svg viewBox="0 0 24 24" class="message-icon" aria-hidden="true">
+                <path d="M21 3 10 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="m21 3-7 18-4-7-7-4 18-7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
               </svg>
-              Laisser un avis
             </button>
-            <div class="reservation-price">{{ booking.totalPrice | currency:'EUR':'code':'1.0-0' }}</div>
-          </div>
-        </div>
+          </form>
+        </section>
       </article>
     </section>
 

@@ -22,7 +22,10 @@ public record BookingDto(
         GuestSummary guest
 ) {
 
-    public record PropertySummary(Long id, String name, String city, String country) {
+    public record PropertySummary(Long id, String name, String city, String country, HostSummary host) {
+    }
+
+    public record HostSummary(Long id, String username, String email) {
     }
 
     public record GuestSummary(Long id, String username, String email) {
@@ -51,8 +54,16 @@ public record BookingDto(
                 property.getId(),
                 property.getName(),
                 property.getCity(),
-                property.getCountry()
+                property.getCountry(),
+                toHostSummary(property.getHost())
         );
+    }
+
+    private static HostSummary toHostSummary(User host) {
+        if (host == null) {
+            return null;
+        }
+        return new HostSummary(host.getId(), host.getUsername(), host.getEmail());
     }
 
     private static GuestSummary toGuestSummary(User guest) {

@@ -172,10 +172,46 @@
             <mat-icon fontIcon="event_available"></mat-icon>
             Reserver
           </button>
-          <button type="button" class="booking-card__secondary">
+          <button type="button" class="booking-card__secondary" (click)="contactHost()">
             <mat-icon fontIcon="chat_bubble_outline"></mat-icon>
             Contacter le proprietaire
           </button>
+
+          <section class="host-chat" *ngIf="hostContactOpen">
+            <header>
+              <strong>Conversation avec {{ property.host?.username || 'l hote' }}</strong>
+            </header>
+
+            <div class="host-chat__body">
+              <p class="host-chat__state" *ngIf="hostMessageLoading">Chargement...</p>
+              <p class="host-chat__state host-chat__state--error" *ngIf="!hostMessageLoading && hostMessageError">{{ hostMessageError }}</p>
+              <p class="host-chat__state" *ngIf="!hostMessageLoading && !hostMessageError && !hostMessages.length">
+                Aucun message pour ce logement.
+              </p>
+
+              <div
+                class="host-chat__bubble"
+                *ngFor="let message of hostMessages"
+                [class.host-chat__bubble--own]="isOwnHostMessage(message)"
+              >
+                <p>{{ message.content }}</p>
+                <span>{{ message.sentAt | date:'dd MMM, HH:mm' }}</span>
+              </div>
+            </div>
+
+            <form class="host-chat__composer" (ngSubmit)="sendHostMessage()">
+              <input
+                type="text"
+                name="host-message"
+                [(ngModel)]="hostMessageDraft"
+                placeholder="Ecrire un message..."
+                [disabled]="hostMessageLoading"
+              />
+              <button type="submit" [disabled]="hostMessageLoading || !hostMessageDraft.trim()">
+                <mat-icon fontIcon="send"></mat-icon>
+              </button>
+            </form>
+          </section>
         </div>
 
         <div class="host-card" *ngIf="property.host">

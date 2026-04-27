@@ -16,6 +16,8 @@ import { BookingDateRange, isDateReserved, isRangeAvailable, startOfDay, toBooki
 import { AuthService } from '../../../core/auth.service';
 import { ReviewService } from '../../reviews/reviewService';
 import { Review } from '../../reviews/review.model';
+import { Message } from '../../messages/message.model';
+import { MessageService } from '../../messages/messageService';
 
 @Component({
   selector: 'app-property-edit',
@@ -56,13 +58,19 @@ export class PropertyEditComponent implements OnInit {
   readonly departureDateFilter = (date: Date | null): boolean => this.canSelectDepartureDate(date);
   readonly dateClass = (date: Date): string =>
     isDateReserved(date, this.unavailableRanges) ? 'property-edit__date--unavailable' : '';
+  hostContactOpen = false;
+  hostMessages: Message[] = [];
+  hostMessageDraft = '';
+  hostMessageLoading = false;
+  hostMessageError = '';
 
   constructor(
     private route: ActivatedRoute,
     private propertyService: PropertyService,
     private bookingService: BookingService,
     private authService: AuthService,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -187,6 +195,66 @@ export class PropertyEditComponent implements OnInit {
       error: () => {
         this.bookingError = 'Impossible d\'enregistrer la reservation. Merci de reessayer.';
         this.startFeedbackTimer();
+      }
+    });
+  }
+
+  contactHost(): void {
+    if (!this.property?.id) {
+      return;
+    }
+
+    this.hostContactOpen = !this.hostContactOpen;
+    if (this.hostContactOpen) {
+      this.loadHostMessages();
+    }
+  }
+
+  sendHostMessage(): void {
+    const senderId = this.authService.getCurrentUserId();
+    const propertyId = this.property?.id;
+    const content = this.hostMessageDraft.trim();
+
+    if (!senderId || !propertyId || !content) {
+      return;
+    }
+
+    this.hostMessageLoading = true;
+    this.hostMessageError = '';
+    this.messageService.create({ senderId, propertyId, content }).subscribe({
+      next: () => {
+        this.hostMessageDraft = '';
+        this.loadHostMessages();
+      },
+      error: () => {
+        this.hostMessageError = 'Impossible d envoyer le message.';
+        this.hostMessageLoading = false;
+      }
+    });
+  }
+
+  isOwnHostMessage(message: Message): boolean {
+    return message.sender.id === this.authService.getCurrentUserId();
+  }
+
+  private loadHostMessages(): void {
+    const userId = this.authService.getCurrentUserId();
+    const propertyId = this.property?.id;
+
+    if (!userId || !propertyId) {
+      return;
+    }
+
+    this.hostMessageLoading = true;
+    this.hostMessageError = '';
+    this.messageService.getThread(userId, propertyId).subscribe({
+      next: messages => {
+        this.hostMessages = messages;
+        this.hostMessageLoading = false;
+      },
+      error: () => {
+        this.hostMessageError = 'Impossible de charger la conversation.';
+        this.hostMessageLoading = false;
       }
     });
   }
