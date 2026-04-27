@@ -92,12 +92,72 @@
 
           <div class="reservation-actions">
             <button *ngIf="canCancel(booking)" type="button" class="cancel-button" (click)="openCancelModal(booking)"> Annuler </button>
+            <button *ngIf="canReview(booking)" type="button" class="review-button" (click)="openReviewModal(booking)">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              Laisser un avis
+            </button>
             <div class="reservation-price">{{ booking.totalPrice | currency:'EUR':'code':'1.0-0' }}</div>
           </div>
         </div>
       </article>
     </section>
 
+    <!-- Modal avis -->
+    <div class="modal-backdrop" *ngIf="showReviewModal" (click)="closeReviewModal()">
+      <div class="cancel-modal" (click)="$event.stopPropagation()">
+        <h2>Laisser un avis</h2>
+        <p *ngIf="bookingToReview">
+          Votre expérience pour <strong>{{ getBookingTitle(bookingToReview) }}</strong>
+        </p>
+
+        <div class="review-stars-row">
+          <span class="review-stars-label">Note :</span>
+          <div class="review-stars">
+            <button
+              *ngFor="let star of [1,2,3,4,5]"
+              type="button"
+              class="star-btn"
+              [class.filled]="star <= reviewRating"
+              (click)="setReviewRating(star)"
+              (mouseenter)="reviewHover = star"
+              (mouseleave)="reviewHover = 0"
+              [attr.aria-label]="star + ' étoile(s)'"
+            >
+              <svg viewBox="0 0 24 24" width="28" height="28"
+                   [attr.fill]="(reviewHover ? star <= reviewHover : star <= reviewRating) ? '#f59e0b' : 'none'"
+                   [attr.stroke]="(reviewHover ? star <= reviewHover : star <= reviewRating) ? '#f59e0b' : '#d1d5db'"
+                   stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <textarea
+          class="review-textarea"
+          [(ngModel)]="reviewComment"
+          placeholder="Décrivez votre séjour..."
+          rows="4"
+          maxlength="1000"
+        ></textarea>
+
+        <p class="modal-error" *ngIf="reviewError">{{ reviewError }}</p>
+        <p class="review-success" *ngIf="reviewSuccess">✓ Avis publié avec succès !</p>
+
+        <div class="modal-actions">
+          <button type="button" class="modal-secondary-button" (click)="closeReviewModal()" [disabled]="isSubmittingReview">
+            Annuler
+          </button>
+          <button type="button" class="modal-primary-button" (click)="submitReview()" [disabled]="isSubmittingReview || reviewRating === 0">
+            {{ isSubmittingReview ? 'Publication...' : "Publier l'avis" }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal annulation -->
     <div class="modal-backdrop" *ngIf="showCancelModal" (click)="closeCancelModal()">
       <div class="cancel-modal" (click)="$event.stopPropagation()">
         <h2>Annuler la réservation ?</h2>
@@ -118,7 +178,7 @@
           </button>
 
           <button type="button" class="modal-danger-button" (click)="confirmCancelBooking()" [disabled]="isCancelling">
-            {{ isCancelling ? 'Annulation...' : 'Confirmer l annulation' }}
+            {{ isCancelling ? 'Annulation...' : "Confirmer l'annulation" }}
           </button>
         </div>
       </div>
