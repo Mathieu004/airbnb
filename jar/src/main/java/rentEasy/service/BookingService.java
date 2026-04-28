@@ -1,7 +1,10 @@
 package rentEasy.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import rentEasy.controller.dto.BookingRequest;
 import rentEasy.model.Booking;
@@ -25,6 +28,9 @@ public class BookingService {
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Transactional
     public Booking create(BookingRequest request) {
         validateDates(request.startDate(), request.endDate());
@@ -45,7 +51,8 @@ public class BookingService {
                 .status(BookingStatus.CONFIRMED)
                 .build();
 
-        return bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
+        return loadBookingWithRelations(savedBooking.getId());
     }
 
     @Transactional
@@ -72,7 +79,8 @@ public class BookingService {
                         .orElseThrow(() -> new IllegalArgumentException("User not found: " + booking.getGuest().getUsername())));
             }
         }
-        return bookingRepository.save(existing);
+        Booking savedBooking = bookingRepository.save(existing);
+        return loadBookingWithRelations(savedBooking.getId());
     }
 
     @Transactional
@@ -91,7 +99,8 @@ public class BookingService {
         if (updated.getStatus() != null) {
             existing.setStatus(updated.getStatus());
         }
-        return bookingRepository.save(existing);
+        Booking savedBooking = bookingRepository.save(existing);
+        return loadBookingWithRelations(savedBooking.getId());
     }
 
     @Transactional
@@ -182,6 +191,39 @@ public class BookingService {
 
         if (overlaps) {
             throw new IllegalArgumentException("Selected dates are not available for this property.");
+        }
+    }
+
+    private Booking loadBookingWithRelations(Long bookingId) {
+        entityManager.flush();
+        entityManager.clear();
+
+        Booking booking = bookingRepository.findByIdWithRelations(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
+
+        initializeRelations(booking);
+        return booking;
+    }
+
+    private void initializeRelations(Booking booking) {
+        Hibernate.initialize(booking);
+
+        Property property = booking.getProperty();
+        if (property != null) {
+            Hibernate.initialize(property);
+            User host = property.getHost();
+            if (host != null) {
+                Hibernate.initialize(host);
+                host.getUsername();
+                host.getEmail();
+            }
+        }
+
+        User guest = booking.getGuest();
+        if (guest != null) {
+            Hibernate.initialize(guest);
+            guest.getUsername();
+            guest.getEmail();
         }
     }
 }

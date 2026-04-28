@@ -1,5 +1,5 @@
 - Mettre un message d'erreur lors d'une erreur de connection utilisateur
-- Dans la barre de defilement de l'utilisateur les animatiosn d'hover ne sont pas les meme
+- Dans la liste deroulante quand on click sur l'utilisateur en haut a droite du site les animations d'hover ne sont pas les meme
 - changer les notes des appartements dans explorer pour mettre une etoile a la place de "/ 5"
 - Mettre un logo pour l'onglet rent easy, ainsi que changer le nom avec les "!!!"
 - messages d'erreur quand on clique sur reserver et que des informations ne sont pas toutes remplies dans les reservations
