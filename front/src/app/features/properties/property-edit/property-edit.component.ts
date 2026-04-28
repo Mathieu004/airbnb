@@ -12,7 +12,13 @@ import { PropertyService } from '../propertyService';
 import { Property } from '../property.model';
 import { BookingService } from '../../bookings/bookingService';
 import { Booking } from '../../bookings/booking.model';
-import { BookingDateRange, isDateReserved, isRangeAvailable, startOfDay, toBookingRanges } from '../../bookings/booking-date.util';
+import {
+  BookingDateRange,
+  isDateReserved,
+  isRangeAvailable,
+  startOfDay,
+  toBookingRanges
+} from '../../bookings/booking-date.util';
 import { AuthService } from '../../../core/auth.service';
 import { ReviewService } from '../../reviews/reviewService';
 import { Review } from '../../reviews/review.model';
@@ -47,7 +53,8 @@ export class PropertyEditComponent implements OnInit {
   successMessage = '';
   bookingError = '';
   private feedbackTimer?: ReturnType<typeof setTimeout>;
-  private readonly fallbackImage = 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80';
+  private readonly fallbackImage =
+    'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80';
   reviews: Review[] = [];
   reviewsError = '';
   reviewsLoading = false;
@@ -63,6 +70,7 @@ export class PropertyEditComponent implements OnInit {
   hostMessageDraft = '';
   hostMessageLoading = false;
   hostMessageError = '';
+  mainImageUrl = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -90,7 +98,7 @@ export class PropertyEditComponent implements OnInit {
     }
 
     this.propertyService.getById(id).subscribe({
-      next: data => this.applyProperty(data),
+      next: (data) => this.applyProperty(data),
       error: () => {
         if (!this.property) {
           this.errorMessage = 'Impossible de charger ce logement.';
@@ -99,8 +107,6 @@ export class PropertyEditComponent implements OnInit {
       }
     });
   }
-
-  mainImageUrl = '';
 
   get ratingLabel(): string {
     if (!this.property) {
@@ -137,7 +143,9 @@ export class PropertyEditComponent implements OnInit {
     if (!this.arrivalDate || !this.departureDate) {
       return 0;
     }
-    const diff = Math.round((this.departureDate.getTime() - this.arrivalDate.getTime()) / (24 * 60 * 60 * 1000));
+    const diff = Math.round(
+      (this.departureDate.getTime() - this.arrivalDate.getTime()) / (24 * 60 * 60 * 1000)
+    );
     return Math.max(diff, 0);
   }
 
@@ -171,29 +179,56 @@ export class PropertyEditComponent implements OnInit {
   }
 
   reserve(): void {
-    if (!this.canReserve || !this.property) {
+    this.clearFeedback();
+
+    if (!this.property) {
+      this.bookingError = 'Ce logement est introuvable pour le moment.';
+      this.startFeedbackTimer();
+      return;
+    }
+
+    if (!this.authService.isLoggedIn()) {
+      this.bookingError = 'Vous devez etre connecte pour reserver.';
+      this.startFeedbackTimer();
+      return;
+    }
+
+    if (!this.arrivalDate || !this.departureDate) {
+      this.bookingError = 'Veuillez renseigner votre date d arrivee et votre date de depart.';
+      this.startFeedbackTimer();
+      return;
+    }
+
+    if (!this.selectedGuests || this.selectedGuests < 1) {
+      this.bookingError = 'Veuillez choisir le nombre de voyageurs.';
+      this.startFeedbackTimer();
+      return;
+    }
+
+    if (!this.canReserve) {
       this.bookingError = 'Les dates selectionnees ne sont pas disponibles.';
+      this.startFeedbackTimer();
       return;
     }
 
     const payload = {
       propertyId: this.property.id,
       guestUsername: this.authService.getCurrentUser() ?? 'invite',
-      startDate: this.formatLocalDate(this.arrivalDate!),
-      endDate: this.formatLocalDate(this.departureDate!),
-      totalPrice: this.computeTotalPrice()
+      startDate: this.formatLocalDate(this.arrivalDate),
+      endDate: this.formatLocalDate(this.departureDate),
+      totalPrice: this.computeTotalPrice(),
+      numberOfGuests: this.selectedGuests
     };
-
-    this.clearFeedback();
 
     this.bookingService.create(payload as any).subscribe({
       next: () => {
-        this.successMessage = 'Reservation confirmée';
+        this.successMessage = 'Reservation confirmee.';
         this.refreshBookings();
         this.startFeedbackTimer();
       },
-      error: () => {
-        this.bookingError = 'Impossible d\'enregistrer la reservation. Merci de reessayer.';
+      error: (err) => {
+        this.bookingError =
+          err?.error?.message || 'Impossible d enregistrer la reservation. Merci de reessayer.';
         this.startFeedbackTimer();
       }
     });
@@ -237,6 +272,35 @@ export class PropertyEditComponent implements OnInit {
     return message.sender.id === this.authService.getCurrentUserId();
   }
 
+  onArrivalDateChange(date: Date | null): void {
+    this.arrivalDate = date ? startOfDay(date) : null;
+    if (this.arrivalDate && this.departureDate && !this.canSelectDepartureDate(this.departureDate)) {
+      this.departureDate = null;
+    }
+    this.bookingError = '';
+  }
+
+  onDepartureDateChange(date: Date | null): void {
+    this.departureDate = date ? startOfDay(date) : null;
+    this.bookingError = '';
+  }
+
+  setMainImage(imageUrl: string): void {
+    this.mainImageUrl = imageUrl || this.fallbackImage;
+  }
+
+  getReviewInitials(name?: string | null): string {
+    if (!name) {
+      return 'RV';
+    }
+    return name
+      .split(' ')
+      .filter(Boolean)
+      .map((part) => part[0]?.toUpperCase() ?? '')
+      .slice(0, 2)
+      .join('');
+  }
+
   private loadHostMessages(): void {
     const userId = this.authService.getCurrentUserId();
     const propertyId = this.property?.id;
@@ -248,7 +312,7 @@ export class PropertyEditComponent implements OnInit {
     this.hostMessageLoading = true;
     this.hostMessageError = '';
     this.messageService.getThread(userId, propertyId).subscribe({
-      next: messages => {
+      next: (messages) => {
         this.hostMessages = messages;
         this.hostMessageLoading = false;
       },
@@ -274,8 +338,9 @@ export class PropertyEditComponent implements OnInit {
     if (!value) {
       return [];
     }
-    return value.split(',')
-      .map(item => item.trim())
+    return value
+      .split(',')
+      .map((item) => item.trim())
       .filter(Boolean);
   }
 
@@ -291,26 +356,9 @@ export class PropertyEditComponent implements OnInit {
     }
   }
 
-  onArrivalDateChange(date: Date | null): void {
-    this.arrivalDate = date ? startOfDay(date) : null;
-    if (this.arrivalDate && this.departureDate && !this.canSelectDepartureDate(this.departureDate)) {
-      this.departureDate = null;
-    }
-    this.bookingError = '';
-  }
-
-  onDepartureDateChange(date: Date | null): void {
-    this.departureDate = date ? startOfDay(date) : null;
-    this.bookingError = '';
-  }
-
-  setMainImage(imageUrl: string): void {
-    this.mainImageUrl = imageUrl || this.fallbackImage;
-  }
-
   private computeMainImage(): string {
     if (this.property?.images?.length) {
-      const main = this.property.images.find(image => image.isMain);
+      const main = this.property.images.find((image) => image.isMain);
       return (main ?? this.property.images[0]).imageUrl;
     }
     return this.fallbackImage;
@@ -332,22 +380,11 @@ export class PropertyEditComponent implements OnInit {
     }, 4000);
   }
 
-  getReviewInitials(name?: string | null): string {
-    if (!name) {
-      return 'RV';
-    }
-    return name.split(' ')
-      .filter(Boolean)
-      .map(part => part[0]?.toUpperCase() ?? '')
-      .slice(0, 2)
-      .join('');
-  }
-
   private loadReviews(propertyId: number): void {
     this.reviewsLoading = true;
     this.reviewsError = '';
     this.reviewService.getByPropertyId(propertyId).subscribe({
-      next: data => {
+      next: (data) => {
         this.reviews = data ?? [];
         this.updateReviewStatsFromList();
         this.reviewsLoading = false;
@@ -375,7 +412,7 @@ export class PropertyEditComponent implements OnInit {
 
   private loadPropertyBookings(propertyId: number): void {
     this.bookingService.getByPropertyId(propertyId).subscribe({
-      next: data => {
+      next: (data) => {
         this.propertyBookings = data ?? [];
         this.unavailableRanges = toBookingRanges(this.propertyBookings);
       },

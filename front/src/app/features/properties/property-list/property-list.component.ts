@@ -78,14 +78,14 @@ export class PropertyListComponent implements OnInit {
 
   getAverageRating(property: Property): string {
     if ((property.reviewCount ?? 0) > 0 && property.reviewAverage != null) {
-      return `${property.reviewAverage.toFixed(1)} / 5`;
+      return `${property.reviewAverage.toFixed(1)} ★`;
     }
     if (!property.reviews || property.reviews.length === 0) {
       return 'Nouveau';
     }
     const total = property.reviews.reduce((sum, review) => sum + (review.rating ?? 0), 0);
     const avg = total / property.reviews.length;
-    return `${avg.toFixed(1)} / 5`;
+    return `${avg.toFixed(1)} ★`;
   }
 
   refresh(): void {
