@@ -43,8 +43,8 @@ export class LoginComponent {
       error: (err) => {
         const serverMessage = err?.error?.message;
 
-        if (serverMessage) {
-          this.error = `Connexion impossible : ${serverMessage}`;
+        if (serverMessage?.includes('Invalid credentials')) {
+          this.error = 'Connexion impossible : nom d\'utilisateur ou mot de passe incorrect.';
           return;
         }
 

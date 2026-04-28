@@ -410,7 +410,11 @@
 /* Status colours matching BookingStatus enum */
 .status.pending   { background: #fff5e7; color: #d48c14; }
 .status.confirmed { background: #e9f9ef; color: #22a447; }
-.status.cancelled { background: #fdecea; color: #c53030; }
+.status.cancelled {
+  border: 1px solid #cbd5e1;
+  background: #f1f5f9;
+  color: #475569;
+}
 .status.completed { background: #ecf0f5; color: #7d8ea4; }
 
 /* Loading / Error / Empty */

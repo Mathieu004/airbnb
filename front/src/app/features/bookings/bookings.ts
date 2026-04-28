@@ -121,10 +121,10 @@ export class BookingsComponent implements OnInit {
 
   getBookingStatusLabel(booking: Booking): string {
     const status = this.getBookingStatus(booking);
-    if (status === 'cancelled') return 'Annulee';
+    if (status === 'cancelled') return 'Annulée';
     if (status === 'current') return 'En cours';
     if (status === 'upcoming') return 'A venir';
-    return 'Terminee';
+    return 'Terminée';
   }
 
   getBookingStatusClass(booking: Booking): string {

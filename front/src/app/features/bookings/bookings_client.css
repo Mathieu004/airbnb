@@ -323,8 +323,9 @@
 }
 
 .status.booking-status--cancelled {
-  background: #ffe9e9;
-  color: #ef4444;
+  border: 1px solid #cbd5e1;
+  background: #f1f5f9;
+  color: #475569;
 }
 
 .modal-backdrop {
@@ -436,8 +437,13 @@
 }
 
 .message-chevron {
-  font-size: 14px;
-  line-height: 1;
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.message-chevron.open {
+  transform: rotate(180deg);
 }
 
 .message-icon {
