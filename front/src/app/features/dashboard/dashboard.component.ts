@@ -104,7 +104,10 @@ export class DashboardComponent implements OnInit {
   }
 
   private loadBookings(): void {
-    this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
+    const ownerId = this.auth.getCurrentUserId();
+    if (!ownerId) return;
+
+    this.http.get<Booking[]>(`${environment.apiUrl}/bookings/owner/${ownerId}`).subscribe({
       next: (bookings) => {
         this.bookings = bookings;
         this.upcomingReservationsCount = this.countUpcomingReservations(bookings);
@@ -224,10 +227,10 @@ export class DashboardComponent implements OnInit {
     return [...bookings]
       .sort((left, right) => this.getBookingTimestamp(right) - this.getBookingTimestamp(left))
       .slice(0, 4)
-      .map((booking, index) => ({
+      .map((booking) => ({
         ...booking,
-        statusLabel: index === 1 ? 'pending' : index === 3 ? 'completed' : 'confirmed',
-        statusClass: index === 1 ? 'pending' : index === 3 ? 'completed' : 'confirmed'
+        statusLabel: (booking.status ?? 'CONFIRMED').toLowerCase(),
+        statusClass: (booking.status ?? 'CONFIRMED').toLowerCase()
       }));
   }
 

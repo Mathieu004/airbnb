@@ -421,7 +421,7 @@ export class LogementsComponent implements OnInit {
 
     this.isLoading = true;
     this.errorMessage = '';
-    this.propertyService.getForHost(this.userId).subscribe({
+    this.propertyService.getByHostId(this.userId).subscribe({
       next: (properties) => {
         this.properties = properties;
         this.isLoading = false;

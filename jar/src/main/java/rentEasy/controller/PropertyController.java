@@ -13,7 +13,7 @@ import rentEasy.service.PropertyService;
 import java.util.List;
 
 @RestController
-@RequestMapping({"/api/properties", "/api/property"})
+@RequestMapping({"/api/property"})
 @RequiredArgsConstructor
 public class PropertyController {
 

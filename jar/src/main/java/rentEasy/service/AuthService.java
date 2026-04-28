@@ -79,4 +79,9 @@ public class AuthService {
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
     }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsernameIgnoreCase(username.trim())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 }

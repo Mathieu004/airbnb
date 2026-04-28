@@ -28,9 +28,6 @@ public class ReviewService {
 
     @Transactional
     public Review createFromRequest(Long userId, Long propertyId, Integer rating, String comment) {
-        if (rating < 1 || rating > 5) {
-            throw new IllegalArgumentException("La note doit être entre 1 et 5");
-        }
         if (reviewRepository.existsByUserIdAndPropertyId(userId, propertyId)) {
             throw new IllegalArgumentException("Vous avez déjà laissé un avis pour ce logement");
         }

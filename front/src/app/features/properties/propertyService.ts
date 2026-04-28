@@ -20,10 +20,6 @@ export class PropertyService extends CrudService<Property, PropertyPayload, Prop
     });
   }
 
-  getForHost(userId: number): Observable<Property[]> {
-    return this.getByHostId(userId);
-  }
-
   getForGuest(): Observable<Property[]> {
     return this.http.get<Property[]>(`${environment.apiUrl}/property`, {
       params: {

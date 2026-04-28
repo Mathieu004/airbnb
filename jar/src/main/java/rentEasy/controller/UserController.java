@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping({"/api/users", "/api/user"})
+@RequestMapping({"/api/user"})
 @RequiredArgsConstructor
 public class UserController {
 

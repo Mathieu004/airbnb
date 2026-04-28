@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rentEasy.model.User;
-import rentEasy.repository.UserRepository;
 import rentEasy.service.AuthService;
 
 @RestController
@@ -15,12 +14,11 @@ import rentEasy.service.AuthService;
 public class AuthController {
 
     private final AuthService authService;
-    private final UserRepository userRepository;
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         String token = authService.login(request.username(), request.password());
-        User user = userRepository.findByUsernameIgnoreCase(request.username().trim()).orElseThrow();
+        User user = authService.getUserByUsername(request.username());
         return new LoginResponse(token, user.getId(), user.getRole().name());
     }
 

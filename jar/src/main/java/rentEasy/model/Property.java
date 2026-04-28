@@ -109,7 +109,7 @@ public class Property {
     private PropertyType type;
 
     @Column(name = "size")
-    private Integer Size;
+    private Integer size;
 
     @Column(name = "is_active")
     private Boolean isActive;
