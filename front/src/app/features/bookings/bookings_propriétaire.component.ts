@@ -21,11 +21,11 @@ export class BookingsProprietaireComponent implements OnInit {
   error: string | null = null;
 
   readonly filters: Array<{ label: string; value: BookingStatus | 'ALL' }> = [
-    { label: 'All', value: 'ALL' },
-    { label: 'Pending', value: 'PENDING' },
-    { label: 'Confirmed', value: 'CONFIRMED' },
-    { label: 'Cancelled', value: 'CANCELLED' },
-    { label: 'Completed', value: 'COMPLETED' }
+    { label: 'Tous', value: 'ALL' },
+    { label: 'En attente', value: 'PENDING' },
+    { label: 'Confirm\u00e9es', value: 'CONFIRMED' },
+    { label: 'Annul\u00e9es', value: 'CANCELLED' },
+    { label: 'Termin\u00e9es', value: 'COMPLETED' }
   ];
 
   constructor(
@@ -44,7 +44,7 @@ export class BookingsProprietaireComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.error = 'Impossible de charger les réservations.';
+        this.error = 'Impossible de charger les r\u00e9servations.';
         this.loading = false;
       }
     });
@@ -88,5 +88,19 @@ export class BookingsProprietaireComponent implements OnInit {
     if (!username) return '?';
     return username.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
   }
-}
 
+  getStatusLabel(status?: BookingStatus): string {
+    switch (status) {
+      case 'PENDING':
+        return 'En attente';
+      case 'CONFIRMED':
+        return 'Confirm\u00e9e';
+      case 'CANCELLED':
+        return 'Annul\u00e9e';
+      case 'COMPLETED':
+        return 'Termin\u00e9e';
+      default:
+        return '';
+    }
+  }
+}

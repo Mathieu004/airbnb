@@ -1,8 +1,8 @@
 <main class="booking-page">
   <div class="booking-container">
     <header class="page-header">
-      <h1>Reservations</h1>
-      <p>{{ filteredBookings.length }} reservation{{ filteredBookings.length !== 1 ? 's' : '' }} au total</p>
+      <h1>R&eacute;servations</h1>
+      <p>{{ filteredBookings.length }} r&eacute;servation{{ filteredBookings.length !== 1 ? 's' : '' }} au total</p>
     </header>
 
     <section class="booking-toolbar">
@@ -11,8 +11,12 @@
           <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle>
           <path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
         </svg>
-        <input type="text" placeholder="Rechercher des reservations..."
-               [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
+        <input
+          type="text"
+          placeholder="Rechercher des r&eacute;servations..."
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearchChange()"
+        />
       </div>
 
       <div class="filter-group">
@@ -22,21 +26,23 @@
           </svg>
         </button>
 
-        <button *ngFor="let f of filters"
-                type="button"
-                class="filter-pill"
-                [class.active]="activeFilter === f.value"
-                (click)="setFilter(f.value)">
+        <button
+          *ngFor="let f of filters"
+          type="button"
+          class="filter-pill"
+          [class.active]="activeFilter === f.value"
+          (click)="setFilter(f.value)"
+        >
           {{ f.label }}
         </button>
       </div>
     </section>
 
-    <div *ngIf="loading" class="loading-state">Chargement…</div>
+    <div *ngIf="loading" class="loading-state">Chargement...</div>
     <div *ngIf="error" class="error-state">{{ error }}</div>
 
     <section class="reservations-list" *ngIf="!loading && !error">
-      <p *ngIf="filteredBookings.length === 0" class="empty-state">Aucune réservation trouvée.</p>
+      <p *ngIf="filteredBookings.length === 0" class="empty-state">Aucune r&eacute;servation trouv&eacute;e.</p>
 
       <article class="reservation-card" *ngFor="let booking of filteredBookings">
         <div class="reservation-left">
@@ -54,7 +60,7 @@
                 <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
                 <path d="M8 3v4M16 3v4M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
               </svg>
-              <span>{{ booking.startDate }} to {{ booking.endDate }}</span>
+              <span>{{ booking.startDate }} au {{ booking.endDate }}</span>
             </div>
             <div class="meta-item" *ngIf="booking.numberOfGuests">
               <svg viewBox="0 0 24 24" class="meta-icon" aria-hidden="true">
@@ -64,7 +70,9 @@
               </svg>
               <span>{{ booking.numberOfGuests }}</span>
             </div>
-            <span class="status" [ngClass]="booking.status?.toLowerCase()">{{ booking.status?.toLowerCase() }}</span>
+            <span class="status" [ngClass]="booking.status?.toLowerCase()">
+              {{ getStatusLabel(booking.status) }}
+            </span>
           </div>
           <div class="reservation-price">EUR {{ booking.totalPrice }}</div>
 
