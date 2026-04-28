@@ -15,36 +15,52 @@
       <h1 class="hero-title">Trouvez le logement ideal<br>pour votre sejour</h1>
       <p class="hero-subtitle">Appartements, villas et studios dans les plus belles villes de France</p>
 
-      <div class="search-bar">
+      <form class="search-bar" (ngSubmit)="searchProperties()">
         <div class="search-field">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
-          <input type="text" placeholder="Destination" />
+          <div class="search-input-group">
+            <label for="home-destination">Destination</label>
+            <input id="home-destination" type="text" name="destination" placeholder="Ville, pays, logement" [(ngModel)]="searchDestination" />
+          </div>
         </div>
-        <div class="search-divider"></div>
         <div class="search-field">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <input type="text" placeholder="Dates" />
+          <div class="search-date-row">
+            <div class="search-input-group">
+              <label for="home-start-date">Arrivée</label>
+              <input id="home-start-date" type="date" name="startDate" [(ngModel)]="searchStartDate" />
+            </div>
+            <div class="search-input-group">
+              <label for="home-end-date">Départ</label>
+              <input id="home-end-date" type="date" name="endDate" [(ngModel)]="searchEndDate" />
+            </div>
+          </div>
         </div>
-        <div class="search-divider"></div>
         <div class="search-field">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <input type="text" placeholder="Voyageurs" />
+          <div class="search-input-group">
+            <label for="home-guests">Voyageurs</label>
+            <input id="home-guests" type="number" name="guests" min="1" placeholder="2" [(ngModel)]="searchGuests" />
+          </div>
         </div>
-        <button class="search-btn">
+        <button class="search-btn" type="submit">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           Rechercher
         </button>
-      </div>
+      </form>
+      <p class="search-error" *ngIf="searchError">{{ searchError }}</p>
     </div>
   </section>
 
   <section class="listings">
-    <h2 class="section-title">Logements populaires</h2>
-    <p class="section-subtitle">Les logements les mieux notés par les voyageurs</p>
+    <h2 class="section-title">{{ hasSearched ? 'Résultats de recherche' : 'Logements populaires' }}</h2>
+    <p class="section-subtitle" *ngIf="hasSearched">{{ featuredProperties.length }} logement{{ featuredProperties.length !== 1 ? 's' : '' }} trouve{{ featuredProperties.length !== 1 ? 's' : '' }}</p>
+    <button type="button" class="reset-search-btn" *ngIf="hasSearched" (click)="resetSearch()">Reinitialiser la recherche</button>
+    <p class="section-subtitle" *ngIf="!hasSearched">Les logements les mieux notes par les voyageurs</p>
     <p class="section-subtitle" *ngIf="isLoading">Chargement des meilleurs logements...</p>
     <p class="section-subtitle" *ngIf="!isLoading && errorMessage">{{ errorMessage }}</p>
     <p class="section-subtitle" *ngIf="!isLoading && !errorMessage && !featuredProperties.length">
-      Aucun logement note n'est disponible pour le moment.
+      {{ hasSearched ? 'Aucun logement ne correspond à votre recherche.' : "Aucun logement note n'est disponible pour le moment." }}
     </p>
 
     <div class="cards-grid" *ngIf="featuredProperties.length">
@@ -77,25 +93,25 @@
 
     <div class="stat-item">
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      <strong>500+</strong>
+      <strong>{{ stats.availableProperties }}</strong>
       <span>Logements disponibles</span>
     </div>
 
     <div class="stat-item">
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-linecap="round" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-linecap="round" stroke-width="2.5"/></svg>
-      <strong>1000+</strong>
+      <strong>{{ stats.happyTravelers }}</strong>
       <span>Voyageurs satisfaits</span>
     </div>
 
     <div class="stat-item">
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      <strong>50+</strong>
+      <strong>{{ stats.coveredCities }}</strong>
       <span>Villes couvertes</span>
     </div>
 
     <div class="stat-item">
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <strong>4.8/5</strong>
+      <strong>{{ getAverageRatingLabel() }}</strong>
       <span>Note moyenne</span>
     </div>
 
@@ -112,11 +128,11 @@
           </svg>
           <span>RentEasy</span>
         </a>
-        <p class="footer-desc">La plateforme de location courte duree simple et moderne.</p>
+        <p class="footer-desc">La plateforme de location courte durée simple et moderne.</p>
       </div>
 
       <div class="footer-col">
-        <h4>Decouvrir</h4>
+        <h4>Découvrir</h4>
         <ul>
           <li><a href="#">Logements</a></li>
           <li><a href="#">Destinations</a></li>
