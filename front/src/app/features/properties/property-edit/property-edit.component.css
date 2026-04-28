@@ -223,11 +223,17 @@
   flex-wrap: wrap;
 }
 
+.property-edit__meta li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .property-edit__meta mat-icon {
-  margin-right: 6px;
   font-size: 20px;
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
 }
 
 .property-edit__rating {
@@ -275,12 +281,19 @@
   color: #40556e;
 }
 
+.property-edit__amenity-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .property-edit__amenities mat-icon {
   font-size: 18px;
   height: 18px;
   width: 18px;
   color: #10b981;
-  margin-right: 6px;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .property-edit__amenities-empty {

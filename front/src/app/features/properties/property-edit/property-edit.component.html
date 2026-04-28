@@ -15,6 +15,7 @@
       </div>
     </div>
   </div>
+
   <div *ngIf="isLoading" class="property-edit__state">
     Chargement du logement...
   </div>
@@ -30,16 +31,19 @@
     </button>
 
     <div class="property-edit__hero" [style.--hero-image]="'url(' + mainImageUrl + ')'">
-      <img [src]="mainImageUrl" [alt]="property.name">
+      <img [src]="mainImageUrl" [alt]="property.name" />
     </div>
+
     <div class="property-edit__gallery" *ngIf="(property.images?.length ?? 0) > 1">
       <div class="gallery-track">
-        <img *ngFor="let image of property.images"
-             [src]="image.imageUrl"
-             [alt]="property.name"
-             class="gallery-image"
-             [class.gallery-image--main]="mainImageUrl === image.imageUrl"
-             (click)="setMainImage(image.imageUrl)">
+        <img
+          *ngFor="let image of property.images"
+          [src]="image.imageUrl"
+          [alt]="property.name"
+          class="gallery-image"
+          [class.gallery-image--main]="mainImageUrl === image.imageUrl"
+          (click)="setMainImage(image.imageUrl)"
+        />
       </div>
     </div>
 
@@ -51,10 +55,10 @@
           {{ property.address || property.city || 'Adresse non renseignee' }}{{ property.city ? ', ' + property.city : '' }}
         </p>
         <ul class="property-edit__meta">
-          <li><mat-icon fontIcon="king_bed"></mat-icon>{{ property.bedrooms }} chambres</li>
-          <li><mat-icon fontIcon="bathtub"></mat-icon>{{ property.bathrooms }} SDB</li>
-          <li><mat-icon fontIcon="groups"></mat-icon>{{ property.maxGuests }} voyageurs</li>
-          <li><mat-icon fontIcon="open_in_full"></mat-icon>{{ property.size || 0 }}m²</li>
+          <li><mat-icon fontIcon="king_bed"></mat-icon><span>{{ property.bedrooms }} chambres</span></li>
+          <li><mat-icon fontIcon="bathtub"></mat-icon><span>{{ property.bathrooms }} SDB</span></li>
+          <li><mat-icon fontIcon="groups"></mat-icon><span>{{ property.maxGuests }} voyageurs</span></li>
+          <li><mat-icon fontIcon="open_in_full"></mat-icon><span>{{ property.size || 0 }}m²</span></li>
         </ul>
       </div>
       <div class="property-edit__rating">
@@ -67,20 +71,23 @@
       <div class="property-edit__main">
         <article class="property-card">
           <h2>Description</h2>
-          <p>{{ property.description || 'Ce logement n\'a pas encore de description detaillee.' }}</p>
-        </article><br>
+          <p>{{ property.description || 'Ce logement n a pas encore de description detaillee.' }}</p>
+        </article>
+        <br />
 
         <article class="property-card">
           <h2>Equipements</h2>
           <div class="property-edit__amenities">
-            <div *ngFor="let amenity of amenities">
-              <mat-icon fontIcon="check_circle"></mat-icon> {{ amenity }}
+            <div *ngFor="let amenity of amenities" class="property-edit__amenity-item">
+              <mat-icon fontIcon="check_circle"></mat-icon>
+              <span>{{ amenity }}</span>
             </div>
             <div *ngIf="!amenities.length" class="property-edit__amenities-empty">
               Aucun equipement specifique renseigne.
             </div>
           </div>
-        </article><br>
+        </article>
+        <br />
 
         <article class="property-card reviews-card">
           <div class="reviews-header">
@@ -117,14 +124,28 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Arrivee</mat-label>
-            <input matInput [matDatepicker]="arrivalPicker" [matDatepickerFilter]="arrivalDateFilter" [min]="minArrivalDate" [(ngModel)]="arrivalDate" (ngModelChange)="onArrivalDateChange($event)">
+            <input
+              matInput
+              [matDatepicker]="arrivalPicker"
+              [matDatepickerFilter]="arrivalDateFilter"
+              [min]="minArrivalDate"
+              [(ngModel)]="arrivalDate"
+              (ngModelChange)="onArrivalDateChange($event)"
+            />
             <mat-datepicker-toggle matIconSuffix [for]="arrivalPicker"></mat-datepicker-toggle>
             <mat-datepicker #arrivalPicker [dateClass]="dateClass"></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Depart</mat-label>
-            <input matInput [matDatepicker]="departurePicker" [matDatepickerFilter]="departureDateFilter" [min]="arrivalDate || minArrivalDate" [(ngModel)]="departureDate" (ngModelChange)="onDepartureDateChange($event)">
+            <input
+              matInput
+              [matDatepicker]="departurePicker"
+              [matDatepickerFilter]="departureDateFilter"
+              [min]="arrivalDate || minArrivalDate"
+              [(ngModel)]="departureDate"
+              (ngModelChange)="onDepartureDateChange($event)"
+            />
             <mat-datepicker-toggle matIconSuffix [for]="departurePicker"></mat-datepicker-toggle>
             <mat-datepicker #departurePicker [dateClass]="dateClass"></mat-datepicker>
           </mat-form-field>
@@ -139,7 +160,7 @@
           </mat-form-field>
 
           <label class="booking-card__option">
-            <input type="checkbox" [(ngModel)]="includeCleaningService">
+            <input type="checkbox" [(ngModel)]="includeCleaningService" />
             <span>
               <strong>Ajouter le service de nettoyage</strong>
               <small>Option facultative. +10% du montant de la reservation.</small>
@@ -165,10 +186,7 @@
             </div>
           </div>
 
-          <button type="button"
-                  class="booking-card__cta"
-                  (click)="reserve()"
-                  [disabled]="!canReserve">
+          <button type="button" class="booking-card__cta" (click)="reserve()">
             <mat-icon fontIcon="event_available"></mat-icon>
             Reserver
           </button>
@@ -184,7 +202,9 @@
 
             <div class="host-chat__body">
               <p class="host-chat__state" *ngIf="hostMessageLoading">Chargement...</p>
-              <p class="host-chat__state host-chat__state--error" *ngIf="!hostMessageLoading && hostMessageError">{{ hostMessageError }}</p>
+              <p class="host-chat__state host-chat__state--error" *ngIf="!hostMessageLoading && hostMessageError">
+                {{ hostMessageError }}
+              </p>
               <p class="host-chat__state" *ngIf="!hostMessageLoading && !hostMessageError && !hostMessages.length">
                 Aucun message pour ce logement.
               </p>

@@ -17,6 +17,7 @@ export class RegisterComponent {
   email = '';
   password = '';
   confirmPassword = '';
+  acceptTerms = false;
   error = '';
   showPassword = false;
   showConfirmPassword = false;
@@ -35,13 +36,16 @@ export class RegisterComponent {
   }
 
   onSubmit() {
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    if (!this.acceptTerms) {
+      this.errorMessage = 'Vous devez accepter les conditions d utilisation pour creer un compte.';
+      return;
+    }
+
     if (this.password !== this.confirmPassword) {
       this.errorMessage = 'Les mots de passe ne correspondent pas';
-
-      setTimeout(() => {
-        this.errorMessage = '';
-      }, 3000);
-
       return;
     }
 
@@ -53,10 +57,8 @@ export class RegisterComponent {
         }, 3000);
       },
       error: () => {
-          setTimeout(() => {
-            this.errorMessage = 'Vous n\'avez pas pu vous inscrire! Verifiez si votre mot de passe est conforme.';
-          }, 3000);
-        }
+        this.errorMessage = 'Vous n avez pas pu vous inscrire. Verifiez si votre mot de passe est conforme.';
+      }
     });
   }
 }

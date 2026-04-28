@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -6,7 +7,7 @@ import { AuthService } from '../../../core/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -36,9 +37,24 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    this.error = '';
     this.auth.login(this.username, this.password).subscribe({
       next: () => this.router.navigateByUrl(this.returnUrl),
-      error: () => this.error = 'Identifiants incorrects'
+      error: (err) => {
+        const serverMessage = err?.error?.message;
+
+        if (serverMessage) {
+          this.error = `Connexion impossible : ${serverMessage}`;
+          return;
+        }
+
+        if (err?.status === 0) {
+          this.error = 'Connexion impossible : le serveur ne repond pas.';
+          return;
+        }
+
+        this.error = 'Connexion impossible : identifiants incorrects.';
+      }
     });
   }
 }

@@ -28,6 +28,13 @@
   text-decoration: none;
 }
 
+.navbar-logo__image {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  display: block;
+}
+
 .navbar-nav {
   display: flex;
   align-items: center;
@@ -118,15 +125,20 @@
   text-decoration: none;
   background: none;
   border: none;
+  box-sizing: border-box;
   cursor: pointer;
   font-family: inherit;
   width: 100%;
   text-align: left;
-  transition: background 0.15s;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
 }
 
 .profile__menu-item:hover {
   background: #f3f4f6;
+  transform: translateX(2px);
 }
 
 .profile__divider {
@@ -141,6 +153,7 @@
 
 .profile__menu-item--logout:hover {
   background: #fef2f2;
+  transform: translateX(2px);
 }
 
 @media (max-width: 768px) {
@@ -165,6 +178,7 @@
 
 .profile__menu-item--host:hover {
   background: #e8f0fe;
+  transform: translateX(2px);
 }
 
 .profile__menu-item--host:disabled {
