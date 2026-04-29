@@ -15,7 +15,6 @@ export class ParametresComponent implements OnInit {
   private apiUrl = environment.apiUrl;
   userId: number | null = null;
 
-  // Profile
   firstName = '';
   lastName = '';
   email = '';
@@ -23,23 +22,12 @@ export class ParametresComponent implements OnInit {
   profileError = '';
   savingProfile = false;
 
-  // Password
   currentPassword = '';
   newPassword = '';
   confirmPassword = '';
   passwordMessage = '';
   passwordError = '';
   savingPassword = false;
-
-  // Notifications
-  notifReservations = true;
-  notifCleaning = true;
-  notifMessages = true;
-  notifPayments = true;
-
-  // Language
-  language = 'Français';
-  currency = 'EUR (€)';
 
   constructor(private http: HttpClient) {}
 
@@ -77,7 +65,7 @@ export class ParametresComponent implements OnInit {
     this.profileError = '';
 
     if (!this.firstName.trim()) {
-      this.profileError = 'Le prénom est requis';
+      this.profileError = 'Le pr\u00e9nom est requis';
       return;
     }
     if (!this.email.trim() || !this.email.includes('@')) {
@@ -95,11 +83,11 @@ export class ParametresComponent implements OnInit {
       email: this.email.trim()
     }).subscribe({
       next: () => {
-        this.profileMessage = 'Profil mis à jour avec succès';
+        this.profileMessage = 'Profil mis \u00e0 jour avec succ\u00e8s';
         this.savingProfile = false;
       },
       error: (err) => {
-        this.profileError = err.error?.message || 'Erreur lors de la mise à jour';
+        this.profileError = err.error?.message || 'Erreur lors de la mise \u00e0 jour';
         this.savingProfile = false;
       }
     });
@@ -114,7 +102,7 @@ export class ParametresComponent implements OnInit {
       return;
     }
     if (!this.newPassword || this.newPassword.length < 4) {
-      this.passwordError = 'Le nouveau mot de passe doit contenir au moins 4 caractères';
+      this.passwordError = 'Le nouveau mot de passe doit contenir au moins 4 caract\u00e8res';
       return;
     }
     if (this.newPassword !== this.confirmPassword) {
@@ -128,7 +116,7 @@ export class ParametresComponent implements OnInit {
       newPassword: this.newPassword
     }).subscribe({
       next: () => {
-        this.passwordMessage = 'Mot de passe modifié avec succès';
+        this.passwordMessage = 'Mot de passe modifi\u00e9 avec succ\u00e8s';
         this.currentPassword = '';
         this.newPassword = '';
         this.confirmPassword = '';
