@@ -2,7 +2,7 @@
   <div class="dashboard-hero">
     <div>
       <h1>Dashboard</h1>
-      <p>Welcome back, {{ displayName }}. Here's your overview.</p>
+      <p>Ravie de vous revoir, {{ displayName }}. Here's your overview.</p>
     </div>
   </div>
 
@@ -15,7 +15,7 @@
       </div>
       <span class="stat-trend positive">+1</span>
       <strong>{{ propertiesCount }}</strong>
-      <p>Properties</p>
+      <p>Propriétés</p>
     </article>
 
     <article class="stat-card">
@@ -26,7 +26,7 @@
       </div>
       <span class="stat-trend positive">+2</span>
       <strong>{{ upcomingReservationsCount }}</strong>
-      <p>Upcoming Reservations</p>
+      <p>Réservations à venir</p>
     </article>
 
     <article class="stat-card">
@@ -37,7 +37,7 @@
       </div>
       <span class="stat-trend negative">-1</span>
       <strong>{{ pendingCleaning }}</strong>
-      <p>Pending Cleaning</p>
+      <p>Nettoyage à effectuer</p>
     </article>
 
     <article class="stat-card">
@@ -48,7 +48,7 @@
       </div>
       <span class="stat-trend positive">+3</span>
       <strong>{{ unreadMessages }}</strong>
-      <p>Unread Messages</p>
+      <p>Messages non lus</p>
     </article>
   </div>
 
@@ -56,16 +56,16 @@
     <article class="panel revenue-panel">
       <header class="panel-header">
         <div>
-          <h2>Revenue</h2>
+          <h2>Revenues</h2>
           <div class="timeline-selector" aria-label="Revenue timeline">
             <button type="button" [class.active]="selectedTimeline === 'week'" (click)="selectTimeline('week')">
-              Week
+              Semaine
             </button>
             <button type="button" [class.active]="selectedTimeline === 'month'" (click)="selectTimeline('month')">
-              Month
+              Mois
             </button>
             <button type="button" [class.active]="selectedTimeline === 'year'" (click)="selectTimeline('year')">
-              Year
+              Années
             </button>
           </div>
         </div>
@@ -93,7 +93,7 @@
     </article>
 
     <article class="panel reservations-panel">
-      <h2>Recent Reservations</h2>
+      <h2>Réservations récentes</h2>
 
       <div class="reservation-list" *ngIf="recentReservations.length; else emptyReservations">
         <div class="reservation-row" *ngFor="let reservation of recentReservations">
