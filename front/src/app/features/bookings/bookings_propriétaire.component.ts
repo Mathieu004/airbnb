@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BookingService } from './bookingService';
 import { AuthService } from '../../core/auth.service';
-import { Booking, BookingStatus } from './booking.model';
+import { Booking } from './booking.model';
 
 @Component({
   selector: 'app-bookings-owner',
@@ -16,16 +16,15 @@ export class BookingsProprietaireComponent implements OnInit {
   bookings: Booking[] = [];
   filteredBookings: Booking[] = [];
   searchQuery = '';
-  activeFilter: BookingStatus | 'ALL' = 'ALL';
+  activeFilter: OwnerBookingFilter = 'all';
   loading = false;
   error: string | null = null;
 
-  readonly filters: Array<{ label: string; value: BookingStatus | 'ALL' }> = [
-    { label: 'All', value: 'ALL' },
-    { label: 'Pending', value: 'PENDING' },
-    { label: 'Confirmed', value: 'CONFIRMED' },
-    { label: 'Cancelled', value: 'CANCELLED' },
-    { label: 'Completed', value: 'COMPLETED' }
+  readonly filters: ReadonlyArray<{ label: string; value: OwnerBookingFilter }> = [
+    { label: 'Tous', value: 'all' },
+    { label: 'En cours', value: 'current' },
+    { label: 'A venir', value: 'upcoming' },
+    { label: 'Passees', value: 'past' }
   ];
 
   constructor(
@@ -36,6 +35,7 @@ export class BookingsProprietaireComponent implements OnInit {
   ngOnInit(): void {
     const ownerId = this.authService.getCurrentUserId();
     if (!ownerId) return;
+
     this.loading = true;
     this.bookingService.getByOwnerId(ownerId).subscribe({
       next: (data) => {
@@ -44,7 +44,7 @@ export class BookingsProprietaireComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.error = 'Impossible de charger les réservations.';
+        this.error = 'Impossible de charger les reservations.';
         this.loading = false;
       }
     });
@@ -52,20 +52,23 @@ export class BookingsProprietaireComponent implements OnInit {
 
   applyFilters(): void {
     let result = this.bookings;
-    if (this.activeFilter !== 'ALL') {
-      result = result.filter(b => b.status === this.activeFilter);
+
+    if (this.activeFilter !== 'all') {
+      result = result.filter(booking => this.getBookingPeriod(booking) === this.activeFilter);
     }
+
     if (this.searchQuery.trim()) {
-      const q = this.searchQuery.toLowerCase();
-      result = result.filter(b =>
-        b.guest?.username?.toLowerCase().includes(q) ||
-        b.property?.name?.toLowerCase().includes(q)
+      const query = this.normalize(this.searchQuery);
+      result = result.filter(booking =>
+        this.normalize(booking.guest?.username ?? '').includes(query) ||
+        this.normalize(booking.property?.name ?? '').includes(query)
       );
     }
+
     this.filteredBookings = result;
   }
 
-  setFilter(filter: BookingStatus | 'ALL'): void {
+  setFilter(filter: OwnerBookingFilter): void {
     this.activeFilter = filter;
     this.applyFilters();
   }
@@ -74,19 +77,47 @@ export class BookingsProprietaireComponent implements OnInit {
     this.applyFilters();
   }
 
-  updateStatus(booking: Booking, status: BookingStatus): void {
-    if (!booking.id) return;
-    this.bookingService.updateStatus(booking.id, status).subscribe({
-      next: (updated) => {
-        booking.status = updated.status;
-        this.applyFilters();
-      }
-    });
-  }
-
   getInitials(username?: string): string {
     if (!username) return '?';
-    return username.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    return username.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
+  }
+
+  getPeriodLabel(booking: Booking): string {
+    const period = this.getBookingPeriod(booking);
+    if (period === 'cancelled') return 'Annulee';
+    if (period === 'current') return 'En cours';
+    if (period === 'upcoming') return 'A venir';
+    return 'Passee';
+  }
+
+  getPeriodClass(booking: Booking): string {
+    return `booking-status--${this.getBookingPeriod(booking)}`;
+  }
+
+  private getBookingPeriod(booking: Booking): Exclude<OwnerBookingFilter, 'all'> | 'cancelled' {
+    if (booking.status === 'CANCELLED') return 'cancelled';
+
+    const today = this.startOfDay(new Date());
+    const startDate = this.startOfDay(new Date(booking.startDate));
+    const endDate = this.startOfDay(new Date(booking.endDate));
+
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) return 'upcoming';
+    if (startDate <= today && endDate >= today) return 'current';
+    if (startDate > today) return 'upcoming';
+    return 'past';
+  }
+
+  private startOfDay(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  private normalize(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
   }
 }
 
+type OwnerBookingFilter = 'all' | 'current' | 'upcoming' | 'past';

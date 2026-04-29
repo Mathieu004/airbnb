@@ -385,19 +385,25 @@
   transform: translateY(2px);
 }
 
-.status-pill.confirmed {
+.status-pill.current {
   background: #dcfce7;
-  color: #baf3cc;
+  color: #15803d;
 }
 
-.status-pill.pending {
+.status-pill.upcoming {
   background: #fff3d8;
-  color: #ffd98b;
+  color: #b7791f;
 }
 
-.status-pill.completed {
+.status-pill.past {
   background: #e6ebf3;
-  color: #c1cad8;
+  color: #64748b;
+}
+
+.status-pill.cancelled {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
 }
 
 .empty-state {

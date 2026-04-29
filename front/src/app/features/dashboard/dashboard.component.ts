@@ -4,6 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/auth.service';
 import { Booking } from '../bookings/booking.model';
+import { BookingService } from '../bookings/bookingService';
+import { MessageService } from '../messages/messageService';
 import { Property } from '../properties/property.model';
 
 type RevenueTimeline = 'week' | 'month' | 'year';
@@ -28,22 +30,24 @@ type RecentReservation = Booking & {
 })
 export class DashboardComponent implements OnInit {
   readonly pendingCleaning = 3;
-  readonly unreadMessages = 3;
-
   propertiesCount = 0;
   upcomingReservationsCount = 0;
+  upcomingCleaningsCount = 0;
+  unreadMessages = 0;
   revenueTotal = 0;
   selectedTimeline: RevenueTimeline = 'week';
   chartBars: ChartBar[] = [];
   recentReservations: RecentReservation[] = [];
 
-  private readonly dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  private readonly monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  private readonly dayLabels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+  private readonly monthLabels = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Sep', 'Oct', 'Nov', 'Dec'];
   private bookings: Booking[] = [];
 
   constructor(
     public auth: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private bookingService: BookingService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -79,12 +83,13 @@ export class DashboardComponent implements OnInit {
   }
 
   formatDateRange(booking: Booking): string {
-    return `${booking.startDate} -> ${booking.endDate}`;
+    return `${booking.startDate} au ${booking.endDate}`;
   }
 
   private loadDashboard(): void {
     this.loadProperties();
     this.loadBookings();
+    this.loadUnreadMessages();
   }
 
   private loadProperties(): void {
@@ -104,18 +109,49 @@ export class DashboardComponent implements OnInit {
   }
 
   private loadBookings(): void {
-    this.http.get<Booking[]>(`${environment.apiUrl}/bookings`).subscribe({
+    const ownerId = this.auth.getCurrentUserId();
+    if (!ownerId) {
+      this.bookings = [];
+      this.upcomingReservationsCount = 0;
+      this.upcomingCleaningsCount = 0;
+      this.chartBars = this.buildRevenueChart([]);
+      this.recentReservations = [];
+      return;
+    }
+
+    this.bookingService.getByOwnerId(ownerId).subscribe({
       next: (bookings) => {
         this.bookings = bookings;
         this.upcomingReservationsCount = this.countUpcomingReservations(bookings);
+        this.upcomingCleaningsCount = this.countUpcomingCleanings(bookings);
         this.chartBars = this.buildRevenueChart(bookings);
         this.recentReservations = this.buildRecentReservations(bookings);
       },
       error: () => {
         this.bookings = [];
         this.upcomingReservationsCount = 0;
+        this.upcomingCleaningsCount = 0;
         this.chartBars = this.buildRevenueChart([]);
         this.recentReservations = [];
+      }
+    });
+  }
+
+  private loadUnreadMessages(): void {
+    const userId = this.auth.getCurrentUserId();
+    if (!userId) {
+      this.unreadMessages = 0;
+      return;
+    }
+
+    this.messageService.getByUserId(userId).subscribe({
+      next: (messages) => {
+        this.unreadMessages = messages.filter(message =>
+          !message.read && message.recipient?.id === userId
+        ).length;
+      },
+      error: () => {
+        this.unreadMessages = 0;
       }
     });
   }
@@ -126,7 +162,17 @@ export class DashboardComponent implements OnInit {
 
     return bookings.filter((booking) => {
       const startDate = this.parseDate(booking.startDate);
-      return startDate != null && startDate >= today;
+      return booking.status !== 'CANCELLED' && startDate != null && startDate >= today;
+    }).length;
+  }
+
+  private countUpcomingCleanings(bookings: Booking[]): number {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return bookings.filter((booking) => {
+      const endDate = this.parseDate(booking.endDate);
+      return booking.status !== 'CANCELLED' && endDate != null && endDate >= today;
     }).length;
   }
 
@@ -224,11 +270,43 @@ export class DashboardComponent implements OnInit {
     return [...bookings]
       .sort((left, right) => this.getBookingTimestamp(right) - this.getBookingTimestamp(left))
       .slice(0, 4)
-      .map((booking, index) => ({
+      .map((booking) => ({
         ...booking,
-        statusLabel: index === 1 ? 'pending' : index === 3 ? 'completed' : 'confirmed',
-        statusClass: index === 1 ? 'pending' : index === 3 ? 'completed' : 'confirmed'
+        statusLabel: this.getBookingStatusLabel(booking),
+        statusClass: this.getBookingStatusClass(booking)
       }));
+  }
+
+  private getBookingStatusLabel(booking: Booking): string {
+    const status = this.getBookingStatus(booking);
+    if (status === 'cancelled') return 'Annulee';
+    if (status === 'current') return 'En cours';
+    if (status === 'upcoming') return 'A venir';
+    return 'Passee';
+  }
+
+  private getBookingStatusClass(booking: Booking): string {
+    return this.getBookingStatus(booking);
+  }
+
+  private getBookingStatus(booking: Booking): 'current' | 'upcoming' | 'past' | 'cancelled' {
+    if (booking.status === 'CANCELLED') return 'cancelled';
+
+    const today = this.startOfDay(new Date());
+    const startDate = this.parseDate(booking.startDate);
+    const endDate = this.parseDate(booking.endDate);
+
+    if (!startDate || !endDate) return 'upcoming';
+    const normalizedStart = this.startOfDay(startDate);
+    const normalizedEnd = this.startOfDay(endDate);
+
+    if (normalizedStart <= today && normalizedEnd >= today) return 'current';
+    if (normalizedStart > today) return 'upcoming';
+    return 'past';
+  }
+
+  private startOfDay(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
   private getCurrentWeekStart(): Date {
