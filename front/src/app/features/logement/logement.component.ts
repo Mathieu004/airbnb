@@ -79,11 +79,7 @@ export class LogementsComponent implements OnInit {
     { label: 'Cafetiere', field: 'hasCoffeeMachine' },
     { label: 'Television', field: 'hasTV' },
     { label: 'Jardin', field: 'hasGarden' },
-    { label: 'Ascenseur' },
     { label: 'Animaux acceptes', field: 'areAnimalsAllowed' },
-    { label: 'Piscine' },
-    { label: 'Parking' },
-    { label: 'BBQ' },
   ];
 
   readonly typeOptions: Array<{ label: string; value: PropertyPayload['type'] }> = [

@@ -352,6 +352,13 @@ img { display: block; width: 100%; height: auto; }
     gap: 10px;
 }
 
+.footer-logo .navbar-logo__image {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
 .footer-bottom {
     text-align: center;
     padding-top: 40px;
